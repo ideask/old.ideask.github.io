@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+
+    
+    
+    
+  <url>
+    <loc>http://yoursite.com/2017/01/21/IDEASK-team-building/</loc>
+    <lastmod>2017-01-21T13:41:57.724Z</lastmod>
+    <data>
+        <display>
+        <title>IDEASK team building</title>
+        <pubTime>2017-01-21T13:40:24.000Z</pubTime>
+        
+        <tag>college life</tag>
+         
+         
+           
+             
+              <breadCrumb title="college life" url="http://yoursite.com/categories/college-life/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+    
+    
+  <url>
+    <loc>http://yoursite.com/2017/01/21/hello-world/</loc>
+    <lastmod>2017-01-21T12:56:59.017Z</lastmod>
+    <data>
+        <display>
+        <title>Hello World</title>
+        <pubTime>2017-01-21T13:22:01.173Z</pubTime>
+        
+         
+           
+        </display>
+    </data>
+    </url>
+
+</urlset>
