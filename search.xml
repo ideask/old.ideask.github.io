@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search>
+  
+  
+    
+    <entry>
+      <title><![CDATA[字符设备驱动指南]]></title>
+      <url>http://yoursite.com/2017/01/22/char-device/</url>
+      <content type="html"><![CDATA[<h2 id="1、头文件"><a href="#1、头文件" class="headerlink" title="1、头文件"></a>1、头文件</h2><p>#include <linux module.h="">  </linux></p>
+<p>#include <linux init.h="">是必不可少的。</linux></p>
+<h2 id="2、模块初始化函数"><a href="#2、模块初始化函数" class="headerlink" title="2、模块初始化函数"></a>2、模块初始化函数</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">static int __init module_init_func(void)</div><div class="line">&#123;</div><div class="line">初始化代码</div><div class="line">&#125;</div><div class="line">module_init(module_init_func);</div></pre></td></tr></table></figure>
+<h2 id="3、模块退出函数"><a href="#3、模块退出函数" class="headerlink" title="3、模块退出函数"></a>3、模块退出函数</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">static void __exit module_exit_func(void)</div><div class="line">&#123;</div><div class="line">模块退出代码</div><div class="line">&#125;</div><div class="line">module_exit(module_exit_func);</div></pre></td></tr></table></figure>
+<h2 id="4、许可证"><a href="#4、许可证" class="headerlink" title="4、许可证"></a>4、许可证</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">MODULE_LICENSE(<span class="string">"GPL"</span>);</div><div class="line">MODULE_AUTHOR(<span class="string">"Jason_lin &lt;Linux@ideask.cf&gt;"</span>);</div><div class="line">MODULE_DESCRIPTION(<span class="string">"beep Driver"</span>);</div><div class="line">MODULE_VERSION(<span class="string">"V1.00"</span>);</div></pre></td></tr></table></figure>
+<h2 id="5、printk语句"><a href="#5、printk语句" class="headerlink" title="5、printk语句"></a>5、printk语句</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#define KERN_EMERG "&lt;0&gt;" /* system is unusable */</span></div><div class="line"><span class="comment">#define KERN_ALERT "&lt;1&gt;" /* action must be taken immediately */</span></div><div class="line"><span class="comment">#define KERN_CRIT "&lt;2&gt;" /* critical conditions */</span></div><div class="line"><span class="comment">#define KERN_ERR "&lt;3&gt;" /* error conditions */</span></div><div class="line"><span class="comment">#define KERN_WARNING "&lt;4&gt;" /* warning conditions */</span></div><div class="line"><span class="comment">#define KERN_NOTICE "&lt;5&gt;" /* normal but significant condition */</span></div><div class="line"><span class="comment">#define KERN_INFO "&lt;6&gt;" /* informational */</span></div><div class="line"><span class="comment">#define KERN_DEBUG "&lt;7&gt;" /* debug-level messages */</span></div></pre></td></tr></table></figure>
+<h2 id="6、Simple-demon"><a href="#6、Simple-demon" class="headerlink" title="6、Simple demon"></a>6、Simple demon</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#include &lt;linux/module.h&gt;</span></div><div class="line"><span class="comment">#include &lt;linux/init.h&gt;</span></div><div class="line"></div><div class="line"> static int num = 3;</div><div class="line"> static char *whom = <span class="string">"master"</span>;</div><div class="line"></div><div class="line"> module_param(num, int, S_IRUGO);</div><div class="line"> module_param(whom, charp, S_IRUGO);</div><div class="line"></div><div class="line"> static int __init hello_init(void)</div><div class="line"> &#123;</div><div class="line">  printk(KERN_INFO <span class="string">"%s, I get %d\n"</span>, whom, num);</div><div class="line">  <span class="built_in">return</span> 0;</div><div class="line"> &#125;</div><div class="line"></div><div class="line"> static void __exit hello_exit(void)</div><div class="line"> &#123;</div><div class="line">  printk(<span class="string">"I'll be leaving, bye!\n"</span>);</div><div class="line"> &#125;</div><div class="line"></div><div class="line"> module_init(hello_init);</div><div class="line"> module_exit(hello_exit);</div><div class="line"></div><div class="line"> MODULE_LICENSE(<span class="string">"GPL"</span>);</div></pre></td></tr></table></figure>
+<h3 id="运行"><a href="#运行" class="headerlink" title="运行"></a>运行</h3><pre><code class="bash"><span class="comment"># insmod hellop.ko whom="MASTER" num=5</span>
+</code></pre>
+<p>MASTER, I get 5</p>
+]]></content>
+    </entry>
+    
+    <entry>
+      <title><![CDATA[IDEASK team building]]></title>
+      <url>http://yoursite.com/2017/01/21/IDEASK-team-building/</url>
+      <content type="html"></content>
+    </entry>
+    
+    <entry>
+      <title><![CDATA[Hello World]]></title>
+      <url>http://yoursite.com/2017/01/21/hello-world/</url>
+      <content type="html"><![CDATA[<p>Welcome to <a href="https://hexo.io/" target="_blank" rel="external">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="external">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="external">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="external">GitHub</a>.</p>
+<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo new <span class="string">"My New Post"</span></div></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="external">Writing</a></p>
+<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo server</div></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="external">Server</a></p>
+<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo generate</div></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="external">Generating</a></p>
+<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo deploy</div></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="external">Deployment</a></p>
+]]></content>
+    </entry>
+    
+  
+  
+</search>

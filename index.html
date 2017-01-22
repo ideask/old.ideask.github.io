@@ -261,6 +261,16 @@
           </a>
         </li>
       
+        
+        <li class="menu-item menu-item-search">
+          <a href="/search" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
 
       
         <li class="menu-item menu-item-search">
@@ -303,6 +313,183 @@
           <div id="content" class="content">
             
   <section id="posts" class="posts-expand">
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/01/22/char-device/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Jason Lin">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.gif">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="Jason Lin">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="Jason Lin" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/01/22/char-device/" itemprop="url">
+                  字符设备驱动指南
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-01-22T17:39:08+08:00">
+                2017-01-22
+              </time>
+			  </span>
+			
+			<span>
+    
+			<span>更新于</span>
+			<time>
+			2017-01-22
+			17:39:08
+			</time>
+			</span>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/embedded-system/" itemprop="url" rel="index">
+                    <span itemprop="name">embedded system</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2017/01/22/char-device/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/01/22/char-device/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+          1、头文件#include   
+#include 是必不可少的。
+2、模块初始化函数12345static int __init module_init_func(void)&#123;初始化代码&#125;module_init(module_init_func);
+3、模块退出函数12345static void __exit module_exit_func(void)&#123;模块退出代码&#125;module_exit(module_exit_func);
+4、许可证1234MODULE_LICENSE("GPL");MODULE_AUTHOR("Jason_lin &lt;Linux@ideask.cf&gt;");MODULE_DESCRIPTION("beep Driver");MODULE_VERSION("V1.00");
+5、printk语句12345678#define KERN_EMERG "&lt;0&gt;" /* system is unusable */#define KERN_ALERT "&lt;1&gt;" /* action must be taken immediately */#define KERN_CRIT "&lt;2&gt;" /* critical conditions */#define KERN_ERR "&lt;3&gt;" /* error conditions */#define KERN_WARNING "&lt;4&gt;" /* warning conditions */#define KERN_NOTICE "&lt;5&gt;" /* normal but significant condition */#define KERN_INFO "&lt;6&gt;" /* informational */#define KERN_DEBUG "&lt;7&gt;" /* debug-level messages */
+6、Simple demon123456789101112131415161718192021222324#include &lt;linux/module.h&gt;#include &lt;linux/init.h&gt; static int num = 3; static char *whom = "master"; module_param(num, int, S_IRUGO); module_param(whom, charp, S_IRUGO); static int __init hello_init(void) &#123;  printk(KERN_INFO "%s, I get %d\n", whom, num);  return 0; &#125; static void __exit hello_exit(void) &#123;  printk("I'll be leaving, bye!\n"); &#125; module_init(hello_init); module_exit(hello_exit); MODULE_LICENSE("GPL");
+运行# insmod hellop.ko whom="MASTER" num=5
+
+MASTER, I get 5
+
+          
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2017/01/22/char-device/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
     
       
 
@@ -668,7 +855,7 @@ More info: Deployment
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-count">3</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -677,7 +864,7 @@ More info: Deployment
           
             <div class="site-state-item site-state-categories">
               <a href="/categories">
-                <span class="site-state-item-count">1</span>
+                <span class="site-state-item-count">2</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -686,7 +873,7 @@ More info: Deployment
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">1</span>
+                <span class="site-state-item-count">2</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
