@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="设备驱动," />
 
 
 
@@ -84,15 +84,37 @@
 
 
 
-<meta name="description" content="embedded system engineer">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Jason Lin">
-<meta property="og:url" content="http://yoursite.com/categories/embedded-system/index.html">
+<meta name="description" content="1、驱动源码#include &amp;lt;linux/init.h&amp;gt;
+#include &amp;lt;linux/module.h&amp;gt;
+#include &amp;lt;linux/fs.h&amp;gt;
+#include &amp;lt;linux/cdev.h&amp;gt;
+#include &amp;lt;linux/device.h&amp;gt;
+#include &amp;lt;linux/version.h&amp;gt;
+
+#include">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ioctl方式操作LED udev驱动模板">
+<meta property="og:url" content="http://yoursite.com/2017/01/22/ioctl-led-udev-char-device/index.html">
 <meta property="og:site_name" content="Jason Lin">
-<meta property="og:description" content="embedded system engineer">
+<meta property="og:description" content="1、驱动源码#include &amp;lt;linux/init.h&amp;gt;
+#include &amp;lt;linux/module.h&amp;gt;
+#include &amp;lt;linux/fs.h&amp;gt;
+#include &amp;lt;linux/cdev.h&amp;gt;
+#include &amp;lt;linux/device.h&amp;gt;
+#include &amp;lt;linux/version.h&amp;gt;
+
+#include">
+<meta property="og:updated_time" content="2017-01-22T12:02:34.964Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Jason Lin">
-<meta name="twitter:description" content="embedded system engineer">
+<meta name="twitter:title" content="ioctl方式操作LED udev驱动模板">
+<meta name="twitter:description" content="1、驱动源码#include &amp;lt;linux/init.h&amp;gt;
+#include &amp;lt;linux/module.h&amp;gt;
+#include &amp;lt;linux/fs.h&amp;gt;
+#include &amp;lt;linux/cdev.h&amp;gt;
+#include &amp;lt;linux/device.h&amp;gt;
+#include &amp;lt;linux/version.h&amp;gt;
+
+#include">
 
 
 
@@ -120,13 +142,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/categories/embedded-system/"/>
+  <link rel="canonical" href="http://yoursite.com/2017/01/22/ioctl-led-udev-char-device/"/>
 
 
 
 
 
-  <title> 分类: embedded system | Jason Lin </title>
+  <title> ioctl方式操作LED udev驱动模板 | Jason Lin </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -166,7 +188,7 @@
     
   
 
-  <div class="container one-collumn sidebar-position-left  ">
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -311,47 +333,421 @@
           <div id="content" class="content">
             
 
-  <section id="posts" class="posts-collapse">
-    <div class="collection-title">
-      <h2 >
-        embedded system
-        <small>分类</small>
-      </h2>
-    </div>
-
+  <div id="posts" class="posts-expand">
     
-      
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h1 class="post-title">
-        
-            <a class="post-title-link" href="/2017/01/22/char-device/" itemprop="url">
-              
-                <span itemprop="name">字符设备驱动指南</span>
-              
-            </a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2017-01-22T17:39:08+08:00"
-              content="2017-01-22" >
-          01-22
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-    
-  </section>
 
   
 
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/01/22/ioctl-led-udev-char-device/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Jason Lin">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.gif">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="Jason Lin">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="Jason Lin" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                ioctl方式操作LED udev驱动模板
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-01-22T19:48:09+08:00">
+                2017-01-22
+              </time>
+			  </span>
+			
+			<span>
+    
+			<span>更新于</span>
+			<time>
+			2017-01-22
+			19:48:09
+			</time>
+			</span>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/设备驱动/" itemprop="url" rel="index">
+                    <span itemprop="name">设备驱动</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2017/01/22/ioctl-led-udev-char-device/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/01/22/ioctl-led-udev-char-device/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="1、驱动源码"><a href="#1、驱动源码" class="headerlink" title="1、驱动源码"></a>1、驱动源码</h2><pre><code class="bash"><span class="comment">#include &lt;linux/init.h&gt;</span>
+<span class="comment">#include &lt;linux/module.h&gt;</span>
+<span class="comment">#include &lt;linux/fs.h&gt;</span>
+<span class="comment">#include &lt;linux/cdev.h&gt;</span>
+<span class="comment">#include &lt;linux/device.h&gt;</span>
+<span class="comment">#include &lt;linux/version.h&gt;</span>
+
+<span class="comment">#include &lt;asm/mach/arch.h&gt;</span>
+<span class="comment">#include &lt;asm/gpio.h&gt;</span>
+
+<span class="comment">#define LED_IOC_MAGIC 'L'    //操作LED的幻数</span>
+<span class="comment">#define LED_ON _IO(LED_IOC_MAGIC,0)    //无参数命令</span>
+<span class="comment">#define LED_OFF _IO(LED_IOC_MAGIC,1) </span>
+<span class="comment">#define LED_IOCTL_MAXNR 2    //</span>
+
+static int major,minor;
+struct cdev *led;
+static dev_t devno;
+static struct class *led_class;
+
+<span class="comment">#define DEVICE_NAME "led" </span>
+<span class="comment">#define GPIO_LED_PIN_NUM 116</span>
+
+static int led_open(struct inode *inode,struct file *file)
+{
+    try_module_get(THIS_MODULE);
+    gpio_direction_output(GPIO_LED_PIN_NUM,1);
+    <span class="built_in">return</span> 0;
+}
+
+static int led_release(struct inode *inode,struct file *file)
+{
+    module_put(THIS_MODULE);
+    gpio_direction_output(GPIO_LED_PIN_NUM,1);
+    <span class="built_in">return</span> 0;
+}
+<span class="comment">#if LINUX_VERSION_CODE &gt;= KERNEL_VERSION(2,6,36)</span>
+int led_ioctl(struct file *filp,unsigned int cmd,unsigned long arg)
+<span class="comment">#else</span>
+static int led_ioctl(struct inode *inode,struct file *file,unsigned int cmd,unsigned long arg)
+<span class="comment">#endif</span>
+{
+    <span class="keyword">if</span>(_IOC_TYPE(cmd) != LED_IOC_MAGIC)
+    {
+        <span class="built_in">return</span> -ENOTTY;
+    }
+    <span class="keyword">if</span>(_IOC_NR(cmd) &gt; LED_IOCTL_MAXNR)
+    {
+        <span class="built_in">return</span> -ENOTTY;
+    }
+    switch(cmd)
+    {
+        <span class="keyword">case</span> LED_ON:
+            gpio_set_value(GPIO_LED_PIN_NUM,0);
+            <span class="built_in">break</span>;
+        <span class="keyword">case</span> LED_OFF:
+            gpio_set_value(GPIO_LED_PIN_NUM,1);
+            <span class="built_in">break</span>;
+        default:
+            gpio_set_value(GPIO_LED_PIN_NUM,0);
+            <span class="built_in">break</span>;
+    }
+    <span class="built_in">return</span> 0;
+}
+
+struct file_operations led_fops ={
+    .owner = THIS_MODULE,
+    .open = led_open,
+    .release = led_release,
+<span class="comment">#if LINUX_VERSION_CODE &gt;= KERNEL_VERSION(2,6,36)</span>
+    .unlocked_ioctl = led_ioctl
+<span class="comment">#else</span>
+    .ioctl = led_ioctl
+<span class="comment">#endif</span>
+};
+static int __init led_init(void)
+{
+    int ret;
+    gpio_free(GPIO_LED_PIN_NUM);
+    <span class="keyword">if</span>(gpio_request(GPIO_LED_PIN_NUM,<span class="string">"led_run"</span>))
+    {
+        printk(<span class="string">"request %s gpio faile \n"</span>,<span class="string">"led_run"</span>);
+        <span class="built_in">return</span> -1;
+    }
+    ret = alloc_chrdev_region(&amp;devno,minor,1,<span class="string">"led"</span>);
+    major = MAJOR(devno);
+    <span class="keyword">if</span>(ret &lt; 0)
+    {
+        printk(KERN_ERR<span class="string">"cannot get major %d \n"</span>,major);
+        <span class="built_in">return</span> -1;
+    }
+
+    led = cdev_alloc();
+    <span class="keyword">if</span>(led != NULL)
+    {
+        cdev_init(led,&amp;led_fops);
+        led-&gt;owner = THIS_MODULE;
+        <span class="keyword">if</span>(cdev_add(led,devno,1) != 0)
+        {
+            printk(KERN_ERR <span class="string">"add cdev error!\n"</span>);
+            goto error;
+        }
+    }
+    <span class="keyword">else</span>
+    {
+        printk(KERN_ERR<span class="string">"cdev_alloc error!\n"</span>);
+        <span class="built_in">return</span> -1;
+    }
+
+    led_class = class_create(THIS_MODULE,<span class="string">"led_class"</span>);
+     <span class="keyword">if</span>(IS_ERR(led_class))
+    {
+        printk(KERN_INFO<span class="string">"create class error\n"</span>);
+        <span class="built_in">return</span> -1;
+    }
+
+    device_create(led_class,NULL,devno,NULL,<span class="string">"led"</span>);
+    <span class="built_in">return</span> 0;
+
+error:
+        unregister_chrdev_region(devno,1);
+        <span class="built_in">return</span> ret;
+}
+
+static void __exit led_exit(void)
+{
+    cdev_del(led);
+    unregister_chrdev_region(devno,1);
+    device_destroy(led_class,devno);
+    class_destroy(led_class);
+}
+
+module_init(led_init);
+module_exit(led_exit);
+
+MODULE_LICENSE(<span class="string">"GPL"</span>);
+MODULE_AUTHOR(<span class="string">"ideask,ideask@ideask.cf"</span>);
+</code></pre>
+<h2 id="2、编译Makefile"><a href="#2、编译Makefile" class="headerlink" title="2、编译Makefile"></a>2、编译Makefile</h2><pre><code class="bash">CC = arm-fsl-linux-gnueabi-gcc
+
+ifneq ($(KERNELRELEASE),)
+obj-m := led.o
+<span class="keyword">else</span>
+PWD :=$(shell <span class="built_in">pwd</span>)
+KVER :=$(shell uname -r)
+KDIR :=/root/linux-2.6.35.3  <span class="comment">#内核文件地址，自定义</span>
+
+all:
+    $(MAKE) -C $(KDIR) M=$(PWD) modules
+clean:
+    rm -rf .*.cmd *.o *.mod.c *.ko .tmp_versions
+endif
+</code></pre>
+<h2 id="3、测试程序"><a href="#3、测试程序" class="headerlink" title="3、测试程序"></a>3、测试程序</h2><pre><code class="bash"><span class="comment">#include &lt;stdio.h&gt;</span>
+<span class="comment">#include &lt;stdlib.h&gt;</span>
+<span class="comment">#include &lt;unistd.h&gt;</span>
+<span class="comment">#include &lt;sys/ioctl.h&gt;</span>
+<span class="comment">#include &lt;errno.h&gt;</span>
+<span class="comment">#include &lt;fcntl.h&gt;</span>
+
+<span class="comment">#define LED_IOC_MAGIC 'L'    //操作LED的幻数</span>
+<span class="comment">#define LED_ON _IO(LED_IOC_MAGIC,0)    //无参数命令</span>
+<span class="comment">#define LED_OFF _IO(LED_IOC_MAGIC,1)</span>
+
+<span class="comment">#define DEV_NAME "/dev/led"</span>
+
+int main(int argc, char *argv[])
+{
+    int i;
+    int fd = 0;
+    fd = open(DEV_NAME,O_RDONLY);
+    <span class="keyword">if</span>(fd &lt; 0)
+    {
+        perror(<span class="string">"Open "</span>DEV_NAME<span class="string">"Failed!\n"</span>);
+        <span class="built_in">return</span> -1;
+    }
+    <span class="keyword">while</span>(1)
+    {
+        ioctl(fd,LED_ON);
+        //sleep(1);
+        ioctl(fd,LED_OFF);
+        //sleep(1);
+    }
+    close(fd);
+    <span class="built_in">return</span> 0;
+}
+</code></pre>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>如果文章对您有用请随意打赏，谢谢支持！</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+        <div id="wechat" style="display: inline-block">
+          <img id="wechat_qr" src="/images/w.png" alt="Jason Lin WeChat Pay"/>
+          <p>微信打赏</p>
+        </div>
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="/images/z.jpg" alt="Jason Lin Alipay"/>
+          <p>支付宝打赏</p>
+        </div>
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/设备驱动/" rel="tag"># 设备驱动</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/01/22/udev-char-device/" rel="next" title="udev字符设备的程序">
+                <i class="fa fa-chevron-left"></i> udev字符设备的程序
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/01/22/12864-udev-char-device/" rel="prev" title="LCD12864串口驱动udev">
+                LCD12864串口驱动udev <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <div class="ds-share flat" data-thread-key="2017/01/22/ioctl-led-udev-char-device/"
+     data-title="ioctl方式操作LED udev驱动模板"
+     data-content=""
+     data-url="http://yoursite.com/2017/01/22/ioctl-led-udev-char-device/">
+  <div class="ds-share-inline">
+    <ul  class="ds-share-icons-16">
+
+      <li data-toggle="ds-share-icons-more"><a class="ds-more" href="javascript:void(0);">分享到：</a></li>
+      <li><a class="ds-weibo" href="javascript:void(0);" data-service="weibo">微博</a></li>
+      <li><a class="ds-qzone" href="javascript:void(0);" data-service="qzone">QQ空间</a></li>
+      <li><a class="ds-qqt" href="javascript:void(0);" data-service="qqt">腾讯微博</a></li>
+      <li><a class="ds-wechat" href="javascript:void(0);" data-service="wechat">微信</a></li>
+
+    </ul>
+    <div class="ds-share-icons-more">
+    </div>
+  </div>
+</div>
+      
+    </div>
+  </div>
 
           
           </div>
@@ -359,6 +755,14 @@
 
 
           
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2017/01/22/ioctl-led-udev-char-device/"
+           data-title="ioctl方式操作LED udev驱动模板" data-url="http://yoursite.com/2017/01/22/ioctl-led-udev-char-device/">
+      </div>
+    
+  </div>
+
 
         </div>
         
@@ -378,8 +782,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel sidebar-panel-active">
+      <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/images/avatar.gif"
@@ -392,7 +805,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-count">6</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -497,6 +910,22 @@
       </section>
 
       
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1、驱动源码"><span class="nav-number">1.</span> <span class="nav-text">1、驱动源码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2、编译Makefile"><span class="nav-number">2.</span> <span class="nav-text">2、编译Makefile</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3、测试程序"><span class="nav-number">3.</span> <span class="nav-text">3、测试程序</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
 
     </div>
   </aside>
@@ -584,6 +1013,10 @@
   
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
 
   
 

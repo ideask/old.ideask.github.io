@@ -4,19 +4,79 @@
 
     
   <url>
-    <loc>http://yoursite.com/2017/01/22/char-device/</loc>
-    <lastmod>2017-01-22T09:51:26.977Z</lastmod>
+    <loc>http://yoursite.com/2017/01/22/12864-udev-char-device/</loc>
+    <lastmod>2017-01-22T12:18:16.997Z</lastmod>
     <data>
         <display>
-        <title>字符设备驱动指南</title>
-        <pubTime>2017-01-22T09:39:08.000Z</pubTime>
+        <title>LCD12864串口驱动udev</title>
+        <pubTime>2017-01-22T12:08:48.000Z</pubTime>
         
-        <tag>embedded system</tag>
+        <tag>设备驱动</tag>
          
          
            
              
-              <breadCrumb title="embedded system" url="http://yoursite.com/categories/embedded-system/"/>
+              <breadCrumb title="设备驱动" url="http://yoursite.com/categories/%E8%AE%BE%E5%A4%87%E9%A9%B1%E5%8A%A8/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://yoursite.com/2017/01/22/ioctl-led-udev-char-device/</loc>
+    <lastmod>2017-01-22T12:02:34.964Z</lastmod>
+    <data>
+        <display>
+        <title>ioctl方式操作LED udev驱动模板</title>
+        <pubTime>2017-01-22T11:48:09.000Z</pubTime>
+        
+        <tag>设备驱动</tag>
+         
+         
+           
+             
+              <breadCrumb title="设备驱动" url="http://yoursite.com/categories/%E8%AE%BE%E5%A4%87%E9%A9%B1%E5%8A%A8/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://yoursite.com/2017/01/22/udev-char-device/</loc>
+    <lastmod>2017-01-22T11:42:06.198Z</lastmod>
+    <data>
+        <display>
+        <title>udev字符设备的程序</title>
+        <pubTime>2017-01-22T10:34:30.000Z</pubTime>
+        
+        <tag>设备驱动</tag>
+         
+         
+           
+             
+              <breadCrumb title="设备驱动" url="http://yoursite.com/categories/%E8%AE%BE%E5%A4%87%E9%A9%B1%E5%8A%A8/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://yoursite.com/2017/01/22/char-device/</loc>
+    <lastmod>2017-01-22T10:30:45.676Z</lastmod>
+    <data>
+        <display>
+        <title>简单的字符设备驱动指南</title>
+        <pubTime>2017-01-22T09:39:08.000Z</pubTime>
+        
+        <tag>设备驱动</tag>
+         
+         
+           
+             
+              <breadCrumb title="设备驱动" url="http://yoursite.com/categories/%E8%AE%BE%E5%A4%87%E9%A9%B1%E5%8A%A8/"/>
           
         </display>
     </data>

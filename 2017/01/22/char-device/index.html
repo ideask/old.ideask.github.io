@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="embedded system," />
+  <meta name="keywords" content="设备驱动," />
 
 
 
@@ -84,25 +84,22 @@
 
 
 
-<meta name="description" content="1、头文件#include   
-#include 是必不可少的。
+<meta name="description" content="1、头文件12#include &amp;lt;linux/module.h&amp;gt;  #include &amp;lt;linux/init.h&amp;gt;是必不可少的。
 2、模块初始化函数12345static int __init module_init_func(void)&amp;#123;初始化代码&amp;#125;module_init(module_init_func);
-3、模块退出函数12345static void __exit module_exit_func(void)&amp;#123;模块退出">
+3、模块退出函数12345static v">
 <meta property="og:type" content="article">
-<meta property="og:title" content="字符设备驱动指南">
+<meta property="og:title" content="简单的字符设备驱动指南">
 <meta property="og:url" content="http://yoursite.com/2017/01/22/char-device/index.html">
 <meta property="og:site_name" content="Jason Lin">
-<meta property="og:description" content="1、头文件#include   
-#include 是必不可少的。
+<meta property="og:description" content="1、头文件12#include &amp;lt;linux/module.h&amp;gt;  #include &amp;lt;linux/init.h&amp;gt;是必不可少的。
 2、模块初始化函数12345static int __init module_init_func(void)&amp;#123;初始化代码&amp;#125;module_init(module_init_func);
-3、模块退出函数12345static void __exit module_exit_func(void)&amp;#123;模块退出">
-<meta property="og:updated_time" content="2017-01-22T09:51:26.977Z">
+3、模块退出函数12345static v">
+<meta property="og:updated_time" content="2017-01-22T10:30:45.676Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="字符设备驱动指南">
-<meta name="twitter:description" content="1、头文件#include   
-#include 是必不可少的。
+<meta name="twitter:title" content="简单的字符设备驱动指南">
+<meta name="twitter:description" content="1、头文件12#include &amp;lt;linux/module.h&amp;gt;  #include &amp;lt;linux/init.h&amp;gt;是必不可少的。
 2、模块初始化函数12345static int __init module_init_func(void)&amp;#123;初始化代码&amp;#125;module_init(module_init_func);
-3、模块退出函数12345static void __exit module_exit_func(void)&amp;#123;模块退出">
+3、模块退出函数12345static v">
 
 
 
@@ -136,7 +133,7 @@
 
 
 
-  <title> 字符设备驱动指南 | Jason Lin </title>
+  <title> 简单的字符设备驱动指南 | Jason Lin </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -355,7 +352,7 @@
             
             
               
-                字符设备驱动指南
+                简单的字符设备驱动指南
               
             
           </h1>
@@ -403,8 +400,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/embedded-system/" itemprop="url" rel="index">
-                    <span itemprop="name">embedded system</span>
+                  <a href="/categories/设备驱动/" itemprop="url" rel="index">
+                    <span itemprop="name">设备驱动</span>
                   </a>
                 </span>
 
@@ -448,8 +445,7 @@
       
 
       
-        <h2 id="1、头文件"><a href="#1、头文件" class="headerlink" title="1、头文件"></a>1、头文件</h2><p>#include <linux module.h="">  </linux></p>
-<p>#include <linux init.h="">是必不可少的。</linux></p>
+        <h2 id="1、头文件"><a href="#1、头文件" class="headerlink" title="1、头文件"></a>1、头文件</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#include &lt;linux/module.h&gt;  </span></div><div class="line"><span class="comment">#include &lt;linux/init.h&gt;是必不可少的。</span></div></pre></td></tr></table></figure>
 <h2 id="2、模块初始化函数"><a href="#2、模块初始化函数" class="headerlink" title="2、模块初始化函数"></a>2、模块初始化函数</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">static int __init module_init_func(void)</div><div class="line">&#123;</div><div class="line">初始化代码</div><div class="line">&#125;</div><div class="line">module_init(module_init_func);</div></pre></td></tr></table></figure>
 <h2 id="3、模块退出函数"><a href="#3、模块退出函数" class="headerlink" title="3、模块退出函数"></a>3、模块退出函数</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">static void __exit module_exit_func(void)</div><div class="line">&#123;</div><div class="line">模块退出代码</div><div class="line">&#125;</div><div class="line">module_exit(module_exit_func);</div></pre></td></tr></table></figure>
 <h2 id="4、许可证"><a href="#4、许可证" class="headerlink" title="4、许可证"></a>4、许可证</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">MODULE_LICENSE(<span class="string">"GPL"</span>);</div><div class="line">MODULE_AUTHOR(<span class="string">"Jason_lin &lt;Linux@ideask.cf&gt;"</span>);</div><div class="line">MODULE_DESCRIPTION(<span class="string">"beep Driver"</span>);</div><div class="line">MODULE_VERSION(<span class="string">"V1.00"</span>);</div></pre></td></tr></table></figure>
@@ -502,7 +498,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/embedded-system/" rel="tag"># embedded system</a>
+            <a href="/tags/设备驱动/" rel="tag"># 设备驱动</a>
           
         </div>
       
@@ -521,6 +517,10 @@
 
           <div class="post-nav-prev post-nav-item">
             
+              <a href="/2017/01/22/udev-char-device/" rel="prev" title="udev字符设备的程序">
+                udev字符设备的程序 <i class="fa fa-chevron-right"></i>
+              </a>
+            
           </div>
         </div>
       
@@ -535,7 +535,7 @@
     <div class="post-spread">
       
         <div class="ds-share flat" data-thread-key="2017/01/22/char-device/"
-     data-title="字符设备驱动指南"
+     data-title="简单的字符设备驱动指南"
      data-content=""
      data-url="http://yoursite.com/2017/01/22/char-device/">
   <div class="ds-share-inline">
@@ -565,7 +565,7 @@
   <div class="comments" id="comments">
     
       <div class="ds-thread" data-thread-key="2017/01/22/char-device/"
-           data-title="字符设备驱动指南" data-url="http://yoursite.com/2017/01/22/char-device/">
+           data-title="简单的字符设备驱动指南" data-url="http://yoursite.com/2017/01/22/char-device/">
       </div>
     
   </div>
@@ -612,7 +612,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-count">6</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
