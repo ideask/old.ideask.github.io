@@ -5,7 +5,7 @@
   
 
 
-<html class="theme-next muse use-motion" lang="zh-Hans">
+<html class="theme-next mist use-motion" lang="zh-Hans">
 <head>
   <meta charset="UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -100,7 +100,7 @@
   var NexT = window.NexT || {};
   var CONFIG = {
     root: '/',
-    scheme: 'Muse',
+    scheme: 'Mist',
     sidebar: {"position":"left","display":"post"},
     fancybox: true,
     motion: true,
@@ -258,16 +258,6 @@
               <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
             
             关于
-          </a>
-        </li>
-      
-        
-        <li class="menu-item menu-item-search">
-          <a href="/search" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
-            
-            搜索
           </a>
         </li>
       
@@ -445,45 +435,45 @@
       
         
           
-          1、LCD12864串口驱动程序#include &lt;linux/module.h&gt;
-#include &lt;linux/kernel.h&gt;
-#include &lt;linux/types.h&gt;
-#include &lt;linux/sched.h&gt;
-#include &lt;linux/init.h&gt;
-#include &lt;linux/fs.h&gt;
-#include &lt;linux/ioctl.h&gt;
-#include &lt;linux/delay.h&gt;
-#include &lt;linux/bcd.h&gt;
-#include &lt;linux/capability.h&gt;
-#include &lt;linux/rtc.h&gt;
-#include &lt;linux/cdev.h&gt;
-#include &lt;linux/device.h&gt;
-#include &lt;linux/gpio.h&gt;
-#include &lt;linux/version.h&gt;
+            <h2 id="1、LCD12864串口驱动程序"><a href="#1、LCD12864串口驱动程序" class="headerlink" title="1、LCD12864串口驱动程序"></a>1、LCD12864串口驱动程序</h2><pre><code class="bash"><span class="comment">#include &lt;linux/module.h&gt;</span>
+<span class="comment">#include &lt;linux/kernel.h&gt;</span>
+<span class="comment">#include &lt;linux/types.h&gt;</span>
+<span class="comment">#include &lt;linux/sched.h&gt;</span>
+<span class="comment">#include &lt;linux/init.h&gt;</span>
+<span class="comment">#include &lt;linux/fs.h&gt;</span>
+<span class="comment">#include &lt;linux/ioctl.h&gt;</span>
+<span class="comment">#include &lt;linux/delay.h&gt;</span>
+<span class="comment">#include &lt;linux/bcd.h&gt;</span>
+<span class="comment">#include &lt;linux/capability.h&gt;</span>
+<span class="comment">#include &lt;linux/rtc.h&gt;</span>
+<span class="comment">#include &lt;linux/cdev.h&gt;</span>
+<span class="comment">#include &lt;linux/device.h&gt;</span>
+<span class="comment">#include &lt;linux/gpio.h&gt;</span>
+<span class="comment">#include &lt;linux/version.h&gt;</span>
 
-#include &lt;../arch/arm/mach-mx28/mx28_pins.h&gt;
+<span class="comment">#include &lt;../arch/arm/mach-mx28/mx28_pins.h&gt;</span>
 
-#define DEVICE_NAME "LCD12864"
+<span class="comment">#define DEVICE_NAME "LCD12864"</span>
 
-#define LCD_SID 57
-#define LCD_CS 39
-#define LCD_CLK 56
+<span class="comment">#define LCD_SID 57</span>
+<span class="comment">#define LCD_CS 39</span>
+<span class="comment">#define LCD_CLK 56</span>
 
-#define LCD_IOC_MAGIC 'L'
-#define LCD_CMD _IO(LCD_IOC_MAGIC,0)
-#define LCD_LINE _IO(LCD_IOC_MAGIC,1)
-#define LCD_ROW _IO(LCD_IOC_MAGIC,2)
-#define LCD_DATA _IO(LCD_IOC_MAGIC,3)
+<span class="comment">#define LCD_IOC_MAGIC 'L'</span>
+<span class="comment">#define LCD_CMD _IO(LCD_IOC_MAGIC,0)</span>
+<span class="comment">#define LCD_LINE _IO(LCD_IOC_MAGIC,1)</span>
+<span class="comment">#define LCD_ROW _IO(LCD_IOC_MAGIC,2)</span>
+<span class="comment">#define LCD_DATA _IO(LCD_IOC_MAGIC,3)</span>
 
-#define LCD_IOCTL_MAXNR 4
+<span class="comment">#define LCD_IOCTL_MAXNR 4</span>
 
 
-#define LCD_SID_H gpio_direction_output(LCD_SID,1);
-#define LCD_SID_L gpio_direction_output(LCD_SID,0);
-#define LCD_CS_H gpio_direction_output(LCD_CS,1);
-#define LCD_CS_L gpio_direction_output(LCD_CS,0);
-#define LCD_CLK_H gpio_direction_output(LCD_CLK,1);
-#define LCD_CLK_L gpio_direction_output(LCD_CLK,0);
+<span class="comment">#define LCD_SID_H gpio_direction_output(LCD_SID,1);</span>
+<span class="comment">#define LCD_SID_L gpio_direction_output(LCD_SID,0);</span>
+<span class="comment">#define LCD_CS_H gpio_direction_output(LCD_CS,1);</span>
+<span class="comment">#define LCD_CS_L gpio_direction_output(LCD_CS,0);</span>
+<span class="comment">#define LCD_CLK_H gpio_direction_output(LCD_CLK,1);</span>
+<span class="comment">#define LCD_CLK_L gpio_direction_output(LCD_CLK,0);</span>
 
 static int major,minor;
 struct cdev *lcd;
@@ -491,7 +481,7 @@ static dev_t devno;
 static struct class *lcd_class;
 static int lcd_open(struct inode *inode,struct file *filp);
 static int lcd_release(struct inode *inode,struct file *filp);
-static int lcd_ioctl(struct inode *inode,struct file *flip,unsigned int command,unsigned long arg);
+static int lcd_ioctl(struct inode *inode,struct file *flip,unsigned int <span class="built_in">command</span>,unsigned long arg);
 static int lcd_init(void);
 static void lcd_exit(void);
 
@@ -499,34 +489,255 @@ struct file_operations lcd_fops ={
     .owner = THIS_MODULE,
     .open =lcd_open,
     .release = lcd_release,
-#if LINUX_VERSION_CODE &gt;= KERNEL_VERSION(2,6,36)
+<span class="comment">#if LINUX_VERSION_CODE &gt;= KERNEL_VERSION(2,6,36)</span>
     .unlocked_ioctl = lcd_ioctl,
-#else
+<span class="comment">#else</span>
     .ioctl = lcd_ioctl
-#endif
+<span class="comment">#endif</span>
 };
 
 static void lcd_sendbyte(unsigned char byte)
 {
     unsigned int i=0;
-    for(i=0;i&lt;8;i++)
+    <span class="keyword">for</span>(i=0;i&lt;8;i++)
     {
         LCD_CLK_L;
         udelay(1);
-        if(byte &amp; 0x80)
+        <span class="keyword">if</span>(byte &amp; 0x80)
         {LCD_SID_H;}
-        else
+        <span class="keyword">else</span>
         {LCD_SID_L;}
         LCD_CLK_H;
-        udelay(1
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2017/01/22/12864-udev-char-device/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
+        udelay(1);
+        LCD_CLK_L;
+        udelay(1);
+        byte = byte &lt;&lt; 1;
+    }
+}
+
+static void lcd12864_write_cmd(unsigned char cmd)
+{
+    LCD_CS_H;
+    lcd_sendbyte(0xf8);
+    lcd_sendbyte(0xf0 &amp; cmd);
+    lcd_sendbyte(0xf0 &amp; (cmd &lt;&lt; 4));
+    LCD_CS_L;
+    mdelay(10);
+}
+
+static void lcd12864_write_dat(unsigned char dat)
+{
+
+    LCD_CS_H;
+    lcd_sendbyte(0xfa);
+    lcd_sendbyte(0xf0 &amp; dat);
+    lcd_sendbyte(0xf0 &amp; (dat &lt;&lt; 4));
+    LCD_CS_L;
+    mdelay(10);
+}
+static void lcd12864_init(void)
+{
+    lcd12864_write_cmd(0x30);
+    lcd12864_write_cmd(0x02);
+    lcd12864_write_cmd(0x06);
+    lcd12864_write_cmd(0x0c);
+    lcd12864_write_cmd(0x01);
+    lcd12864_write_cmd(0x80);
+
+}
+static void lcd12864_clean(void)
+{
+    lcd12864_write_cmd(0x01);
+}
+static void lcd_string(unsigned char x,unsigned char y,unsigned char *String)
+{
+    <span class="keyword">if</span>((x &lt; 8)&amp;&amp;(y &lt; 4))
+    {
+        switch(y)
+        {
+            <span class="keyword">case</span> 0:
+                lcd12864_write_cmd(0x80|0x00|x);
+                <span class="built_in">break</span>;
+            <span class="keyword">case</span> 1:
+                lcd12864_write_cmd(0x80|0x10|x);
+                <span class="built_in">break</span>;
+            <span class="keyword">case</span> 2:
+                lcd12864_write_cmd(0x80|0x08|x);
+                <span class="built_in">break</span>;
+            <span class="keyword">case</span> 3:
+                lcd12864_write_cmd(0x80|0x18|x);
+                <span class="built_in">break</span>;
+        }
+        <span class="keyword">while</span>(*String !=<span class="string">'\0'</span>)
+        {
+            lcd12864_write_dat(*String);
+            mdelay(50);
+            String++;
+        }
+    }
+
+}    
+static int lcd_open(struct inode *inode,struct file *file)
+{
+    try_module_get(THIS_MODULE);
+    lcd12864_init();//init lcd12864 cmd 
+    //init lcd12864 background
+    lcd_string(0,0,<span class="string">"Linux Chardev"</span>);
+    lcd_string(0,1,<span class="string">"LCD12864 Device"</span>);
+    lcd_string(0,2,<span class="string">"Initialization"</span>);
+    lcd_string(0,3,<span class="string">"Author:Jason"</span>);
+    <span class="built_in">return</span> 0;
+}
+static int lcd_release(struct inode *inode,struct file *file)
+{
+    module_put(THIS_MODULE);
+    lcd12864_clean();//close lcd12864 background
+    lcd_string(0,0,<span class="string">"LCD12864 Device"</span>);
+    lcd_string(0,1,<span class="string">"Already"</span>);
+    lcd_string(0,2,<span class="string">"Closed"</span>);
+    <span class="built_in">return</span> 0;
+}
+
+
+<span class="comment">#if LINUX_VERSION_CODE &gt;= KERNEL_VERSION(2,6,36)</span>
+int lcd_ioctl(struct file *filp,unsigned int cmd,unsigned long arg)
+<span class="comment">#else</span>
+static int lcd_ioctl(struct inode *inode,struct file *file,unsigned int cmd,unsigned long arg)
+<span class="comment">#endif</span>
+{
+    <span class="keyword">if</span>(_IOC_TYPE(cmd) != LCD_IOC_MAGIC)
+    {
+        <span class="built_in">return</span> -ENOTTY;
+    }
+    <span class="keyword">if</span>(_IOC_NR(cmd) &gt; LCD_IOCTL_MAXNR)
+    {
+        <span class="built_in">return</span> -ENOTTY;
+    }
+
+    switch(cmd)
+    {
+        <span class="keyword">case</span> LCD_LINE:  //待开发
+                <span class="built_in">break</span>;
+        <span class="keyword">case</span> LCD_ROW:   //待开发
+                <span class="built_in">break</span>;
+        <span class="keyword">case</span> LCD_CMD:   //待开发
+                <span class="built_in">break</span>;
+        <span class="keyword">case</span> LCD_DATA:  //待开发
+                <span class="built_in">break</span>;
+    }
+    <span class="built_in">return</span> 0;
+
+
+}
+static int __init lcd_init(void)
+{
+    int ret=0;
+
+    gpio_free(LCD_SID);
+    gpio_free(LCD_CS);
+    gpio_free(LCD_CLK);
+    ret += gpio_request(LCD_SID,<span class="string">"SID"</span>);
+    ret += gpio_request(LCD_CS,<span class="string">"CS"</span>);
+    ret += gpio_request(LCD_CLK,<span class="string">"CLK"</span>);
+    <span class="keyword">if</span>(ret)
+    {
+        printk(<span class="string">"request gpio failed "</span>);
+        <span class="built_in">return</span> -1;
+    }
+    ret = 0;
+    ret = alloc_chrdev_region(&amp;devno,minor,1,<span class="string">"LCD12864"</span>);
+    major = MAJOR(devno);
+    <span class="keyword">if</span>(ret &lt; 0)
+    {
+        printk(KERN_ERR<span class="string">"cannot get major %d\n"</span>,major);
+        <span class="built_in">return</span> -1;
+    }
+    lcd = cdev_alloc();
+    <span class="keyword">if</span>(lcd !=NULL)
+    {
+        cdev_init(lcd,&amp;lcd_fops);
+        lcd-&gt;owner = THIS_MODULE;
+        <span class="keyword">if</span>(cdev_add(lcd,devno,1) != 0)
+        {
+            printk(KERN_ERR<span class="string">"add cdev error! \n"</span>);
+            goto error;
+        }
+    }    
+    <span class="keyword">else</span>
+    {
+        printk(KERN_ERR<span class="string">"cdev_alloc error! \n"</span>);
+        <span class="built_in">return</span> -1;
+    }
+
+    lcd_class = class_create(THIS_MODULE,<span class="string">"lcd_class"</span>);
+    <span class="keyword">if</span>(IS_ERR(lcd_class))
+    {
+        printk(KERN_INFO<span class="string">"create class error!\n"</span>);
+        <span class="built_in">return</span> -1;
+    }
+    device_create(lcd_class,NULL,devno,NULL,<span class="string">"lcd12864"</span>);
+    <span class="built_in">return</span> 0;
+error:
+    unregister_chrdev_region(devno,1);
+    <span class="built_in">return</span> ret;
+
+}
+static void __exit lcd_exit(void)
+{
+    cdev_del(lcd);
+    unregister_chrdev_region(devno,1);
+    device_destroy(lcd_class,devno);
+    class_destroy(lcd_class);
+}
+
+module_init(lcd_init);
+module_exit(lcd_exit);
+
+MODULE_LICENSE(<span class="string">"GPL"</span>);
+MODULE_AUTHOR(<span class="string">"ideask,ideask@ideask.cf"</span>);
+</code></pre>
+<h2 id="2、Makefile"><a href="#2、Makefile" class="headerlink" title="2、Makefile"></a>2、Makefile</h2><pre><code class="bash">CC = arm-fsl-linux-gnueabi-gcc
+
+ifneq ($(KERNELRELEASE),)
+obj-m := lcd.o
+<span class="keyword">else</span>
+PWD :=$(shell <span class="built_in">pwd</span>)
+KVER :=$(shell uname -r)
+KDIR :=/root/linux-2.6.35.3
+
+all:
+    $(MAKE) -C $(KDIR) M=$(PWD) modules
+clean:
+    rm -rf .*.cmd *.o *.mod.c *.ko .tmp_versions
+endif
+</code></pre>
+<h2 id="3、测试程序"><a href="#3、测试程序" class="headerlink" title="3、测试程序"></a>3、测试程序</h2><pre><code class="bash"><span class="comment">#include &lt;stdio.h&gt;</span>
+<span class="comment">#include &lt;stdlib.h&gt;</span>
+<span class="comment">#include &lt;unistd.h&gt;</span>
+<span class="comment">#include &lt;sys/ioctl.h&gt;</span>
+<span class="comment">#include &lt;errno.h&gt;</span>
+<span class="comment">#include &lt;fcntl.h&gt;</span>
+
+
+<span class="comment">#define DEV_NAME "/dev/lcd12864"</span>
+
+int main(int argc, char *argv[])
+{
+    int i;
+    int fd = 0;
+    fd = open(DEV_NAME,O_RDONLY);
+    <span class="keyword">if</span>(fd &lt; 0)
+    {
+        perror(<span class="string">"Open "</span>DEV_NAME<span class="string">"Failed!\n"</span>);
+        <span class="built_in">return</span> -1;
+    }
+    //close(fd);
+    <span class="keyword">while</span>(1);
+    <span class="built_in">return</span> 0;
+}
+</code></pre>
+
+          
         
       
     </div>
@@ -685,97 +896,195 @@ static void lcd_sendbyte(unsigned char byte)
       
         
           
-          1、驱动源码#include &lt;linux/init.h&gt;
-#include &lt;linux/module.h&gt;
-#include &lt;linux/fs.h&gt;
-#include &lt;linux/cdev.h&gt;
-#include &lt;linux/device.h&gt;
-#include &lt;linux/version.h&gt;
+            <h2 id="1、驱动源码"><a href="#1、驱动源码" class="headerlink" title="1、驱动源码"></a>1、驱动源码</h2><pre><code class="bash"><span class="comment">#include &lt;linux/init.h&gt;</span>
+<span class="comment">#include &lt;linux/module.h&gt;</span>
+<span class="comment">#include &lt;linux/fs.h&gt;</span>
+<span class="comment">#include &lt;linux/cdev.h&gt;</span>
+<span class="comment">#include &lt;linux/device.h&gt;</span>
+<span class="comment">#include &lt;linux/version.h&gt;</span>
 
-#include &lt;asm/mach/arch.h&gt;
-#include &lt;asm/gpio.h&gt;
+<span class="comment">#include &lt;asm/mach/arch.h&gt;</span>
+<span class="comment">#include &lt;asm/gpio.h&gt;</span>
 
-#define LED_IOC_MAGIC 'L'    //操作LED的幻数
-#define LED_ON _IO(LED_IOC_MAGIC,0)    //无参数命令
-#define LED_OFF _IO(LED_IOC_MAGIC,1) 
-#define LED_IOCTL_MAXNR 2    //
+<span class="comment">#define LED_IOC_MAGIC 'L'    //操作LED的幻数</span>
+<span class="comment">#define LED_ON _IO(LED_IOC_MAGIC,0)    //无参数命令</span>
+<span class="comment">#define LED_OFF _IO(LED_IOC_MAGIC,1) </span>
+<span class="comment">#define LED_IOCTL_MAXNR 2    //</span>
 
 static int major,minor;
 struct cdev *led;
 static dev_t devno;
 static struct class *led_class;
 
-#define DEVICE_NAME "led" 
-#define GPIO_LED_PIN_NUM 116
+<span class="comment">#define DEVICE_NAME "led" </span>
+<span class="comment">#define GPIO_LED_PIN_NUM 116</span>
 
 static int led_open(struct inode *inode,struct file *file)
 {
     try_module_get(THIS_MODULE);
     gpio_direction_output(GPIO_LED_PIN_NUM,1);
-    return 0;
+    <span class="built_in">return</span> 0;
 }
 
 static int led_release(struct inode *inode,struct file *file)
 {
     module_put(THIS_MODULE);
     gpio_direction_output(GPIO_LED_PIN_NUM,1);
-    return 0;
+    <span class="built_in">return</span> 0;
 }
-#if LINUX_VERSION_CODE &gt;= KERNEL_VERSION(2,6,36)
+<span class="comment">#if LINUX_VERSION_CODE &gt;= KERNEL_VERSION(2,6,36)</span>
 int led_ioctl(struct file *filp,unsigned int cmd,unsigned long arg)
-#else
+<span class="comment">#else</span>
 static int led_ioctl(struct inode *inode,struct file *file,unsigned int cmd,unsigned long arg)
-#endif
+<span class="comment">#endif</span>
 {
-    if(_IOC_TYPE(cmd) != LED_IOC_MAGIC)
+    <span class="keyword">if</span>(_IOC_TYPE(cmd) != LED_IOC_MAGIC)
     {
-        return -ENOTTY;
+        <span class="built_in">return</span> -ENOTTY;
     }
-    if(_IOC_NR(cmd) &gt; LED_IOCTL_MAXNR)
+    <span class="keyword">if</span>(_IOC_NR(cmd) &gt; LED_IOCTL_MAXNR)
     {
-        return -ENOTTY;
+        <span class="built_in">return</span> -ENOTTY;
     }
     switch(cmd)
     {
-        case LED_ON:
+        <span class="keyword">case</span> LED_ON:
             gpio_set_value(GPIO_LED_PIN_NUM,0);
-            break;
-        case LED_OFF:
+            <span class="built_in">break</span>;
+        <span class="keyword">case</span> LED_OFF:
             gpio_set_value(GPIO_LED_PIN_NUM,1);
-            break;
+            <span class="built_in">break</span>;
         default:
             gpio_set_value(GPIO_LED_PIN_NUM,0);
-            break;
+            <span class="built_in">break</span>;
     }
-    return 0;
+    <span class="built_in">return</span> 0;
 }
 
 struct file_operations led_fops ={
     .owner = THIS_MODULE,
     .open = led_open,
     .release = led_release,
-#if LINUX_VERSION_CODE &gt;= KERNEL_VERSION(2,6,36)
+<span class="comment">#if LINUX_VERSION_CODE &gt;= KERNEL_VERSION(2,6,36)</span>
     .unlocked_ioctl = led_ioctl
-#else
+<span class="comment">#else</span>
     .ioctl = led_ioctl
-#endif
+<span class="comment">#endif</span>
 };
 static int __init led_init(void)
 {
     int ret;
     gpio_free(GPIO_LED_PIN_NUM);
-    if(gpio_request(GPIO_LED_PIN_NUM,"led_run"))
+    <span class="keyword">if</span>(gpio_request(GPIO_LED_PIN_NUM,<span class="string">"led_run"</span>))
     {
-        printk("request %s gpio faile \n","led_run");
-        
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2017/01/22/ioctl-led-udev-char-device/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
+        printk(<span class="string">"request %s gpio faile \n"</span>,<span class="string">"led_run"</span>);
+        <span class="built_in">return</span> -1;
+    }
+    ret = alloc_chrdev_region(&amp;devno,minor,1,<span class="string">"led"</span>);
+    major = MAJOR(devno);
+    <span class="keyword">if</span>(ret &lt; 0)
+    {
+        printk(KERN_ERR<span class="string">"cannot get major %d \n"</span>,major);
+        <span class="built_in">return</span> -1;
+    }
+
+    led = cdev_alloc();
+    <span class="keyword">if</span>(led != NULL)
+    {
+        cdev_init(led,&amp;led_fops);
+        led-&gt;owner = THIS_MODULE;
+        <span class="keyword">if</span>(cdev_add(led,devno,1) != 0)
+        {
+            printk(KERN_ERR <span class="string">"add cdev error!\n"</span>);
+            goto error;
+        }
+    }
+    <span class="keyword">else</span>
+    {
+        printk(KERN_ERR<span class="string">"cdev_alloc error!\n"</span>);
+        <span class="built_in">return</span> -1;
+    }
+
+    led_class = class_create(THIS_MODULE,<span class="string">"led_class"</span>);
+     <span class="keyword">if</span>(IS_ERR(led_class))
+    {
+        printk(KERN_INFO<span class="string">"create class error\n"</span>);
+        <span class="built_in">return</span> -1;
+    }
+
+    device_create(led_class,NULL,devno,NULL,<span class="string">"led"</span>);
+    <span class="built_in">return</span> 0;
+
+error:
+        unregister_chrdev_region(devno,1);
+        <span class="built_in">return</span> ret;
+}
+
+static void __exit led_exit(void)
+{
+    cdev_del(led);
+    unregister_chrdev_region(devno,1);
+    device_destroy(led_class,devno);
+    class_destroy(led_class);
+}
+
+module_init(led_init);
+module_exit(led_exit);
+
+MODULE_LICENSE(<span class="string">"GPL"</span>);
+MODULE_AUTHOR(<span class="string">"ideask,ideask@ideask.cf"</span>);
+</code></pre>
+<h2 id="2、编译Makefile"><a href="#2、编译Makefile" class="headerlink" title="2、编译Makefile"></a>2、编译Makefile</h2><pre><code class="bash">CC = arm-fsl-linux-gnueabi-gcc
+
+ifneq ($(KERNELRELEASE),)
+obj-m := led.o
+<span class="keyword">else</span>
+PWD :=$(shell <span class="built_in">pwd</span>)
+KVER :=$(shell uname -r)
+KDIR :=/root/linux-2.6.35.3  <span class="comment">#内核文件地址，自定义</span>
+
+all:
+    $(MAKE) -C $(KDIR) M=$(PWD) modules
+clean:
+    rm -rf .*.cmd *.o *.mod.c *.ko .tmp_versions
+endif
+</code></pre>
+<h2 id="3、测试程序"><a href="#3、测试程序" class="headerlink" title="3、测试程序"></a>3、测试程序</h2><pre><code class="bash"><span class="comment">#include &lt;stdio.h&gt;</span>
+<span class="comment">#include &lt;stdlib.h&gt;</span>
+<span class="comment">#include &lt;unistd.h&gt;</span>
+<span class="comment">#include &lt;sys/ioctl.h&gt;</span>
+<span class="comment">#include &lt;errno.h&gt;</span>
+<span class="comment">#include &lt;fcntl.h&gt;</span>
+
+<span class="comment">#define LED_IOC_MAGIC 'L'    //操作LED的幻数</span>
+<span class="comment">#define LED_ON _IO(LED_IOC_MAGIC,0)    //无参数命令</span>
+<span class="comment">#define LED_OFF _IO(LED_IOC_MAGIC,1)</span>
+
+<span class="comment">#define DEV_NAME "/dev/led"</span>
+
+int main(int argc, char *argv[])
+{
+    int i;
+    int fd = 0;
+    fd = open(DEV_NAME,O_RDONLY);
+    <span class="keyword">if</span>(fd &lt; 0)
+    {
+        perror(<span class="string">"Open "</span>DEV_NAME<span class="string">"Failed!\n"</span>);
+        <span class="built_in">return</span> -1;
+    }
+    <span class="keyword">while</span>(1)
+    {
+        ioctl(fd,LED_ON);
+        //sleep(1);
+        ioctl(fd,LED_OFF);
+        //sleep(1);
+    }
+    close(fd);
+    <span class="built_in">return</span> 0;
+}
+</code></pre>
+
+          
         
       
     </div>
@@ -934,15 +1243,10 @@ static int __init led_init(void)
       
         
           
-          支持udev的空壳程序12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758596061626364656667686970717273747576777879808182838485#include &lt;linux/init.h&gt;#include &lt;linux/module.h&gt;#include &lt;linux/fs.h&gt;#include &lt;linux/cdev.h&gt;#include &lt;linux/device.h&gt; static int major = 232; /* 静态设备号方式的默认值 */ static int minor = 0; /* 静态设备号方式的默认值 */ module_param(major, int, S_IRUGO); module_param(minor, int, S_IRUGO); struct cdev *char_null_udev; /* cdev 数据结构 */ static dev_t devno; /* 设备编号 */ static struct class *char_null_udev_class; #define DEVICE_NAME "char_null_udev" static int __init char_null_udev_init(void) &#123;	 int ret;	 if (major &gt; 0) 	 &#123; /* 静态设备号 */		devno = MKDEV(major, minor);		ret=register_chrdev_region(devno,1,"char_null_udev");	 &#125; 	 else 	 &#123; /* 动态设备号 */		ret=alloc_chrdev_region(&amp;devno,minor,1,"char_null_udev"); /* 从系统获取主设备号 */		major = MAJOR(devno);	 &#125;	 if (ret &lt; 0)	 &#123;		printk(KERN_ERR "cannot get major %d \n", major);		return -1;	 &#125;	 char_null_udev = cdev_alloc(); /* 分配 char_null_udev 结构 */	 if (char_null_udev != NULL) 	 &#123;		 cdev_init(char_null_udev, &amp;major); /* 初始化 char_null_udev 结构 */		 char_null_udev-&gt;owner = THIS_MODULE;		if (cdev_add(char_null_udev, devno, 1) != 0) 		&#123; /* 增加 char_null_udev 到系统中 */			printk(KERN_ERR "add cdev error!\n");			goto error;		&#125;	 &#125; 	 else &#123;		printk(KERN_ERR "cdev_alloc error!\n");		return -1;		&#125;	//在/sys/class/下创建 char_null_udev_class 目录	char_null_udev_class = class_create(THIS_MODULE, "char_null_udev_class");	if (IS_ERR(char_null_udev_class)) 	&#123;		printk(KERN_INFO "create class error\n");		return -1;	&#125;	/* 将创建/dev/char_null_udev0 文件 */	//device_create(char_null_udev_class, NULL, devno, NULL, "char_null_udev" "%d",MINOR(devno));	/* 将创建/dev/char_null_udev 文件 */	device_create(char_null_udev_class, NULL, devno, NULL, "char_null_udev");	return 0;	error:		unregister_chrdev_region(devno, 1); 
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2017/01/22/udev-char-device/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
+            <h2 id="支持udev的空壳程序"><a href="#支持udev的空壳程序" class="headerlink" title="支持udev的空壳程序"></a>支持udev的空壳程序</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#include &lt;linux/init.h&gt;</span></div><div class="line"><span class="comment">#include &lt;linux/module.h&gt;</span></div><div class="line"><span class="comment">#include &lt;linux/fs.h&gt;</span></div><div class="line"><span class="comment">#include &lt;linux/cdev.h&gt;</span></div><div class="line"><span class="comment">#include &lt;linux/device.h&gt;</span></div><div class="line"></div><div class="line"> static int major = 232; /* 静态设备号方式的默认值 */</div><div class="line"> static int minor = 0; /* 静态设备号方式的默认值 */</div><div class="line"> module_param(major, int, S_IRUGO);</div><div class="line"> module_param(minor, int, S_IRUGO);</div><div class="line"></div><div class="line"> struct cdev *char_null_udev; /* cdev 数据结构 */</div><div class="line"> static dev_t devno; /* 设备编号 */</div><div class="line"> static struct class *char_null_udev_class;</div><div class="line"></div><div class="line"> <span class="comment">#define DEVICE_NAME "char_null_udev"</span></div><div class="line"></div><div class="line"> static int __init char_null_udev_init(void)</div><div class="line"> &#123;</div><div class="line">	 int ret;</div><div class="line"></div><div class="line">	 <span class="keyword">if</span> (major &gt; 0) </div><div class="line">	 &#123; /* 静态设备号 */</div><div class="line">		devno = MKDEV(major, minor);</div><div class="line">		ret=register_chrdev_region(devno,1,<span class="string">"char_null_udev"</span>);</div><div class="line">	 &#125; </div><div class="line">	 <span class="keyword">else</span> </div><div class="line">	 &#123; /* 动态设备号 */</div><div class="line">		ret=alloc_chrdev_region(&amp;devno,minor,1,<span class="string">"char_null_udev"</span>); /* 从系统获取主设备号 */</div><div class="line">		major = MAJOR(devno);</div><div class="line">	 &#125;</div><div class="line">	 <span class="keyword">if</span> (ret &lt; 0)</div><div class="line">	 &#123;</div><div class="line">		printk(KERN_ERR <span class="string">"cannot get major %d \n"</span>, major);</div><div class="line">		<span class="built_in">return</span> -1;</div><div class="line">	 &#125;</div><div class="line"></div><div class="line">	 char_null_udev = cdev_alloc(); /* 分配 char_null_udev 结构 */</div><div class="line">	 <span class="keyword">if</span> (char_null_udev != NULL) </div><div class="line">	 &#123;</div><div class="line">		 cdev_init(char_null_udev, &amp;major); /* 初始化 char_null_udev 结构 */</div><div class="line">		 char_null_udev-&gt;owner = THIS_MODULE;</div><div class="line">		<span class="keyword">if</span> (cdev_add(char_null_udev, devno, 1) != 0) </div><div class="line">		&#123; /* 增加 char_null_udev 到系统中 */</div><div class="line">			printk(KERN_ERR <span class="string">"add cdev error!\n"</span>);</div><div class="line">			goto error;</div><div class="line">		&#125;</div><div class="line">	 &#125; </div><div class="line">	 <span class="keyword">else</span> &#123;</div><div class="line">		printk(KERN_ERR <span class="string">"cdev_alloc error!\n"</span>);</div><div class="line">		<span class="built_in">return</span> -1;</div><div class="line">		&#125;</div><div class="line"></div><div class="line">	//在/sys/class/下创建 char_null_udev_class 目录</div><div class="line">	char_null_udev_class = class_create(THIS_MODULE, <span class="string">"char_null_udev_class"</span>);</div><div class="line">	<span class="keyword">if</span> (IS_ERR(char_null_udev_class)) </div><div class="line">	&#123;</div><div class="line">		printk(KERN_INFO <span class="string">"create class error\n"</span>);</div><div class="line">		<span class="built_in">return</span> -1;</div><div class="line">	&#125;</div><div class="line">	/* 将创建/dev/char_null_udev0 文件 */</div><div class="line">	//device_create(char_null_udev_class, NULL, devno, NULL, <span class="string">"char_null_udev"</span> <span class="string">"%d"</span>,MINOR(devno));</div><div class="line">	/* 将创建/dev/char_null_udev 文件 */</div><div class="line">	device_create(char_null_udev_class, NULL, devno, NULL, <span class="string">"char_null_udev"</span>);</div><div class="line"></div><div class="line">	<span class="built_in">return</span> 0;</div><div class="line"></div><div class="line">	error:</div><div class="line">		unregister_chrdev_region(devno, 1); /* 释放已经获得的设备号 */</div><div class="line">	<span class="built_in">return</span> ret;</div><div class="line"> &#125;</div><div class="line"></div><div class="line"> static void __exit char_null_udev_exit(void)</div><div class="line"> &#123;</div><div class="line">	device_destroy(char_null_udev_class, devno);</div><div class="line">	class_destroy(char_null_udev_class);</div><div class="line">	cdev_del(char_null_udev); /* 移除字符设备 */</div><div class="line">	unregister_chrdev_region(devno, 1); /* 释放设备号 */</div><div class="line"> &#125;</div><div class="line"></div><div class="line"> module_init(char_null_udev_init);</div><div class="line"> module_exit(char_null_udev_exit);</div><div class="line"></div><div class="line"> MODULE_LICENSE(<span class="string">"GPL"</span>);</div><div class="line"> MODULE_AUTHOR(<span class="string">"Jason"</span>);</div></pre></td></tr></table></figure>
+<h2 id="程序分析"><a href="#程序分析" class="headerlink" title="程序分析:"></a>程序分析:</h2><p> 第(1)~(5)行是所需要的头文件；<br> 第(7)~(8)行用变量设定设备的主次设备号；<br> 第(9)~(10)行是模块参数，驱动支持加载的时候指定主次设备号；<br> 第(12)行定义一个 cdev 全局变量 char_null_udev；<br> 第(13)行的 dev_t devno 用来保存设备编号；<br> 第(14)行是定义 class 结构；<br> 第(16)行定义设备名为 char_null_udev；<br> 第(18)~(71)是模块的初始化代码，行完成设备注册以及设备节点创建：<br> 第(22)~(31)行，根据 major 变量，可以静态或者动态获取设备编号：如果是设<br>备号，需要用 MKDEV 构建成设备编号（行(24)）； 如果是动态获取设备编号，<br>还需在(29)行获取主设备号；<br> 第(38)行通过 cdev_alloc 分配一个 cdev 数据结构 char_null_udev；<br> 如果分配成功，则在(41)~(42)行进行初始化；注意 cdev_init()的第 2 个参数，<br>本应该传入驱动操作方法 fops 的地址，但是没有实现 fops，就传入一个有效<br>地址，防止运行错误；<br> 第(43)行通过 cdev_add 将 char_null_udev 添加到系统中，如果添加失败，则需<br>要释放已经获取的设备号并退出；<br> 第(55)行在 sysfs 的 class 目录下创建 char_null_udev_class 目录；<br> 第(62)或(64)行是在 sysfs 系统中创建设备节点；<br> 第(73)~(79)是模块的退出代码，完成资源释放工作：<br> 第(75)行删除 char_null_uedv 结构；<br> 第(78)行释放设备号；<br> 第(77)行删除 sysfs 中的设备节点；<br> 第(76)行销毁 sysfs 中的 class。</p>
+
+          
         
       
     </div>
@@ -1101,24 +1405,17 @@ static int __init led_init(void)
       
         
           
-          1、头文件12#include &lt;linux/module.h&gt;  #include &lt;linux/init.h&gt;是必不可少的。
-2、模块初始化函数12345static int __init module_init_func(void)&#123;初始化代码&#125;module_init(module_init_func);
-3、模块退出函数12345static void __exit module_exit_func(void)&#123;模块退出代码&#125;module_exit(module_exit_func);
-4、许可证1234MODULE_LICENSE("GPL");MODULE_AUTHOR("Jason_lin &lt;Linux@ideask.cf&gt;");MODULE_DESCRIPTION("beep Driver");MODULE_VERSION("V1.00");
-5、printk语句12345678#define KERN_EMERG "&lt;0&gt;" /* system is unusable */#define KERN_ALERT "&lt;1&gt;" /* action must be taken immediately */#define KERN_CRIT "&lt;2&gt;" /* critical conditions */#define KERN_ERR "&lt;3&gt;" /* error conditions */#define KERN_WARNING "&lt;4&gt;" /* warning conditions */#define KERN_NOTICE "&lt;5&gt;" /* normal but significant condition */#define KERN_INFO "&lt;6&gt;" /* informational */#define KERN_DEBUG "&lt;7&gt;" /* debug-level messages */
-6、Simple demon123456789101112131415161718192021222324#include &lt;linux/module.h&gt;#include &lt;linux/init.h&gt; static int num = 3; static char *whom = "master"; module_param(num, int, S_IRUGO); module_param(whom, charp, S_IRUGO); static int __init hello_init(void) &#123;  printk(KERN_INFO "%s, I get %d\n", whom, num);  return 0; &#125; static void __exit hello_exit(void) &#123;  printk("I'll be leaving, bye!\n"); &#125; module_init(hello_init); module_exit(hello_exit); MODULE_LICENSE("GPL");
-运行# insmod hellop.ko whom="MASTER" num=5
-
-MASTER, I get 5
+            <h2 id="1、头文件"><a href="#1、头文件" class="headerlink" title="1、头文件"></a>1、头文件</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#include &lt;linux/module.h&gt;  </span></div><div class="line"><span class="comment">#include &lt;linux/init.h&gt;是必不可少的。</span></div></pre></td></tr></table></figure>
+<h2 id="2、模块初始化函数"><a href="#2、模块初始化函数" class="headerlink" title="2、模块初始化函数"></a>2、模块初始化函数</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">static int __init module_init_func(void)</div><div class="line">&#123;</div><div class="line">初始化代码</div><div class="line">&#125;</div><div class="line">module_init(module_init_func);</div></pre></td></tr></table></figure>
+<h2 id="3、模块退出函数"><a href="#3、模块退出函数" class="headerlink" title="3、模块退出函数"></a>3、模块退出函数</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">static void __exit module_exit_func(void)</div><div class="line">&#123;</div><div class="line">模块退出代码</div><div class="line">&#125;</div><div class="line">module_exit(module_exit_func);</div></pre></td></tr></table></figure>
+<h2 id="4、许可证"><a href="#4、许可证" class="headerlink" title="4、许可证"></a>4、许可证</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">MODULE_LICENSE(<span class="string">"GPL"</span>);</div><div class="line">MODULE_AUTHOR(<span class="string">"Jason_lin &lt;Linux@ideask.cf&gt;"</span>);</div><div class="line">MODULE_DESCRIPTION(<span class="string">"beep Driver"</span>);</div><div class="line">MODULE_VERSION(<span class="string">"V1.00"</span>);</div></pre></td></tr></table></figure>
+<h2 id="5、printk语句"><a href="#5、printk语句" class="headerlink" title="5、printk语句"></a>5、printk语句</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#define KERN_EMERG "&lt;0&gt;" /* system is unusable */</span></div><div class="line"><span class="comment">#define KERN_ALERT "&lt;1&gt;" /* action must be taken immediately */</span></div><div class="line"><span class="comment">#define KERN_CRIT "&lt;2&gt;" /* critical conditions */</span></div><div class="line"><span class="comment">#define KERN_ERR "&lt;3&gt;" /* error conditions */</span></div><div class="line"><span class="comment">#define KERN_WARNING "&lt;4&gt;" /* warning conditions */</span></div><div class="line"><span class="comment">#define KERN_NOTICE "&lt;5&gt;" /* normal but significant condition */</span></div><div class="line"><span class="comment">#define KERN_INFO "&lt;6&gt;" /* informational */</span></div><div class="line"><span class="comment">#define KERN_DEBUG "&lt;7&gt;" /* debug-level messages */</span></div></pre></td></tr></table></figure>
+<h2 id="6、Simple-demon"><a href="#6、Simple-demon" class="headerlink" title="6、Simple demon"></a>6、Simple demon</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#include &lt;linux/module.h&gt;</span></div><div class="line"><span class="comment">#include &lt;linux/init.h&gt;</span></div><div class="line"></div><div class="line"> static int num = 3;</div><div class="line"> static char *whom = <span class="string">"master"</span>;</div><div class="line"></div><div class="line"> module_param(num, int, S_IRUGO);</div><div class="line"> module_param(whom, charp, S_IRUGO);</div><div class="line"></div><div class="line"> static int __init hello_init(void)</div><div class="line"> &#123;</div><div class="line">  printk(KERN_INFO <span class="string">"%s, I get %d\n"</span>, whom, num);</div><div class="line">  <span class="built_in">return</span> 0;</div><div class="line"> &#125;</div><div class="line"></div><div class="line"> static void __exit hello_exit(void)</div><div class="line"> &#123;</div><div class="line">  printk(<span class="string">"I'll be leaving, bye!\n"</span>);</div><div class="line"> &#125;</div><div class="line"></div><div class="line"> module_init(hello_init);</div><div class="line"> module_exit(hello_exit);</div><div class="line"></div><div class="line"> MODULE_LICENSE(<span class="string">"GPL"</span>);</div></pre></td></tr></table></figure>
+<h3 id="运行"><a href="#运行" class="headerlink" title="运行"></a>运行</h3><pre><code class="bash"><span class="comment"># insmod hellop.ko whom="MASTER" num=5</span>
+</code></pre>
+<p>MASTER, I get 5</p>
 
           
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2017/01/22/char-device/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
         
       
     </div>
@@ -1277,15 +1574,8 @@ MASTER, I get 5
       
         
           
+            
           
-          
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2017/01/21/IDEASK-team-building/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
         
       
     </div>
@@ -1422,24 +1712,17 @@ MASTER, I get 5
       
         
           
-          Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub.
-Quick StartCreate a new post1$ hexo new "My New Post"
-More info: Writing
-Run server1$ hexo server
-More info: Server
-Generate static files1$ hexo generate
-More info: Generating
-Deploy to remote sites1$ hexo deploy
-More info: Deployment
+            <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="external">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="external">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="external">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="external">GitHub</a>.</p>
+<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo new <span class="string">"My New Post"</span></div></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="external">Writing</a></p>
+<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo server</div></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="external">Server</a></p>
+<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo generate</div></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="external">Generating</a></p>
+<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo deploy</div></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="external">Deployment</a></p>
 
           
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2017/01/21/hello-world/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
         
       
     </div>
