@@ -84,16 +84,31 @@
 
 
 
-<meta name="description" content="1、LCD12864串口驱动程序1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556575859606162636465666768697071727374757677787980818283848586878889909192939495969">
+<meta name="description" content="1、LCD12864串口驱动程序#include &amp;lt;linux/module.h&amp;gt;
+#include &amp;lt;linux/kernel.h&amp;gt;
+#include &amp;lt;linux/types.h&amp;gt;
+#include &amp;lt;linux/sched.h&amp;gt;
+#include &amp;lt;linux/init.h&amp;gt;
+#include &amp;lt;linux/fs.h&amp;gt;">
 <meta property="og:type" content="article">
 <meta property="og:title" content="LCD12864串口驱动udev">
 <meta property="og:url" content="http://yoursite.com/2017/01/22/12864-udev-char-device/index.html">
 <meta property="og:site_name" content="Jason Lin">
-<meta property="og:description" content="1、LCD12864串口驱动程序1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556575859606162636465666768697071727374757677787980818283848586878889909192939495969">
-<meta property="og:updated_time" content="2017-01-22T12:18:16.997Z">
+<meta property="og:description" content="1、LCD12864串口驱动程序#include &amp;lt;linux/module.h&amp;gt;
+#include &amp;lt;linux/kernel.h&amp;gt;
+#include &amp;lt;linux/types.h&amp;gt;
+#include &amp;lt;linux/sched.h&amp;gt;
+#include &amp;lt;linux/init.h&amp;gt;
+#include &amp;lt;linux/fs.h&amp;gt;">
+<meta property="og:updated_time" content="2017-01-22T12:28:02.727Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="LCD12864串口驱动udev">
-<meta name="twitter:description" content="1、LCD12864串口驱动程序1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556575859606162636465666768697071727374757677787980818283848586878889909192939495969">
+<meta name="twitter:description" content="1、LCD12864串口驱动程序#include &amp;lt;linux/module.h&amp;gt;
+#include &amp;lt;linux/kernel.h&amp;gt;
+#include &amp;lt;linux/types.h&amp;gt;
+#include &amp;lt;linux/sched.h&amp;gt;
+#include &amp;lt;linux/init.h&amp;gt;
+#include &amp;lt;linux/fs.h&amp;gt;">
 
 
 
@@ -439,7 +454,308 @@
       
 
       
-        <h2 id="1、LCD12864串口驱动程序"><a href="#1、LCD12864串口驱动程序" class="headerlink" title="1、LCD12864串口驱动程序"></a>1、LCD12864串口驱动程序</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div><div class="line">125</div><div class="line">126</div><div class="line">127</div><div class="line">128</div><div class="line">129</div><div class="line">130</div><div class="line">131</div><div class="line">132</div><div class="line">133</div><div class="line">134</div><div class="line">135</div><div class="line">136</div><div class="line">137</div><div class="line">138</div><div class="line">139</div><div class="line">140</div><div class="line">141</div><div class="line">142</div><div class="line">143</div><div class="line">144</div><div class="line">145</div><div class="line">146</div><div class="line">147</div><div class="line">148</div><div class="line">149</div><div class="line">150</div><div class="line">151</div><div class="line">152</div><div class="line">153</div><div class="line">154</div><div class="line">155</div><div class="line">156</div><div class="line">157</div><div class="line">158</div><div class="line">159</div><div class="line">160</div><div class="line">161</div><div class="line">162</div><div class="line">163</div><div class="line">164</div><div class="line">165</div><div class="line">166</div><div class="line">167</div><div class="line">168</div><div class="line">169</div><div class="line">170</div><div class="line">171</div><div class="line">172</div><div class="line">173</div><div class="line">174</div><div class="line">175</div><div class="line">176</div><div class="line">177</div><div class="line">178</div><div class="line">179</div><div class="line">180</div><div class="line">181</div><div class="line">182</div><div class="line">183</div><div class="line">184</div><div class="line">185</div><div class="line">186</div><div class="line">187</div><div class="line">188</div><div class="line">189</div><div class="line">190</div><div class="line">191</div><div class="line">192</div><div class="line">193</div><div class="line">194</div><div class="line">195</div><div class="line">196</div><div class="line">197</div><div class="line">198</div><div class="line">199</div><div class="line">200</div><div class="line">201</div><div class="line">202</div><div class="line">203</div><div class="line">204</div><div class="line">205</div><div class="line">206</div><div class="line">207</div><div class="line">208</div><div class="line">209</div><div class="line">210</div><div class="line">211</div><div class="line">212</div><div class="line">213</div><div class="line">214</div><div class="line">215</div><div class="line">216</div><div class="line">217</div><div class="line">218</div><div class="line">219</div><div class="line">220</div><div class="line">221</div><div class="line">222</div><div class="line">223</div><div class="line">224</div><div class="line">225</div><div class="line">226</div><div class="line">227</div><div class="line">228</div><div class="line">229</div><div class="line">230</div><div class="line">231</div><div class="line">232</div><div class="line">233</div><div class="line">234</div><div class="line">235</div><div class="line">236</div><div class="line">237</div><div class="line">238</div><div class="line">239</div><div class="line">240</div><div class="line">241</div><div class="line">242</div><div class="line">243</div><div class="line">244</div><div class="line">245</div><div class="line">246</div><div class="line">247</div><div class="line">248</div><div class="line">249</div><div class="line">250</div><div class="line">251</div><div class="line">252</div><div class="line">253</div><div class="line">254</div><div class="line">255</div><div class="line">256</div><div class="line">257</div><div class="line">258</div><div class="line">259</div><div class="line">260</div><div class="line">261</div><div class="line">262</div><div class="line">263</div><div class="line">264</div><div class="line">265</div><div class="line">266</div><div class="line">267</div><div class="line">268</div><div class="line">269</div><div class="line">270</div><div class="line">271</div><div class="line">272</div><div class="line">273</div><div class="line">274</div><div class="line">275</div><div class="line">276</div><div class="line">277</div><div class="line">278</div><div class="line">279</div><div class="line">280</div><div class="line">281</div><div class="line">282</div><div class="line">283</div><div class="line">284</div><div class="line">285</div><div class="line">286</div><div class="line">287</div><div class="line">288</div><div class="line">289</div><div class="line">290</div><div class="line">291</div><div class="line">292</div><div class="line">293</div><div class="line">294</div><div class="line">295</div><div class="line">296</div><div class="line">297</div><div class="line">298</div><div class="line">299</div><div class="line">300</div><div class="line">301</div><div class="line">302</div><div class="line">303</div><div class="line">304</div><div class="line">305</div><div class="line">306</div><div class="line">307</div><div class="line">308</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#include &lt;linux/module.h&gt;</span></div><div class="line"><span class="comment">#include &lt;linux/kernel.h&gt;</span></div><div class="line"><span class="comment">#include &lt;linux/types.h&gt;</span></div><div class="line"><span class="comment">#include &lt;linux/sched.h&gt;</span></div><div class="line"><span class="comment">#include &lt;linux/init.h&gt;</span></div><div class="line"><span class="comment">#include &lt;linux/fs.h&gt;</span></div><div class="line"><span class="comment">#include &lt;linux/ioctl.h&gt;</span></div><div class="line"><span class="comment">#include &lt;linux/delay.h&gt;</span></div><div class="line"><span class="comment">#include &lt;linux/bcd.h&gt;</span></div><div class="line"><span class="comment">#include &lt;linux/capability.h&gt;</span></div><div class="line"><span class="comment">#include &lt;linux/rtc.h&gt;</span></div><div class="line"><span class="comment">#include &lt;linux/cdev.h&gt;</span></div><div class="line"><span class="comment">#include &lt;linux/device.h&gt;</span></div><div class="line"><span class="comment">#include &lt;linux/gpio.h&gt;</span></div><div class="line"><span class="comment">#include &lt;linux/version.h&gt;</span></div><div class="line"></div><div class="line"><span class="comment">#include &lt;../arch/arm/mach-mx28/mx28_pins.h&gt;</span></div><div class="line"></div><div class="line"><span class="comment">#define DEVICE_NAME "LCD12864"</span></div><div class="line"></div><div class="line"><span class="comment">#define LCD_SID 57</span></div><div class="line"><span class="comment">#define LCD_CS 39</span></div><div class="line"><span class="comment">#define LCD_CLK 56</span></div><div class="line"></div><div class="line"><span class="comment">#define LCD_IOC_MAGIC 'L'</span></div><div class="line"><span class="comment">#define LCD_CMD _IO(LCD_IOC_MAGIC,0)</span></div><div class="line"><span class="comment">#define LCD_LINE _IO(LCD_IOC_MAGIC,1)</span></div><div class="line"><span class="comment">#define LCD_ROW _IO(LCD_IOC_MAGIC,2)</span></div><div class="line"><span class="comment">#define LCD_DATA _IO(LCD_IOC_MAGIC,3)</span></div><div class="line"></div><div class="line"><span class="comment">#define LCD_IOCTL_MAXNR 4</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="comment">#define LCD_SID_H gpio_direction_output(LCD_SID,1);</span></div><div class="line"><span class="comment">#define LCD_SID_L gpio_direction_output(LCD_SID,0);</span></div><div class="line"><span class="comment">#define LCD_CS_H gpio_direction_output(LCD_CS,1);</span></div><div class="line"><span class="comment">#define LCD_CS_L gpio_direction_output(LCD_CS,0);</span></div><div class="line"><span class="comment">#define LCD_CLK_H gpio_direction_output(LCD_CLK,1);</span></div><div class="line"><span class="comment">#define LCD_CLK_L gpio_direction_output(LCD_CLK,0);</span></div><div class="line"></div><div class="line">static int major,minor;</div><div class="line">struct cdev *lcd;</div><div class="line">static dev_t devno;</div><div class="line">static struct class *lcd_class;</div><div class="line">static int lcd_open(struct inode *inode,struct file *filp);</div><div class="line">static int lcd_release(struct inode *inode,struct file *filp);</div><div class="line">static int lcd_ioctl(struct inode *inode,struct file *flip,unsigned int <span class="built_in">command</span>,unsigned long arg);</div><div class="line">static int lcd_init(void);</div><div class="line">static void lcd_exit(void);</div><div class="line"></div><div class="line">struct file_operations lcd_fops =&#123;</div><div class="line">	.owner = THIS_MODULE,</div><div class="line">	.open =lcd_open,</div><div class="line">	.release = lcd_release,</div><div class="line"><span class="comment">#if LINUX_VERSION_CODE &gt;= KERNEL_VERSION(2,6,36)</span></div><div class="line">	.unlocked_ioctl = lcd_ioctl,</div><div class="line"><span class="comment">#else</span></div><div class="line">	.ioctl = lcd_ioctl</div><div class="line"><span class="comment">#endif</span></div><div class="line">&#125;;</div><div class="line"></div><div class="line">static void lcd_sendbyte(unsigned char byte)</div><div class="line">&#123;</div><div class="line">	unsigned int i=0;</div><div class="line">	<span class="keyword">for</span>(i=0;i&lt;8;i++)</div><div class="line">	&#123;</div><div class="line">		LCD_CLK_L;</div><div class="line">		udelay(1);</div><div class="line">		<span class="keyword">if</span>(byte &amp; 0x80)</div><div class="line">		&#123;LCD_SID_H;&#125;</div><div class="line">		<span class="keyword">else</span></div><div class="line">		&#123;LCD_SID_L;&#125;</div><div class="line">		LCD_CLK_H;</div><div class="line">		udelay(1);</div><div class="line">		LCD_CLK_L;</div><div class="line">		udelay(1);</div><div class="line">		byte = byte &lt;&lt; 1;</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">static void lcd12864_write_cmd(unsigned char cmd)</div><div class="line">&#123;</div><div class="line">	LCD_CS_H;</div><div class="line">	lcd_sendbyte(0xf8);</div><div class="line">	lcd_sendbyte(0xf0 &amp; cmd);</div><div class="line">	lcd_sendbyte(0xf0 &amp; (cmd &lt;&lt; 4));</div><div class="line">	LCD_CS_L;</div><div class="line">	mdelay(10);</div><div class="line">&#125;</div><div class="line"></div><div class="line">static void lcd12864_write_dat(unsigned char dat)</div><div class="line">&#123;</div><div class="line">	</div><div class="line">	LCD_CS_H;</div><div class="line">	lcd_sendbyte(0xfa);</div><div class="line">	lcd_sendbyte(0xf0 &amp; dat);</div><div class="line">	lcd_sendbyte(0xf0 &amp; (dat &lt;&lt; 4));</div><div class="line">	LCD_CS_L;</div><div class="line">	mdelay(10);</div><div class="line">&#125;</div><div class="line">static void lcd12864_init(void)</div><div class="line">&#123;</div><div class="line">	lcd12864_write_cmd(0x30);</div><div class="line">	lcd12864_write_cmd(0x02);</div><div class="line">	lcd12864_write_cmd(0x06);</div><div class="line">	lcd12864_write_cmd(0x0c);</div><div class="line">	lcd12864_write_cmd(0x01);</div><div class="line">	lcd12864_write_cmd(0x80);</div><div class="line"></div><div class="line">&#125;</div><div class="line">static void lcd12864_clean(void)</div><div class="line">&#123;</div><div class="line">	lcd12864_write_cmd(0x01);</div><div class="line">&#125;</div><div class="line">static void lcd_string(unsigned char x,unsigned char y,unsigned char *String)</div><div class="line">&#123;</div><div class="line">	<span class="keyword">if</span>((x &lt; 8)&amp;&amp;(y &lt; 4))</div><div class="line">	&#123;</div><div class="line">		switch(y)</div><div class="line">		&#123;</div><div class="line">			<span class="keyword">case</span> 0:</div><div class="line">				lcd12864_write_cmd(0x80|0x00|x);</div><div class="line">				<span class="built_in">break</span>;</div><div class="line">			<span class="keyword">case</span> 1:</div><div class="line">				lcd12864_write_cmd(0x80|0x10|x);</div><div class="line">				<span class="built_in">break</span>;</div><div class="line">			<span class="keyword">case</span> 2:</div><div class="line">				lcd12864_write_cmd(0x80|0x08|x);</div><div class="line">				<span class="built_in">break</span>;</div><div class="line">			<span class="keyword">case</span> 3:</div><div class="line">				lcd12864_write_cmd(0x80|0x18|x);</div><div class="line">				<span class="built_in">break</span>;</div><div class="line">		&#125;</div><div class="line">		<span class="keyword">while</span>(*String !=<span class="string">'\0'</span>)</div><div class="line">		&#123;</div><div class="line">			lcd12864_write_dat(*String);</div><div class="line">			mdelay(50);</div><div class="line">			String++;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">&#125;	</div><div class="line">static int lcd_open(struct inode *inode,struct file *file)</div><div class="line">&#123;</div><div class="line">	try_module_get(THIS_MODULE);</div><div class="line">	lcd12864_init();//init lcd12864 cmd </div><div class="line">	//init lcd12864 background</div><div class="line">	lcd_string(0,0,<span class="string">"Linux Chardev"</span>);</div><div class="line">	lcd_string(0,1,<span class="string">"LCD12864 Device"</span>);</div><div class="line">	lcd_string(0,2,<span class="string">"Initialization"</span>);</div><div class="line">	lcd_string(0,3,<span class="string">"Author:Jason"</span>);</div><div class="line">	<span class="built_in">return</span> 0;</div><div class="line">&#125;</div><div class="line">static int lcd_release(struct inode *inode,struct file *file)</div><div class="line">&#123;</div><div class="line">	module_put(THIS_MODULE);</div><div class="line">	lcd12864_clean();//close lcd12864 background</div><div class="line">	lcd_string(0,0,<span class="string">"LCD12864 Device"</span>);</div><div class="line">	lcd_string(0,1,<span class="string">"Already"</span>);</div><div class="line">	lcd_string(0,2,<span class="string">"Closed"</span>);</div><div class="line">	<span class="built_in">return</span> 0;</div><div class="line">&#125;</div><div class="line"></div><div class="line"></div><div class="line"><span class="comment">#if LINUX_VERSION_CODE &gt;= KERNEL_VERSION(2,6,36)</span></div><div class="line">int lcd_ioctl(struct file *filp,unsigned int cmd,unsigned long arg)</div><div class="line"><span class="comment">#else</span></div><div class="line">static int lcd_ioctl(struct inode *inode,struct file *file,unsigned int cmd,unsigned long arg)</div><div class="line"><span class="comment">#endif</span></div><div class="line">&#123;</div><div class="line">	<span class="keyword">if</span>(_IOC_TYPE(cmd) != LCD_IOC_MAGIC)</div><div class="line">	&#123;</div><div class="line">		<span class="built_in">return</span> -ENOTTY;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">if</span>(_IOC_NR(cmd) &gt; LCD_IOCTL_MAXNR)</div><div class="line">	&#123;</div><div class="line">		<span class="built_in">return</span> -ENOTTY;</div><div class="line">	&#125;</div><div class="line">	</div><div class="line">	switch(cmd)</div><div class="line">	&#123;</div><div class="line">		<span class="keyword">case</span> LCD_LINE:  //待开发</div><div class="line">				<span class="built_in">break</span>;</div><div class="line">		<span class="keyword">case</span> LCD_ROW:   //待开发</div><div class="line">				<span class="built_in">break</span>;</div><div class="line">		<span class="keyword">case</span> LCD_CMD:   //待开发</div><div class="line">				<span class="built_in">break</span>;</div><div class="line">		<span class="keyword">case</span> LCD_DATA:  //待开发</div><div class="line">				<span class="built_in">break</span>;</div><div class="line">	&#125;</div><div class="line">	<span class="built_in">return</span> 0;</div><div class="line"></div><div class="line">			</div><div class="line">&#125;</div><div class="line">static int __init lcd_init(void)</div><div class="line">&#123;</div><div class="line">	int ret=0;</div><div class="line"></div><div class="line">	gpio_free(LCD_SID);</div><div class="line">	gpio_free(LCD_CS);</div><div class="line">	gpio_free(LCD_CLK);</div><div class="line">	ret += gpio_request(LCD_SID,<span class="string">"SID"</span>);</div><div class="line">	ret += gpio_request(LCD_CS,<span class="string">"CS"</span>);</div><div class="line">	ret += gpio_request(LCD_CLK,<span class="string">"CLK"</span>);</div><div class="line">	<span class="keyword">if</span>(ret)</div><div class="line">	&#123;</div><div class="line">		printk(<span class="string">"request gpio failed "</span>);</div><div class="line">		<span class="built_in">return</span> -1;</div><div class="line">	&#125;</div><div class="line">	ret = 0;</div><div class="line">	ret = alloc_chrdev_region(&amp;devno,minor,1,<span class="string">"LCD12864"</span>);</div><div class="line">	major = MAJOR(devno);</div><div class="line">	<span class="keyword">if</span>(ret &lt; 0)</div><div class="line">	&#123;</div><div class="line">		printk(KERN_ERR<span class="string">"cannot get major %d\n"</span>,major);</div><div class="line">		<span class="built_in">return</span> -1;</div><div class="line">	&#125;</div><div class="line">	lcd = cdev_alloc();</div><div class="line">	<span class="keyword">if</span>(lcd !=NULL)</div><div class="line">	&#123;</div><div class="line">		cdev_init(lcd,&amp;lcd_fops);</div><div class="line">		lcd-&gt;owner = THIS_MODULE;</div><div class="line">		<span class="keyword">if</span>(cdev_add(lcd,devno,1) != 0)</div><div class="line">		&#123;</div><div class="line">			printk(KERN_ERR<span class="string">"add cdev error! \n"</span>);</div><div class="line">			goto error;</div><div class="line">		&#125;</div><div class="line">	&#125;	</div><div class="line">	<span class="keyword">else</span></div><div class="line">	&#123;</div><div class="line">		printk(KERN_ERR<span class="string">"cdev_alloc error! \n"</span>);</div><div class="line">		<span class="built_in">return</span> -1;</div><div class="line">	&#125;</div><div class="line">	</div><div class="line">	lcd_class = class_create(THIS_MODULE,<span class="string">"lcd_class"</span>);</div><div class="line">	<span class="keyword">if</span>(IS_ERR(lcd_class))</div><div class="line">	&#123;</div><div class="line">		printk(KERN_INFO<span class="string">"create class error!\n"</span>);</div><div class="line">		<span class="built_in">return</span> -1;</div><div class="line">	&#125;</div><div class="line">	device_create(lcd_class,NULL,devno,NULL,<span class="string">"lcd12864"</span>);</div><div class="line">	<span class="built_in">return</span> 0;</div><div class="line">error:</div><div class="line">	unregister_chrdev_region(devno,1);</div><div class="line">	<span class="built_in">return</span> ret;</div><div class="line">	</div><div class="line">&#125;</div><div class="line">static void __exit lcd_exit(void)</div><div class="line">&#123;</div><div class="line">	cdev_del(lcd);</div><div class="line">	unregister_chrdev_region(devno,1);</div><div class="line">	device_destroy(lcd_class,devno);</div><div class="line">	class_destroy(lcd_class);</div><div class="line">&#125;</div><div class="line"></div><div class="line">module_init(lcd_init);</div><div class="line">module_exit(lcd_exit);</div><div class="line"></div><div class="line">MODULE_LICENSE(<span class="string">"GPL"</span>);</div><div class="line">MODULE_AUTHOR(<span class="string">"ideask,ideask@ideask.cf"</span>);</div><div class="line"></div><div class="line">``` </div><div class="line"></div><div class="line"><span class="comment">## 2、Makefile</span></div><div class="line">``` bash</div><div class="line">CC = arm-fsl-linux-gnueabi-gcc</div><div class="line"></div><div class="line">ifneq ($(KERNELRELEASE),)</div><div class="line">obj-m := lcd.o</div><div class="line"><span class="keyword">else</span></div><div class="line">PWD :=$(shell <span class="built_in">pwd</span>)</div><div class="line">KVER :=$(shell uname -r)</div><div class="line">KDIR :=/root/linux-2.6.35.3</div><div class="line"></div><div class="line">all:</div><div class="line">	$(MAKE) -C $(KDIR) M=$(PWD) modules</div><div class="line">clean:</div><div class="line">	rm -rf .*.cmd *.o *.mod.c *.ko .tmp_versions</div><div class="line">endif</div><div class="line"></div><div class="line">``` </div><div class="line"></div><div class="line"><span class="comment">## 3、测试程序</span></div><div class="line">``` bash</div><div class="line"><span class="comment">#include &lt;stdio.h&gt;</span></div><div class="line"><span class="comment">#include &lt;stdlib.h&gt;</span></div><div class="line"><span class="comment">#include &lt;unistd.h&gt;</span></div><div class="line"><span class="comment">#include &lt;sys/ioctl.h&gt;</span></div><div class="line"><span class="comment">#include &lt;errno.h&gt;</span></div><div class="line"><span class="comment">#include &lt;fcntl.h&gt;</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="comment">#define DEV_NAME "/dev/lcd12864"</span></div><div class="line"></div><div class="line">int main(int argc, char *argv[])</div><div class="line">&#123;</div><div class="line">	int i;</div><div class="line">	int fd = 0;</div><div class="line">	fd = open(DEV_NAME,O_RDONLY);</div><div class="line">	<span class="keyword">if</span>(fd &lt; 0)</div><div class="line">	&#123;</div><div class="line">		perror(<span class="string">"Open "</span>DEV_NAME<span class="string">"Failed!\n"</span>);</div><div class="line">		<span class="built_in">return</span> -1;</div><div class="line">	&#125;</div><div class="line">	//close(fd);</div><div class="line">	<span class="keyword">while</span>(1);</div><div class="line">	<span class="built_in">return</span> 0;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+        <h2 id="1、LCD12864串口驱动程序"><a href="#1、LCD12864串口驱动程序" class="headerlink" title="1、LCD12864串口驱动程序"></a>1、LCD12864串口驱动程序</h2><pre><code class="bash"><span class="comment">#include &lt;linux/module.h&gt;</span>
+<span class="comment">#include &lt;linux/kernel.h&gt;</span>
+<span class="comment">#include &lt;linux/types.h&gt;</span>
+<span class="comment">#include &lt;linux/sched.h&gt;</span>
+<span class="comment">#include &lt;linux/init.h&gt;</span>
+<span class="comment">#include &lt;linux/fs.h&gt;</span>
+<span class="comment">#include &lt;linux/ioctl.h&gt;</span>
+<span class="comment">#include &lt;linux/delay.h&gt;</span>
+<span class="comment">#include &lt;linux/bcd.h&gt;</span>
+<span class="comment">#include &lt;linux/capability.h&gt;</span>
+<span class="comment">#include &lt;linux/rtc.h&gt;</span>
+<span class="comment">#include &lt;linux/cdev.h&gt;</span>
+<span class="comment">#include &lt;linux/device.h&gt;</span>
+<span class="comment">#include &lt;linux/gpio.h&gt;</span>
+<span class="comment">#include &lt;linux/version.h&gt;</span>
+
+<span class="comment">#include &lt;../arch/arm/mach-mx28/mx28_pins.h&gt;</span>
+
+<span class="comment">#define DEVICE_NAME "LCD12864"</span>
+
+<span class="comment">#define LCD_SID 57</span>
+<span class="comment">#define LCD_CS 39</span>
+<span class="comment">#define LCD_CLK 56</span>
+
+<span class="comment">#define LCD_IOC_MAGIC 'L'</span>
+<span class="comment">#define LCD_CMD _IO(LCD_IOC_MAGIC,0)</span>
+<span class="comment">#define LCD_LINE _IO(LCD_IOC_MAGIC,1)</span>
+<span class="comment">#define LCD_ROW _IO(LCD_IOC_MAGIC,2)</span>
+<span class="comment">#define LCD_DATA _IO(LCD_IOC_MAGIC,3)</span>
+
+<span class="comment">#define LCD_IOCTL_MAXNR 4</span>
+
+
+<span class="comment">#define LCD_SID_H gpio_direction_output(LCD_SID,1);</span>
+<span class="comment">#define LCD_SID_L gpio_direction_output(LCD_SID,0);</span>
+<span class="comment">#define LCD_CS_H gpio_direction_output(LCD_CS,1);</span>
+<span class="comment">#define LCD_CS_L gpio_direction_output(LCD_CS,0);</span>
+<span class="comment">#define LCD_CLK_H gpio_direction_output(LCD_CLK,1);</span>
+<span class="comment">#define LCD_CLK_L gpio_direction_output(LCD_CLK,0);</span>
+
+static int major,minor;
+struct cdev *lcd;
+static dev_t devno;
+static struct class *lcd_class;
+static int lcd_open(struct inode *inode,struct file *filp);
+static int lcd_release(struct inode *inode,struct file *filp);
+static int lcd_ioctl(struct inode *inode,struct file *flip,unsigned int <span class="built_in">command</span>,unsigned long arg);
+static int lcd_init(void);
+static void lcd_exit(void);
+
+struct file_operations lcd_fops ={
+    .owner = THIS_MODULE,
+    .open =lcd_open,
+    .release = lcd_release,
+<span class="comment">#if LINUX_VERSION_CODE &gt;= KERNEL_VERSION(2,6,36)</span>
+    .unlocked_ioctl = lcd_ioctl,
+<span class="comment">#else</span>
+    .ioctl = lcd_ioctl
+<span class="comment">#endif</span>
+};
+
+static void lcd_sendbyte(unsigned char byte)
+{
+    unsigned int i=0;
+    <span class="keyword">for</span>(i=0;i&lt;8;i++)
+    {
+        LCD_CLK_L;
+        udelay(1);
+        <span class="keyword">if</span>(byte &amp; 0x80)
+        {LCD_SID_H;}
+        <span class="keyword">else</span>
+        {LCD_SID_L;}
+        LCD_CLK_H;
+        udelay(1);
+        LCD_CLK_L;
+        udelay(1);
+        byte = byte &lt;&lt; 1;
+    }
+}
+
+static void lcd12864_write_cmd(unsigned char cmd)
+{
+    LCD_CS_H;
+    lcd_sendbyte(0xf8);
+    lcd_sendbyte(0xf0 &amp; cmd);
+    lcd_sendbyte(0xf0 &amp; (cmd &lt;&lt; 4));
+    LCD_CS_L;
+    mdelay(10);
+}
+
+static void lcd12864_write_dat(unsigned char dat)
+{
+
+    LCD_CS_H;
+    lcd_sendbyte(0xfa);
+    lcd_sendbyte(0xf0 &amp; dat);
+    lcd_sendbyte(0xf0 &amp; (dat &lt;&lt; 4));
+    LCD_CS_L;
+    mdelay(10);
+}
+static void lcd12864_init(void)
+{
+    lcd12864_write_cmd(0x30);
+    lcd12864_write_cmd(0x02);
+    lcd12864_write_cmd(0x06);
+    lcd12864_write_cmd(0x0c);
+    lcd12864_write_cmd(0x01);
+    lcd12864_write_cmd(0x80);
+
+}
+static void lcd12864_clean(void)
+{
+    lcd12864_write_cmd(0x01);
+}
+static void lcd_string(unsigned char x,unsigned char y,unsigned char *String)
+{
+    <span class="keyword">if</span>((x &lt; 8)&amp;&amp;(y &lt; 4))
+    {
+        switch(y)
+        {
+            <span class="keyword">case</span> 0:
+                lcd12864_write_cmd(0x80|0x00|x);
+                <span class="built_in">break</span>;
+            <span class="keyword">case</span> 1:
+                lcd12864_write_cmd(0x80|0x10|x);
+                <span class="built_in">break</span>;
+            <span class="keyword">case</span> 2:
+                lcd12864_write_cmd(0x80|0x08|x);
+                <span class="built_in">break</span>;
+            <span class="keyword">case</span> 3:
+                lcd12864_write_cmd(0x80|0x18|x);
+                <span class="built_in">break</span>;
+        }
+        <span class="keyword">while</span>(*String !=<span class="string">'\0'</span>)
+        {
+            lcd12864_write_dat(*String);
+            mdelay(50);
+            String++;
+        }
+    }
+
+}    
+static int lcd_open(struct inode *inode,struct file *file)
+{
+    try_module_get(THIS_MODULE);
+    lcd12864_init();//init lcd12864 cmd 
+    //init lcd12864 background
+    lcd_string(0,0,<span class="string">"Linux Chardev"</span>);
+    lcd_string(0,1,<span class="string">"LCD12864 Device"</span>);
+    lcd_string(0,2,<span class="string">"Initialization"</span>);
+    lcd_string(0,3,<span class="string">"Author:Jason"</span>);
+    <span class="built_in">return</span> 0;
+}
+static int lcd_release(struct inode *inode,struct file *file)
+{
+    module_put(THIS_MODULE);
+    lcd12864_clean();//close lcd12864 background
+    lcd_string(0,0,<span class="string">"LCD12864 Device"</span>);
+    lcd_string(0,1,<span class="string">"Already"</span>);
+    lcd_string(0,2,<span class="string">"Closed"</span>);
+    <span class="built_in">return</span> 0;
+}
+
+
+<span class="comment">#if LINUX_VERSION_CODE &gt;= KERNEL_VERSION(2,6,36)</span>
+int lcd_ioctl(struct file *filp,unsigned int cmd,unsigned long arg)
+<span class="comment">#else</span>
+static int lcd_ioctl(struct inode *inode,struct file *file,unsigned int cmd,unsigned long arg)
+<span class="comment">#endif</span>
+{
+    <span class="keyword">if</span>(_IOC_TYPE(cmd) != LCD_IOC_MAGIC)
+    {
+        <span class="built_in">return</span> -ENOTTY;
+    }
+    <span class="keyword">if</span>(_IOC_NR(cmd) &gt; LCD_IOCTL_MAXNR)
+    {
+        <span class="built_in">return</span> -ENOTTY;
+    }
+
+    switch(cmd)
+    {
+        <span class="keyword">case</span> LCD_LINE:  //待开发
+                <span class="built_in">break</span>;
+        <span class="keyword">case</span> LCD_ROW:   //待开发
+                <span class="built_in">break</span>;
+        <span class="keyword">case</span> LCD_CMD:   //待开发
+                <span class="built_in">break</span>;
+        <span class="keyword">case</span> LCD_DATA:  //待开发
+                <span class="built_in">break</span>;
+    }
+    <span class="built_in">return</span> 0;
+
+
+}
+static int __init lcd_init(void)
+{
+    int ret=0;
+
+    gpio_free(LCD_SID);
+    gpio_free(LCD_CS);
+    gpio_free(LCD_CLK);
+    ret += gpio_request(LCD_SID,<span class="string">"SID"</span>);
+    ret += gpio_request(LCD_CS,<span class="string">"CS"</span>);
+    ret += gpio_request(LCD_CLK,<span class="string">"CLK"</span>);
+    <span class="keyword">if</span>(ret)
+    {
+        printk(<span class="string">"request gpio failed "</span>);
+        <span class="built_in">return</span> -1;
+    }
+    ret = 0;
+    ret = alloc_chrdev_region(&amp;devno,minor,1,<span class="string">"LCD12864"</span>);
+    major = MAJOR(devno);
+    <span class="keyword">if</span>(ret &lt; 0)
+    {
+        printk(KERN_ERR<span class="string">"cannot get major %d\n"</span>,major);
+        <span class="built_in">return</span> -1;
+    }
+    lcd = cdev_alloc();
+    <span class="keyword">if</span>(lcd !=NULL)
+    {
+        cdev_init(lcd,&amp;lcd_fops);
+        lcd-&gt;owner = THIS_MODULE;
+        <span class="keyword">if</span>(cdev_add(lcd,devno,1) != 0)
+        {
+            printk(KERN_ERR<span class="string">"add cdev error! \n"</span>);
+            goto error;
+        }
+    }    
+    <span class="keyword">else</span>
+    {
+        printk(KERN_ERR<span class="string">"cdev_alloc error! \n"</span>);
+        <span class="built_in">return</span> -1;
+    }
+
+    lcd_class = class_create(THIS_MODULE,<span class="string">"lcd_class"</span>);
+    <span class="keyword">if</span>(IS_ERR(lcd_class))
+    {
+        printk(KERN_INFO<span class="string">"create class error!\n"</span>);
+        <span class="built_in">return</span> -1;
+    }
+    device_create(lcd_class,NULL,devno,NULL,<span class="string">"lcd12864"</span>);
+    <span class="built_in">return</span> 0;
+error:
+    unregister_chrdev_region(devno,1);
+    <span class="built_in">return</span> ret;
+
+}
+static void __exit lcd_exit(void)
+{
+    cdev_del(lcd);
+    unregister_chrdev_region(devno,1);
+    device_destroy(lcd_class,devno);
+    class_destroy(lcd_class);
+}
+
+module_init(lcd_init);
+module_exit(lcd_exit);
+
+MODULE_LICENSE(<span class="string">"GPL"</span>);
+MODULE_AUTHOR(<span class="string">"ideask,ideask@ideask.cf"</span>);
+</code></pre>
+<h2 id="2、Makefile"><a href="#2、Makefile" class="headerlink" title="2、Makefile"></a>2、Makefile</h2><pre><code class="bash">CC = arm-fsl-linux-gnueabi-gcc
+
+ifneq ($(KERNELRELEASE),)
+obj-m := lcd.o
+<span class="keyword">else</span>
+PWD :=$(shell <span class="built_in">pwd</span>)
+KVER :=$(shell uname -r)
+KDIR :=/root/linux-2.6.35.3
+
+all:
+    $(MAKE) -C $(KDIR) M=$(PWD) modules
+clean:
+    rm -rf .*.cmd *.o *.mod.c *.ko .tmp_versions
+endif
+</code></pre>
+<h2 id="3、测试程序"><a href="#3、测试程序" class="headerlink" title="3、测试程序"></a>3、测试程序</h2><pre><code class="bash"><span class="comment">#include &lt;stdio.h&gt;</span>
+<span class="comment">#include &lt;stdlib.h&gt;</span>
+<span class="comment">#include &lt;unistd.h&gt;</span>
+<span class="comment">#include &lt;sys/ioctl.h&gt;</span>
+<span class="comment">#include &lt;errno.h&gt;</span>
+<span class="comment">#include &lt;fcntl.h&gt;</span>
+
+
+<span class="comment">#define DEV_NAME "/dev/lcd12864"</span>
+
+int main(int argc, char *argv[])
+{
+    int i;
+    int fd = 0;
+    fd = open(DEV_NAME,O_RDONLY);
+    <span class="keyword">if</span>(fd &lt; 0)
+    {
+        perror(<span class="string">"Open "</span>DEV_NAME<span class="string">"Failed!\n"</span>);
+        <span class="built_in">return</span> -1;
+    }
+    //close(fd);
+    <span class="keyword">while</span>(1);
+    <span class="built_in">return</span> 0;
+}
+</code></pre>
+
       
     </div>
 
@@ -707,7 +1023,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1、LCD12864串口驱动程序"><span class="nav-number">1.</span> <span class="nav-text">1、LCD12864串口驱动程序</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1、LCD12864串口驱动程序"><span class="nav-number">1.</span> <span class="nav-text">1、LCD12864串口驱动程序</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2、Makefile"><span class="nav-number">2.</span> <span class="nav-text">2、Makefile</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3、测试程序"><span class="nav-number">3.</span> <span class="nav-text">3、测试程序</span></a></li></ol></div>
             
 
           </div>
