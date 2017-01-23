@@ -85,18 +85,42 @@
 
 
 <meta name="description" content="gdb移植和使用方法
-1、gdb移植123456789#./configure --target=arm-linux --host=arm-linux#make CC=/usr/local/arm/2.95.3/bin/arm-linux-gcc``` ## 2、gdb使用### 2.1、gdb网络调试先nfs挂载先开发板：``` bashgdbserver [电脑的IP地址：端口号] [待调试的">
+1、gdb移植#./configure --target=arm-linux --host=arm-linux
+#make CC=/usr/local/arm/2.95.3/bin/arm-linux-gcc
+
+2、gdb使用2.1、gdb网络调试先nfs挂载先开发板：
+gdbserver [电脑的IP地址：端口号] [待调试的程序]
+
+电脑：
+gdb
+target remo">
 <meta property="og:type" content="article">
 <meta property="og:title" content="gdb移植和使用方法">
-<meta property="og:url" content="http://yoursite.com/2017/01/23/gdb-transplant/index.html">
+<meta property="og:url" content="http://ideask.cf/2017/01/23/gdb-transplant/index.html">
 <meta property="og:site_name" content="Jason Lin">
 <meta property="og:description" content="gdb移植和使用方法
-1、gdb移植123456789#./configure --target=arm-linux --host=arm-linux#make CC=/usr/local/arm/2.95.3/bin/arm-linux-gcc``` ## 2、gdb使用### 2.1、gdb网络调试先nfs挂载先开发板：``` bashgdbserver [电脑的IP地址：端口号] [待调试的">
-<meta property="og:updated_time" content="2017-01-23T03:21:00.627Z">
+1、gdb移植#./configure --target=arm-linux --host=arm-linux
+#make CC=/usr/local/arm/2.95.3/bin/arm-linux-gcc
+
+2、gdb使用2.1、gdb网络调试先nfs挂载先开发板：
+gdbserver [电脑的IP地址：端口号] [待调试的程序]
+
+电脑：
+gdb
+target remo">
+<meta property="og:updated_time" content="2017-01-23T03:27:09.059Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="gdb移植和使用方法">
 <meta name="twitter:description" content="gdb移植和使用方法
-1、gdb移植123456789#./configure --target=arm-linux --host=arm-linux#make CC=/usr/local/arm/2.95.3/bin/arm-linux-gcc``` ## 2、gdb使用### 2.1、gdb网络调试先nfs挂载先开发板：``` bashgdbserver [电脑的IP地址：端口号] [待调试的">
+1、gdb移植#./configure --target=arm-linux --host=arm-linux
+#make CC=/usr/local/arm/2.95.3/bin/arm-linux-gcc
+
+2、gdb使用2.1、gdb网络调试先nfs挂载先开发板：
+gdbserver [电脑的IP地址：端口号] [待调试的程序]
+
+电脑：
+gdb
+target remo">
 
 
 
@@ -124,7 +148,7 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2017/01/23/gdb-transplant/"/>
+  <link rel="canonical" href="http://ideask.cf/2017/01/23/gdb-transplant/"/>
 
 
 
@@ -315,7 +339,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/01/23/gdb-transplant/">
+  <link itemprop="mainEntityOfPage" href="http://ideask.cf/2017/01/23/gdb-transplant/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="Jason Lin">
@@ -433,7 +457,12 @@
 
       
         <h1 id="gdb移植和使用方法"><a href="#gdb移植和使用方法" class="headerlink" title="gdb移植和使用方法"></a>gdb移植和使用方法</h1><hr>
-<h2 id="1、gdb移植"><a href="#1、gdb移植" class="headerlink" title="1、gdb移植"></a>1、gdb移植</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#./configure --target=arm-linux --host=arm-linux</span></div><div class="line"><span class="comment">#make CC=/usr/local/arm/2.95.3/bin/arm-linux-gcc</span></div><div class="line">``` </div><div class="line"><span class="comment">## 2、gdb使用</span></div><div class="line"><span class="comment">### 2.1、gdb网络调试</span></div><div class="line">先nfs挂载先</div><div class="line">开发板：</div><div class="line">``` bash</div><div class="line">gdbserver [电脑的IP地址：端口号] [待调试的程序]</div></pre></td></tr></table></figure>
+<h2 id="1、gdb移植"><a href="#1、gdb移植" class="headerlink" title="1、gdb移植"></a>1、gdb移植</h2><pre><code class="bash"><span class="comment">#./configure --target=arm-linux --host=arm-linux</span>
+<span class="comment">#make CC=/usr/local/arm/2.95.3/bin/arm-linux-gcc</span>
+</code></pre>
+<h2 id="2、gdb使用"><a href="#2、gdb使用" class="headerlink" title="2、gdb使用"></a>2、gdb使用</h2><h3 id="2-1、gdb网络调试"><a href="#2-1、gdb网络调试" class="headerlink" title="2.1、gdb网络调试"></a>2.1、gdb网络调试</h3><p>先nfs挂载先<br>开发板：</p>
+<pre><code class="bash">gdbserver [电脑的IP地址：端口号] [待调试的程序]
+</code></pre>
 <p>电脑：</p>
 <pre><code class="bash">gdb
 target remote [开发板IP地址：端口号]
@@ -533,7 +562,7 @@ target remote /dev/ttyS0
         <div class="ds-share flat" data-thread-key="2017/01/23/gdb-transplant/"
      data-title="gdb移植和使用方法"
      data-content=""
-     data-url="http://yoursite.com/2017/01/23/gdb-transplant/">
+     data-url="http://ideask.cf/2017/01/23/gdb-transplant/">
   <div class="ds-share-inline">
     <ul  class="ds-share-icons-16">
 
@@ -561,7 +590,7 @@ target remote /dev/ttyS0
   <div class="comments" id="comments">
     
       <div class="ds-thread" data-thread-key="2017/01/23/gdb-transplant/"
-           data-title="gdb移植和使用方法" data-url="http://yoursite.com/2017/01/23/gdb-transplant/">
+           data-title="gdb移植和使用方法" data-url="http://ideask.cf/2017/01/23/gdb-transplant/">
       </div>
     
   </div>
@@ -722,7 +751,7 @@ target remote /dev/ttyS0
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#gdb移植和使用方法"><span class="nav-number">1.</span> <span class="nav-text">gdb移植和使用方法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1、gdb移植"><span class="nav-number">1.1.</span> <span class="nav-text">1、gdb移植</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2、gdb串口调试"><span class="nav-number">1.1.1.</span> <span class="nav-text">2.2、gdb串口调试</span></a></li></ol></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#gdb移植和使用方法"><span class="nav-number">1.</span> <span class="nav-text">gdb移植和使用方法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1、gdb移植"><span class="nav-number">1.1.</span> <span class="nav-text">1、gdb移植</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2、gdb使用"><span class="nav-number">1.2.</span> <span class="nav-text">2、gdb使用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1、gdb网络调试"><span class="nav-number">1.2.1.</span> <span class="nav-text">2.1、gdb网络调试</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2、gdb串口调试"><span class="nav-number">1.2.2.</span> <span class="nav-text">2.2、gdb串口调试</span></a></li></ol></li></ol></li></ol></div>
             
 
           </div>

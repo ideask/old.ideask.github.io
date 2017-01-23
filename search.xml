@@ -5,7 +5,7 @@
     
     <entry>
       <title><![CDATA[嵌入式linux系统开发学习路径]]></title>
-      <url>http://yoursite.com/2017/01/23/embedded-system-learning/</url>
+      <url>http://ideask.cf/2017/01/23/embedded-system-learning/</url>
       <content type="html"><![CDATA[<h1 id="嵌入式linux系统开发学习路径"><a href="#嵌入式linux系统开发学习路径" class="headerlink" title="嵌入式linux系统开发学习路径"></a>嵌入式linux系统开发学习路径</h1><hr>
 <p>　   一：C语言<br>　　嵌入式Linux工程师的学习需要具备一定的C语言基础，C语言是嵌入式领域最重要也是最主要的编程语言，通过大量编程实例重点理解C语言的基础编程以及高级编程知识。包括：基本数据类型、数组、指针、结构体、链表、文件操作、队列、栈等。</p>
 <p>　　二：Linux基础<br>　　Linux操作系统的概念、安装方法，详细了解Linux下的目录结构、基本命令、编辑器VI ,编译器GCC，调试器GDB和 Make 项目管理工具, Shell Makefile脚本编写等知识，嵌入式开发环境的搭建。</p>
@@ -20,9 +20,14 @@
     
     <entry>
       <title><![CDATA[gdb移植和使用方法]]></title>
-      <url>http://yoursite.com/2017/01/23/gdb-transplant/</url>
+      <url>http://ideask.cf/2017/01/23/gdb-transplant/</url>
       <content type="html"><![CDATA[<h1 id="gdb移植和使用方法"><a href="#gdb移植和使用方法" class="headerlink" title="gdb移植和使用方法"></a>gdb移植和使用方法</h1><hr>
-<h2 id="1、gdb移植"><a href="#1、gdb移植" class="headerlink" title="1、gdb移植"></a>1、gdb移植</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#./configure --target=arm-linux --host=arm-linux</span></div><div class="line"><span class="comment">#make CC=/usr/local/arm/2.95.3/bin/arm-linux-gcc</span></div><div class="line">``` </div><div class="line"><span class="comment">## 2、gdb使用</span></div><div class="line"><span class="comment">### 2.1、gdb网络调试</span></div><div class="line">先nfs挂载先</div><div class="line">开发板：</div><div class="line">``` bash</div><div class="line">gdbserver [电脑的IP地址：端口号] [待调试的程序]</div></pre></td></tr></table></figure>
+<h2 id="1、gdb移植"><a href="#1、gdb移植" class="headerlink" title="1、gdb移植"></a>1、gdb移植</h2><pre><code class="bash"><span class="comment">#./configure --target=arm-linux --host=arm-linux</span>
+<span class="comment">#make CC=/usr/local/arm/2.95.3/bin/arm-linux-gcc</span>
+</code></pre>
+<h2 id="2、gdb使用"><a href="#2、gdb使用" class="headerlink" title="2、gdb使用"></a>2、gdb使用</h2><h3 id="2-1、gdb网络调试"><a href="#2-1、gdb网络调试" class="headerlink" title="2.1、gdb网络调试"></a>2.1、gdb网络调试</h3><p>先nfs挂载先<br>开发板：</p>
+<pre><code class="bash">gdbserver [电脑的IP地址：端口号] [待调试的程序]
+</code></pre>
 <p>电脑：</p>
 <pre><code class="bash">gdb
 target remote [开发板IP地址：端口号]
@@ -44,7 +49,7 @@ target remote /dev/ttyS0
     
     <entry>
       <title><![CDATA[gcc静态编译和动态编译笔记]]></title>
-      <url>http://yoursite.com/2017/01/23/gcc-static-dynamic/</url>
+      <url>http://ideask.cf/2017/01/23/gcc-static-dynamic/</url>
       <content type="html"><![CDATA[<h1 id="gcc静态编译与动态编译"><a href="#gcc静态编译与动态编译" class="headerlink" title="gcc静态编译与动态编译"></a>gcc静态编译与动态编译</h1><h2 id="1、静态库"><a href="#1、静态库" class="headerlink" title="1、静态库"></a>1、静态库</h2><p>gcc -c 编译出目标文件 ，而不是直接gcc  直接gcc系统会直接链接目标文件，但是由于缺少main函数所以不成功<br>ar归档工具生成静态库<br>-c 建立备存文件<br>-r 将文件插入备存文件<br>-v 显示执行过程<br>-s 无论ar命令是否修改了库内容都强制重新生成库符号表<br>ar rcvs [libpow.a静态库文件] [unsgn_pow.o 目标文件]<br>将目标文件集合在一起</p>
 <h2 id="2、动态库"><a href="#2、动态库" class="headerlink" title="2、动态库"></a>2、动态库</h2><p>gcc -c -fPIC -Wall unsgn_pow.c<br>gcc -shared -o libpow.so unsgn_pow.o<br>gcc -o pow_test pow_test.c -L . -lpow</p>
 ]]></content>
@@ -52,7 +57,7 @@ target remote /dev/ttyS0
     
     <entry>
       <title><![CDATA[vim笔记]]></title>
-      <url>http://yoursite.com/2017/01/23/vim-note/</url>
+      <url>http://ideask.cf/2017/01/23/vim-note/</url>
       <content type="html"><![CDATA[<h1 id="VIM工具常用快捷键"><a href="#VIM工具常用快捷键" class="headerlink" title="VIM工具常用快捷键"></a>VIM工具常用快捷键</h1><hr>
 <p>G 到文件最底部<br>gg 到文件顶部<br>V  行复制框选<br>v  字符复制框选<br>ctrl+v矩形框选</p>
 <p>[数字]G  跳到多少行<br>[数字]Enter  向下跳多少行</p>
@@ -67,7 +72,7 @@ target remote /dev/ttyS0
     
     <entry>
       <title><![CDATA[LCD12864串口驱动udev]]></title>
-      <url>http://yoursite.com/2017/01/22/12864-udev-char-device/</url>
+      <url>http://ideask.cf/2017/01/22/12864-udev-char-device/</url>
       <content type="html"><![CDATA[<h2 id="1、LCD12864串口驱动程序"><a href="#1、LCD12864串口驱动程序" class="headerlink" title="1、LCD12864串口驱动程序"></a>1、LCD12864串口驱动程序</h2><pre><code class="bash"><span class="comment">#include &lt;linux/module.h&gt;</span>
 <span class="comment">#include &lt;linux/kernel.h&gt;</span>
 <span class="comment">#include &lt;linux/types.h&gt;</span>
@@ -374,7 +379,7 @@ int main(int argc, char *argv[])
     
     <entry>
       <title><![CDATA[ioctl方式操作LED udev驱动模板]]></title>
-      <url>http://yoursite.com/2017/01/22/ioctl-led-udev-char-device/</url>
+      <url>http://ideask.cf/2017/01/22/ioctl-led-udev-char-device/</url>
       <content type="html"><![CDATA[<h2 id="1、驱动源码"><a href="#1、驱动源码" class="headerlink" title="1、驱动源码"></a>1、驱动源码</h2><pre><code class="bash"><span class="comment">#include &lt;linux/init.h&gt;</span>
 <span class="comment">#include &lt;linux/module.h&gt;</span>
 <span class="comment">#include &lt;linux/fs.h&gt;</span>
@@ -567,7 +572,7 @@ int main(int argc, char *argv[])
     
     <entry>
       <title><![CDATA[udev字符设备的程序]]></title>
-      <url>http://yoursite.com/2017/01/22/udev-char-device/</url>
+      <url>http://ideask.cf/2017/01/22/udev-char-device/</url>
       <content type="html"><![CDATA[<h2 id="支持udev的空壳程序"><a href="#支持udev的空壳程序" class="headerlink" title="支持udev的空壳程序"></a>支持udev的空壳程序</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#include &lt;linux/init.h&gt;</span></div><div class="line"><span class="comment">#include &lt;linux/module.h&gt;</span></div><div class="line"><span class="comment">#include &lt;linux/fs.h&gt;</span></div><div class="line"><span class="comment">#include &lt;linux/cdev.h&gt;</span></div><div class="line"><span class="comment">#include &lt;linux/device.h&gt;</span></div><div class="line"></div><div class="line"> static int major = 232; /* 静态设备号方式的默认值 */</div><div class="line"> static int minor = 0; /* 静态设备号方式的默认值 */</div><div class="line"> module_param(major, int, S_IRUGO);</div><div class="line"> module_param(minor, int, S_IRUGO);</div><div class="line"></div><div class="line"> struct cdev *char_null_udev; /* cdev 数据结构 */</div><div class="line"> static dev_t devno; /* 设备编号 */</div><div class="line"> static struct class *char_null_udev_class;</div><div class="line"></div><div class="line"> <span class="comment">#define DEVICE_NAME "char_null_udev"</span></div><div class="line"></div><div class="line"> static int __init char_null_udev_init(void)</div><div class="line"> &#123;</div><div class="line">	 int ret;</div><div class="line"></div><div class="line">	 <span class="keyword">if</span> (major &gt; 0) </div><div class="line">	 &#123; /* 静态设备号 */</div><div class="line">		devno = MKDEV(major, minor);</div><div class="line">		ret=register_chrdev_region(devno,1,<span class="string">"char_null_udev"</span>);</div><div class="line">	 &#125; </div><div class="line">	 <span class="keyword">else</span> </div><div class="line">	 &#123; /* 动态设备号 */</div><div class="line">		ret=alloc_chrdev_region(&amp;devno,minor,1,<span class="string">"char_null_udev"</span>); /* 从系统获取主设备号 */</div><div class="line">		major = MAJOR(devno);</div><div class="line">	 &#125;</div><div class="line">	 <span class="keyword">if</span> (ret &lt; 0)</div><div class="line">	 &#123;</div><div class="line">		printk(KERN_ERR <span class="string">"cannot get major %d \n"</span>, major);</div><div class="line">		<span class="built_in">return</span> -1;</div><div class="line">	 &#125;</div><div class="line"></div><div class="line">	 char_null_udev = cdev_alloc(); /* 分配 char_null_udev 结构 */</div><div class="line">	 <span class="keyword">if</span> (char_null_udev != NULL) </div><div class="line">	 &#123;</div><div class="line">		 cdev_init(char_null_udev, &amp;major); /* 初始化 char_null_udev 结构 */</div><div class="line">		 char_null_udev-&gt;owner = THIS_MODULE;</div><div class="line">		<span class="keyword">if</span> (cdev_add(char_null_udev, devno, 1) != 0) </div><div class="line">		&#123; /* 增加 char_null_udev 到系统中 */</div><div class="line">			printk(KERN_ERR <span class="string">"add cdev error!\n"</span>);</div><div class="line">			goto error;</div><div class="line">		&#125;</div><div class="line">	 &#125; </div><div class="line">	 <span class="keyword">else</span> &#123;</div><div class="line">		printk(KERN_ERR <span class="string">"cdev_alloc error!\n"</span>);</div><div class="line">		<span class="built_in">return</span> -1;</div><div class="line">		&#125;</div><div class="line"></div><div class="line">	//在/sys/class/下创建 char_null_udev_class 目录</div><div class="line">	char_null_udev_class = class_create(THIS_MODULE, <span class="string">"char_null_udev_class"</span>);</div><div class="line">	<span class="keyword">if</span> (IS_ERR(char_null_udev_class)) </div><div class="line">	&#123;</div><div class="line">		printk(KERN_INFO <span class="string">"create class error\n"</span>);</div><div class="line">		<span class="built_in">return</span> -1;</div><div class="line">	&#125;</div><div class="line">	/* 将创建/dev/char_null_udev0 文件 */</div><div class="line">	//device_create(char_null_udev_class, NULL, devno, NULL, <span class="string">"char_null_udev"</span> <span class="string">"%d"</span>,MINOR(devno));</div><div class="line">	/* 将创建/dev/char_null_udev 文件 */</div><div class="line">	device_create(char_null_udev_class, NULL, devno, NULL, <span class="string">"char_null_udev"</span>);</div><div class="line"></div><div class="line">	<span class="built_in">return</span> 0;</div><div class="line"></div><div class="line">	error:</div><div class="line">		unregister_chrdev_region(devno, 1); /* 释放已经获得的设备号 */</div><div class="line">	<span class="built_in">return</span> ret;</div><div class="line"> &#125;</div><div class="line"></div><div class="line"> static void __exit char_null_udev_exit(void)</div><div class="line"> &#123;</div><div class="line">	device_destroy(char_null_udev_class, devno);</div><div class="line">	class_destroy(char_null_udev_class);</div><div class="line">	cdev_del(char_null_udev); /* 移除字符设备 */</div><div class="line">	unregister_chrdev_region(devno, 1); /* 释放设备号 */</div><div class="line"> &#125;</div><div class="line"></div><div class="line"> module_init(char_null_udev_init);</div><div class="line"> module_exit(char_null_udev_exit);</div><div class="line"></div><div class="line"> MODULE_LICENSE(<span class="string">"GPL"</span>);</div><div class="line"> MODULE_AUTHOR(<span class="string">"Jason"</span>);</div></pre></td></tr></table></figure>
 <h2 id="程序分析"><a href="#程序分析" class="headerlink" title="程序分析:"></a>程序分析:</h2><p> 第(1)~(5)行是所需要的头文件；<br> 第(7)~(8)行用变量设定设备的主次设备号；<br> 第(9)~(10)行是模块参数，驱动支持加载的时候指定主次设备号；<br> 第(12)行定义一个 cdev 全局变量 char_null_udev；<br> 第(13)行的 dev_t devno 用来保存设备编号；<br> 第(14)行是定义 class 结构；<br> 第(16)行定义设备名为 char_null_udev；<br> 第(18)~(71)是模块的初始化代码，行完成设备注册以及设备节点创建：<br> 第(22)~(31)行，根据 major 变量，可以静态或者动态获取设备编号：如果是设<br>备号，需要用 MKDEV 构建成设备编号（行(24)）； 如果是动态获取设备编号，<br>还需在(29)行获取主设备号；<br> 第(38)行通过 cdev_alloc 分配一个 cdev 数据结构 char_null_udev；<br> 如果分配成功，则在(41)~(42)行进行初始化；注意 cdev_init()的第 2 个参数，<br>本应该传入驱动操作方法 fops 的地址，但是没有实现 fops，就传入一个有效<br>地址，防止运行错误；<br> 第(43)行通过 cdev_add 将 char_null_udev 添加到系统中，如果添加失败，则需<br>要释放已经获取的设备号并退出；<br> 第(55)行在 sysfs 的 class 目录下创建 char_null_udev_class 目录；<br> 第(62)或(64)行是在 sysfs 系统中创建设备节点；<br> 第(73)~(79)是模块的退出代码，完成资源释放工作：<br> 第(75)行删除 char_null_uedv 结构；<br> 第(78)行释放设备号；<br> 第(77)行删除 sysfs 中的设备节点；<br> 第(76)行销毁 sysfs 中的 class。</p>
 ]]></content>
@@ -575,7 +580,7 @@ int main(int argc, char *argv[])
     
     <entry>
       <title><![CDATA[简单的字符设备驱动指南]]></title>
-      <url>http://yoursite.com/2017/01/22/char-device/</url>
+      <url>http://ideask.cf/2017/01/22/char-device/</url>
       <content type="html"><![CDATA[<h2 id="1、头文件"><a href="#1、头文件" class="headerlink" title="1、头文件"></a>1、头文件</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#include &lt;linux/module.h&gt;  </span></div><div class="line"><span class="comment">#include &lt;linux/init.h&gt;是必不可少的。</span></div></pre></td></tr></table></figure>
 <h2 id="2、模块初始化函数"><a href="#2、模块初始化函数" class="headerlink" title="2、模块初始化函数"></a>2、模块初始化函数</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">static int __init module_init_func(void)</div><div class="line">&#123;</div><div class="line">初始化代码</div><div class="line">&#125;</div><div class="line">module_init(module_init_func);</div></pre></td></tr></table></figure>
 <h2 id="3、模块退出函数"><a href="#3、模块退出函数" class="headerlink" title="3、模块退出函数"></a>3、模块退出函数</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">static void __exit module_exit_func(void)</div><div class="line">&#123;</div><div class="line">模块退出代码</div><div class="line">&#125;</div><div class="line">module_exit(module_exit_func);</div></pre></td></tr></table></figure>
@@ -590,13 +595,13 @@ int main(int argc, char *argv[])
     
     <entry>
       <title><![CDATA[IDEASK team building]]></title>
-      <url>http://yoursite.com/2017/01/21/IDEASK-team-building/</url>
+      <url>http://ideask.cf/2017/01/21/IDEASK-team-building/</url>
       <content type="html"></content>
     </entry>
     
     <entry>
       <title><![CDATA[Hello World]]></title>
-      <url>http://yoursite.com/2017/01/21/hello-world/</url>
+      <url>http://ideask.cf/2017/01/21/hello-world/</url>
       <content type="html"><![CDATA[<p>Welcome to <a href="https://hexo.io/" target="_blank" rel="external">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="external">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="external">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="external">GitHub</a>.</p>
 <h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo new <span class="string">"My New Post"</span></div></pre></td></tr></table></figure>
 <p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="external">Writing</a></p>
