@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="gcc笔记," />
+  <meta name="keywords" content="体系架构," />
 
 
 
@@ -84,19 +84,35 @@
 
 
 
-<meta name="description" content="gcc静态编译与动态编译1、静态库gcc -c 编译出目标文件 ，而不是直接gcc  直接gcc系统会直接链接目标文件，但是由于缺少main函数所以不成功ar归档工具生成静态库-c 建立备存文件-r 将文件插入备存文件-v 显示执行过程-s 无论ar命令是否修改了库内容都强制重新生成库符号表ar rcvs [libpow.a静态库文件] [unsgn_pow.o 目标文件]将目标文件集合在一起
-2">
+<meta name="description" content="ARM获得当前PC需要PC=PC+8？1、抛出问题为何ARM9和ARM7一样？一个是五级流水线结构，另外一个是三级流水线结构，怎么也是PC=PC+8？ 
+ARM9五级流水线 VS ARM7三级流水线
+对应的映射关系
+2、解析问题先列出ARM9的五级流水线的示例：以uboot中的start.S的最开始的汇编代码为例来进行解释：由反汇编可得：
+00000000 &amp;lt;_start&amp;gt;:
+   0">
 <meta property="og:type" content="article">
-<meta property="og:title" content="gcc静态编译和动态编译笔记">
-<meta property="og:url" content="http://ideask.cf/2017/01/23/gcc-static-dynamic/index.html">
+<meta property="og:title" content="ARM获得当前PC需要PC=PC+8？">
+<meta property="og:url" content="http://ideask.cf/2017/01/26/Pipeline-architecture/index.html">
 <meta property="og:site_name" content="Jason Lin">
-<meta property="og:description" content="gcc静态编译与动态编译1、静态库gcc -c 编译出目标文件 ，而不是直接gcc  直接gcc系统会直接链接目标文件，但是由于缺少main函数所以不成功ar归档工具生成静态库-c 建立备存文件-r 将文件插入备存文件-v 显示执行过程-s 无论ar命令是否修改了库内容都强制重新生成库符号表ar rcvs [libpow.a静态库文件] [unsgn_pow.o 目标文件]将目标文件集合在一起
-2">
-<meta property="og:updated_time" content="2017-01-23T03:12:23.369Z">
+<meta property="og:description" content="ARM获得当前PC需要PC=PC+8？1、抛出问题为何ARM9和ARM7一样？一个是五级流水线结构，另外一个是三级流水线结构，怎么也是PC=PC+8？ 
+ARM9五级流水线 VS ARM7三级流水线
+对应的映射关系
+2、解析问题先列出ARM9的五级流水线的示例：以uboot中的start.S的最开始的汇编代码为例来进行解释：由反汇编可得：
+00000000 &amp;lt;_start&amp;gt;:
+   0">
+<meta property="og:image" content="http://my.csdn.net/uploads/201207/08/1341755975_5410.png">
+<meta property="og:image" content="http://my.csdn.net/uploads/201207/08/1341755957_7798.png">
+<meta property="og:image" content="http://my.csdn.net/uploads/201207/08/1341755941_1321.jpg">
+<meta property="og:updated_time" content="2017-01-26T02:40:28.426Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="gcc静态编译和动态编译笔记">
-<meta name="twitter:description" content="gcc静态编译与动态编译1、静态库gcc -c 编译出目标文件 ，而不是直接gcc  直接gcc系统会直接链接目标文件，但是由于缺少main函数所以不成功ar归档工具生成静态库-c 建立备存文件-r 将文件插入备存文件-v 显示执行过程-s 无论ar命令是否修改了库内容都强制重新生成库符号表ar rcvs [libpow.a静态库文件] [unsgn_pow.o 目标文件]将目标文件集合在一起
-2">
+<meta name="twitter:title" content="ARM获得当前PC需要PC=PC+8？">
+<meta name="twitter:description" content="ARM获得当前PC需要PC=PC+8？1、抛出问题为何ARM9和ARM7一样？一个是五级流水线结构，另外一个是三级流水线结构，怎么也是PC=PC+8？ 
+ARM9五级流水线 VS ARM7三级流水线
+对应的映射关系
+2、解析问题先列出ARM9的五级流水线的示例：以uboot中的start.S的最开始的汇编代码为例来进行解释：由反汇编可得：
+00000000 &amp;lt;_start&amp;gt;:
+   0">
+<meta name="twitter:image" content="http://my.csdn.net/uploads/201207/08/1341755975_5410.png">
 
 
 
@@ -124,13 +140,13 @@
 
 
 
-  <link rel="canonical" href="http://ideask.cf/2017/01/23/gcc-static-dynamic/"/>
+  <link rel="canonical" href="http://ideask.cf/2017/01/26/Pipeline-architecture/"/>
 
 
 
 
 
-  <title> gcc静态编译和动态编译笔记 | Jason Lin </title>
+  <title> ARM获得当前PC需要PC=PC+8？ | Jason Lin </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -315,7 +331,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://ideask.cf/2017/01/23/gcc-static-dynamic/">
+  <link itemprop="mainEntityOfPage" href="http://ideask.cf/2017/01/26/Pipeline-architecture/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="Jason Lin">
@@ -339,7 +355,7 @@
             
             
               
-                gcc静态编译和动态编译笔记
+                ARM获得当前PC需要PC=PC+8？
               
             
           </h1>
@@ -354,8 +370,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-01-23T11:08:43+08:00">
-                2017-01-23
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-01-26T10:23:24+08:00">
+                2017-01-26
               </time>
 			  </span>
 			
@@ -363,8 +379,8 @@
     
 			<span>更新于</span>
 			<time>
-			2017-01-23
-			11:08:43
+			2017-01-26
+			10:23:24
 			</time>
 			</span>
             
@@ -387,8 +403,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/gcc笔记/" itemprop="url" rel="index">
-                    <span itemprop="name">gcc笔记</span>
+                  <a href="/categories/ARM体系架构/" itemprop="url" rel="index">
+                    <span itemprop="name">ARM体系架构</span>
                   </a>
                 </span>
 
@@ -405,8 +421,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2017/01/23/gcc-static-dynamic/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/01/23/gcc-static-dynamic/" itemprop="commentCount"></span>
+                <a href="/2017/01/26/Pipeline-architecture/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/01/26/Pipeline-architecture/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -432,8 +448,30 @@
       
 
       
-        <h1 id="gcc静态编译与动态编译"><a href="#gcc静态编译与动态编译" class="headerlink" title="gcc静态编译与动态编译"></a>gcc静态编译与动态编译</h1><h2 id="1、静态库"><a href="#1、静态库" class="headerlink" title="1、静态库"></a>1、静态库</h2><p>gcc -c 编译出目标文件 ，而不是直接gcc  直接gcc系统会直接链接目标文件，但是由于缺少main函数所以不成功<br>ar归档工具生成静态库<br>-c 建立备存文件<br>-r 将文件插入备存文件<br>-v 显示执行过程<br>-s 无论ar命令是否修改了库内容都强制重新生成库符号表<br>ar rcvs [libpow.a静态库文件] [unsgn_pow.o 目标文件]<br>将目标文件集合在一起</p>
-<h2 id="2、动态库"><a href="#2、动态库" class="headerlink" title="2、动态库"></a>2、动态库</h2><p>gcc -c -fPIC -Wall unsgn_pow.c<br>gcc -shared -o libpow.so unsgn_pow.o<br>gcc -o pow_test pow_test.c -L . -lpow</p>
+        <h1 id="ARM获得当前PC需要PC-PC-8？"><a href="#ARM获得当前PC需要PC-PC-8？" class="headerlink" title="ARM获得当前PC需要PC=PC+8？"></a>ARM获得当前PC需要PC=PC+8？</h1><h2 id="1、抛出问题"><a href="#1、抛出问题" class="headerlink" title="1、抛出问题"></a>1、抛出问题</h2><pre><code>为何ARM9和ARM7一样？一个是五级流水线结构，另外一个是三级流水线结构，怎么也是PC=PC+8？ 
+</code></pre><h3 id="ARM9五级流水线-VS-ARM7三级流水线"><a href="#ARM9五级流水线-VS-ARM7三级流水线" class="headerlink" title="ARM9五级流水线 VS ARM7三级流水线"></a>ARM9五级流水线 VS ARM7三级流水线</h3><p><img src="http://my.csdn.net/uploads/201207/08/1341755975_5410.png" alt="这里写图片描述"></p>
+<h3 id="对应的映射关系"><a href="#对应的映射关系" class="headerlink" title="对应的映射关系"></a>对应的映射关系</h3><p><img src="http://my.csdn.net/uploads/201207/08/1341755957_7798.png" alt="这里写图片描述"></p>
+<h2 id="2、解析问题"><a href="#2、解析问题" class="headerlink" title="2、解析问题"></a>2、解析问题</h2><h3 id="先列出ARM9的五级流水线的示例："><a href="#先列出ARM9的五级流水线的示例：" class="headerlink" title="先列出ARM9的五级流水线的示例："></a>先列出ARM9的五级流水线的示例：</h3><p><img src="http://my.csdn.net/uploads/201207/08/1341755941_1321.jpg" alt="这里写图片描述"><br>以uboot中的start.S的最开始的汇编代码为例来进行解释：<br>由反汇编可得：</p>
+<pre><code class="bash">00000000 &lt;_start&gt;:
+   0:   ea000014   b   58 &lt;reset&gt;
+   4:   e59ff014   ldr pc, [pc, <span class="comment">#20] ; 20 &lt;_undefined_instruction&gt;</span>
+   8:   e59ff014   ldr pc, [pc, <span class="comment">#20] ; 24 &lt;_software_interrupt&gt;</span>
+   c:   e59ff014   ldr pc, [pc, <span class="comment">#20] ; 28 &lt;_prefetch_abort&gt;</span>
+  10:   e59ff014   ldr pc, [pc, <span class="comment">#20] ; 2c &lt;_data_abort&gt;</span>
+  14:   e59ff014   ldr pc, [pc, <span class="comment">#20] ; 30 &lt;_not_used&gt;</span>
+  18:   e59ff014   ldr pc, [pc, <span class="comment">#20] ; 34 &lt;_irq&gt;</span>
+  1c:   e59ff014   ldr pc, [pc, <span class="comment">#20] ; 38 &lt;_fiq&gt;</span>
+
+00000020 &lt;_undefined_instruction&gt;:
+  20:   00000120   .word  0x00000120
+</code></pre>
+<p>下面对每一个指令周期，CPU做了哪些事情，分别详细进行阐述：<br>在看下面具体解释之前，有一句话要牢记，那就是：</p>
+<pre><code class="bash">PC不是指向你正在运行的指令，而是
+PC始终指向你要取的指令的地址。
+</code></pre>
+<p>认识清楚了这个前提，后面的举例讲解，就容易懂了。<br>指令周期Cycle1<br>（1）取指：<br>PC总是指向将要读取的指令的地址（即我们常说的，指向下一条指令的地址），而当前PC=4，<br>所以去取物理地址为4对对应的指令“ldr pc, [pc, #20]”，其对应二进制代码为e59ff014。<br>此处取指完之后，自动更新PC的值，即PC=PC+4（单个指令占4字节，所以加4）=4+4=8<br>指令周期Cycle2<br>（1）译指：翻译指令e59ff014；<br>（2）同时再去取指：<br>PC总是指向将要读取的指令的地址（即我们常说的，指向下一条指令的地址），而当前PC=8，<br>所以去物理地址为8所对应的指令“ldr pc, [pc, #20]” 其对应二进制代码为e59ff014。<br>此处取指完之后，自动更新PC的值，即PC=PC+4=8+4=12=0xc<br>指令周期Cycle3<br>（1）执行（指令）：执行“e59ff014”，即“ldr pc,[pc, #20]”所对表达的含义，即<br>PC<br>= PC + 20<br>= 12 + 20<br>= 32<br>= 0x20<br>此处，只是计算出待会要赋值给PC的值是0x20，这个0x20还只是放在执行单元中内部的缓冲中。<br>（2）译指：翻译e59ff014。<br>（3）取指：<br>此步骤由于是和上面（1）中的执行同步做的，所以，未受到影响，继续取指，而取指的那一时刻，PC为上一Cycle<br>更新后的值，即PC=0xc，所以是去取物理地址为0xc所对应的指令” ldr pc, [pc, #20]”，对应二进制为e59ff014。<br>其实，分析到这里，大家就可以看出：<br>在Cycle3的时候，PC的值，刚好已经在Cycle1和Cycle2，分别加了4，所以Cycle3的时候，PC=PC+8，而同样道理<br>，对于任何一条指令的，都是在Cycle3，指令的Execute执行阶段，如果用到PC的值，那么PC那一时刻，就是<br>PC=PC+8。<br>所以，此处虽然是五级流水线，但是却不是PC=PC+16，而是PC=PC+8。<br>进一步地，我们发现，其实PC=PC+N的N，是和指令的执行阶段所处于流水线的深度有关，即此处指令的执行<br>Execute阶段，是五级流水线中的第三个，而这个第三阶段的Execute和指令的第一个阶段的Fetch取指，相差的<br>值是 3 -1 =2，即两个CPU的Cycle，而每个Cycle都会导致PC=+PC+4，所以，指令到了Execute阶段，才会发现<br>，此时PC已经变成PC=PC+8了。<br>回过头来反观ARM7的三级流水线，也是同样的道理，指令的Execute执行阶段，是处于指令的第三个阶段，<br>同理，在指令计算数据的时候，如果用到PC，就会发现此时PC=PC+8。<br>同理，假如ARM9的五级流水线，把指令的Execute执行阶段，设计在了第四个阶段，那么就是<br>PC=PC+（第4阶段-1）*4个字节 = PC= PC+12了。</p>
+<h2 id="3、总结"><a href="#3、总结" class="headerlink" title="3、总结"></a>3、总结</h2><p>ARM7的三级流水线，PC=PC+8，<br>ARM9的五级流水线，也是PC=PC+8，<br>根本的原因是，两者的流水线设计中，指令的Execute执行阶段，都是处于流水线的第三级，<br>所以使得PC=PC+8。<br>类似地，可以推导出：<br>假设，Execute阶段处于流水线中的第E阶段，每条指令是T个字节，那么<br>PC<br>= PC + N<em>T<br>= PC + (E - 1) </em> T<br>此处ARM7和ARM9：<br>Execute阶段都是第3阶段-&gt; E=3<br>每条指令是4个字节-&gt; T=4<br>所以：<br>PC<br>=PC + N<em> T<br>=PC + (3 -1 ) </em> 4<br>= PC + 8</p>
+<h2 id="关于直接改变PC的值，会导致流水线清空的解释"><a href="#关于直接改变PC的值，会导致流水线清空的解释" class="headerlink" title="关于直接改变PC的值，会导致流水线清空的解释"></a>关于直接改变PC的值，会导致流水线清空的解释</h2><p>   把PC的值直接赋值为0x20。而PC值更改，直接导致流水线的清空，即导致下一个cycle中的，对应的流水线中的<br>其他几个步骤，包括接下来的同一个Cycle中的取指的工作被取消。在PC跳转到0x20的位置之后，流水线重新计算<br>，重新一步步地按照流水线的逻辑，去一点点执行。当然要保证当前指令的执行完成，即执行之后，<br>还有两个cycle，分别做的Memory和Write，会继续执行完成。</p>
 
       
     </div>
@@ -478,7 +516,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/gcc笔记/" rel="tag"># gcc笔记</a>
+            <a href="/tags/体系架构/" rel="tag"># 体系架构</a>
           
         </div>
       
@@ -487,8 +525,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/01/23/vim-note/" rel="next" title="vim笔记">
-                <i class="fa fa-chevron-left"></i> vim笔记
+              <a href="/2017/01/23/embedded-system-learning/" rel="next" title="嵌入式linux系统开发学习路径">
+                <i class="fa fa-chevron-left"></i> 嵌入式linux系统开发学习路径
               </a>
             
           </div>
@@ -496,10 +534,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/01/23/gdb-transplant/" rel="prev" title="gdb移植和使用方法">
-                gdb移植和使用方法 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -514,10 +548,10 @@
 
     <div class="post-spread">
       
-        <div class="ds-share flat" data-thread-key="2017/01/23/gcc-static-dynamic/"
-     data-title="gcc静态编译和动态编译笔记"
+        <div class="ds-share flat" data-thread-key="2017/01/26/Pipeline-architecture/"
+     data-title="ARM获得当前PC需要PC=PC+8？"
      data-content=""
-     data-url="http://ideask.cf/2017/01/23/gcc-static-dynamic/">
+     data-url="http://ideask.cf/2017/01/26/Pipeline-architecture/">
   <div class="ds-share-inline">
     <ul  class="ds-share-icons-16">
 
@@ -544,8 +578,8 @@
           
   <div class="comments" id="comments">
     
-      <div class="ds-thread" data-thread-key="2017/01/23/gcc-static-dynamic/"
-           data-title="gcc静态编译和动态编译笔记" data-url="http://ideask.cf/2017/01/23/gcc-static-dynamic/">
+      <div class="ds-thread" data-thread-key="2017/01/26/Pipeline-architecture/"
+           data-title="ARM获得当前PC需要PC=PC+8？" data-url="http://ideask.cf/2017/01/26/Pipeline-architecture/">
       </div>
     
   </div>
@@ -706,7 +740,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#gcc静态编译与动态编译"><span class="nav-number">1.</span> <span class="nav-text">gcc静态编译与动态编译</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1、静态库"><span class="nav-number">1.1.</span> <span class="nav-text">1、静态库</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2、动态库"><span class="nav-number">1.2.</span> <span class="nav-text">2、动态库</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#ARM获得当前PC需要PC-PC-8？"><span class="nav-number">1.</span> <span class="nav-text">ARM获得当前PC需要PC=PC+8？</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1、抛出问题"><span class="nav-number">1.1.</span> <span class="nav-text">1、抛出问题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#ARM9五级流水线-VS-ARM7三级流水线"><span class="nav-number">1.1.1.</span> <span class="nav-text">ARM9五级流水线 VS ARM7三级流水线</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#对应的映射关系"><span class="nav-number">1.1.2.</span> <span class="nav-text">对应的映射关系</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2、解析问题"><span class="nav-number">1.2.</span> <span class="nav-text">2、解析问题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#先列出ARM9的五级流水线的示例："><span class="nav-number">1.2.1.</span> <span class="nav-text">先列出ARM9的五级流水线的示例：</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3、总结"><span class="nav-number">1.3.</span> <span class="nav-text">3、总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#关于直接改变PC的值，会导致流水线清空的解释"><span class="nav-number">1.4.</span> <span class="nav-text">关于直接改变PC的值，会导致流水线清空的解释</span></a></li></ol></li></ol></div>
             
 
           </div>

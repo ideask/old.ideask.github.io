@@ -2,16 +2,23 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>http://ideask.cf/2017/01/23/gdb-transplant/</loc>
+    <loc>http://ideask.cf/2017/01/26/Pipeline-architecture/</loc>
     
-    <lastmod>2017-01-23T03:27:09.059Z</lastmod>
+    <lastmod>2017-01-26T02:40:28.426Z</lastmod>
     
   </url>
   
   <url>
     <loc>http://ideask.cf/2017/01/23/embedded-system-learning/</loc>
     
-    <lastmod>2017-01-23T03:24:07.605Z</lastmod>
+    <lastmod>2017-01-23T09:34:40.194Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://ideask.cf/2017/01/23/gdb-transplant/</loc>
+    
+    <lastmod>2017-01-23T03:27:09.059Z</lastmod>
     
   </url>
   

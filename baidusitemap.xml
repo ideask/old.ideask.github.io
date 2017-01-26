@@ -4,6 +4,46 @@
 
     
   <url>
+    <loc>http://ideask.cf/2017/01/26/Pipeline-architecture/</loc>
+    <lastmod>2017-01-26T02:40:28.426Z</lastmod>
+    <data>
+        <display>
+        <title>ARM获得当前PC需要PC=PC+8？</title>
+        <pubTime>2017-01-26T02:23:24.000Z</pubTime>
+        
+        <tag>体系架构</tag>
+         
+         
+           
+             
+              <breadCrumb title="ARM体系架构" url="http://ideask.cf/categories/ARM%E4%BD%93%E7%B3%BB%E6%9E%B6%E6%9E%84/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://ideask.cf/2017/01/23/embedded-system-learning/</loc>
+    <lastmod>2017-01-23T09:34:40.194Z</lastmod>
+    <data>
+        <display>
+        <title>嵌入式linux系统开发学习路径</title>
+        <pubTime>2017-01-23T03:22:33.000Z</pubTime>
+        
+        <tag>学习路线</tag>
+         
+         
+           
+             
+              <breadCrumb title="学习路线" url="http://ideask.cf/categories/%E5%AD%A6%E4%B9%A0%E8%B7%AF%E7%BA%BF/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://ideask.cf/2017/01/23/gdb-transplant/</loc>
     <lastmod>2017-01-23T03:27:09.059Z</lastmod>
     <data>
@@ -17,26 +57,6 @@
            
              
               <breadCrumb title="gdb" url="http://ideask.cf/categories/gdb/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>http://ideask.cf/2017/01/23/embedded-system-learning/</loc>
-    <lastmod>2017-01-23T03:24:07.605Z</lastmod>
-    <data>
-        <display>
-        <title>嵌入式linux系统开发学习路径</title>
-        <pubTime>2017-01-23T03:22:33.000Z</pubTime>
-        
-        <tag>学习路线</tag>
-         
-         
-           
-             
-              <breadCrumb title="学习路线" url="http://ideask.cf/categories/%E5%AD%A6%E4%B9%A0%E8%B7%AF%E7%BA%BF/"/>
           
         </display>
     </data>
