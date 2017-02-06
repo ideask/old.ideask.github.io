@@ -4,6 +4,26 @@
 
     
   <url>
+    <loc>http://ideask.cf/2017/02/01/arm-asm/</loc>
+    <lastmod>2017-02-06T08:40:37.805Z</lastmod>
+    <data>
+        <display>
+        <title>ARM指令和指令系统</title>
+        <pubTime>2017-02-01T03:59:58.000Z</pubTime>
+        
+        <tag>ARM汇编基础</tag>
+         
+         
+           
+             
+              <breadCrumb title="ARM汇编基础" url="http://ideask.cf/categories/ARM%E6%B1%87%E7%BC%96%E5%9F%BA%E7%A1%80/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://ideask.cf/2017/01/26/Pipeline-architecture/</loc>
     <lastmod>2017-01-26T02:40:28.426Z</lastmod>
     <data>

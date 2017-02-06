@@ -1,0 +1,1227 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="ARM汇编基础," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="指令是指示计算机某种操作的命令，指令的集合称为指令系统。指令系统的功能强弱很大程度上决定了这类计算机智能的高低，它集中地反应了微处理器的硬件功能和属性。
+ARM指令在机器中的表示格式是用32位的二进制数表示。如ARM中有一条指令为
+    ADDEQS  R0，R1，#8；
+其二进制代码形式为：
+31~28    |    27~25    |    24~21    |    20    |">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ARM指令和指令系统">
+<meta property="og:url" content="http://ideask.cf/2017/02/01/arm-asm/index.html">
+<meta property="og:site_name" content="Jason Lin">
+<meta property="og:description" content="指令是指示计算机某种操作的命令，指令的集合称为指令系统。指令系统的功能强弱很大程度上决定了这类计算机智能的高低，它集中地反应了微处理器的硬件功能和属性。
+ARM指令在机器中的表示格式是用32位的二进制数表示。如ARM中有一条指令为
+    ADDEQS  R0，R1，#8；
+其二进制代码形式为：
+31~28    |    27~25    |    24~21    |    20    |">
+<meta property="og:updated_time" content="2017-02-06T08:40:37.805Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ARM指令和指令系统">
+<meta name="twitter:description" content="指令是指示计算机某种操作的命令，指令的集合称为指令系统。指令系统的功能强弱很大程度上决定了这类计算机智能的高低，它集中地反应了微处理器的硬件功能和属性。
+ARM指令在机器中的表示格式是用32位的二进制数表示。如ARM中有一条指令为
+    ADDEQS  R0，R1，#8；
+其二进制代码形式为：
+31~28    |    27~25    |    24~21    |    20    |">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://ideask.cf/2017/02/01/arm-asm/"/>
+
+
+
+
+
+  <title> ARM指令和指令系统 | Jason Lin </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  ga('create', '85*****1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?87980c**************99ec5e26fb5";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Jason Lin</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+    
+      <p class="site-subtitle">Jason's Blog</p>
+    
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-message">
+          <a href="/message" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-external-link"></i> <br />
+            
+            留言
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup">
+ <span class="search-icon fa fa-search"></span>
+ <input type="text" id="local-search-input">
+ <div id="local-search-result"></div>
+ <span class="popup-btn-close">close</span>
+</div>
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://ideask.cf/2017/02/01/arm-asm/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Jason Lin">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.gif">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="Jason Lin">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="Jason Lin" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                ARM指令和指令系统
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-02-01T11:59:58+08:00">
+                2017-02-01
+              </time>
+			  </span>
+			
+			<span>
+    
+			<span>更新于</span>
+			<time>
+			2017-02-06
+			16:40:58
+			</time>
+			</span>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/ARM汇编基础/" itemprop="url" rel="index">
+                    <span itemprop="name">ARM汇编基础</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2017/02/01/arm-asm/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/02/01/arm-asm/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <pre><code>指令是指示计算机某种操作的命令，指令的集合称为指令系统。指令系统的功能强弱很大程度上决定了这类计算机智能的高低，它集中地反应了微处理器的硬件功能和属性。
+ARM指令在机器中的表示格式是用32位的二进制数表示。如ARM中有一条指令为
+    ADDEQS  R0，R1，#8；
+其二进制代码形式为：
+31~28    |    27~25    |    24~21    |    20    |    19~16    |     15~12    |    11~0
+0000    |    001        |    0100    |    1    |    0001    |    0000    |    0000 0000 1000
+cond    |        opcode                    |    Rn        |    Rd        |    Op2
+
+ARM指令格式一般如下：
+&lt;opcode&gt;    {&lt;cond&gt;}{s}&lt;Rd&gt;，&lt;Rn&gt;{，&lt;OP2&gt;}
+格式中&lt; &gt;的内容是必不可少的，{ }中的内容可忽略
+
+&lt;opcode&gt;    表示操作码。如ADD表示算术加法
+{&lt;cond&gt;}        表示指令执行的条件域。如EQ、NE等，缺省为AL。
+{S}    决定指令的执行结果是否影响CPSR的值，使用该后缀则指令执行结果影响CPSR的值，否则不影响
+&lt;Rd&gt;    表示目的寄存器
+&lt;Rn&gt;    表示第一个操作数，为寄存器
+&lt;op2&gt;    表示第二个操作数，可以是立即数。寄存器和寄存器移位操作数
+</code></pre><h2 id="ARM指令后缀：S、！"><a href="#ARM指令后缀：S、！" class="headerlink" title="ARM指令后缀：S、！"></a>ARM指令后缀：S、！</h2><pre><code>S后缀：指令中使用S后缀时，指令执行后程序状态寄存器的条件标志位将被刷新，不使用S后缀时，指令执行后程序状态寄存器的条件标志将不会发生变化。S后缀常用于对条件进行测试，如是否有溢出，是否进位等，根据这些变化，就可以进行一些判断，如是否大于，相等，从而影响指令执行的顺序。
+！后缀：如果指令地址表达式中不含！后缀，则基址寄存器中的地址值不会发生变化。加上此后缀后，基址寄存器中的值（指令执行后） =  指令执行前的值 + 地址偏移量
+    （1）！后缀必须紧跟在地址表达式后面，而地址表达式要有明确的地址偏移量
+    （2）！后缀不能用于R15（PC）的后面
+    （3）当用在单个地址寄存器后面时，必须确信这个寄存器有隐性的偏移量，例如“STMDB  R1！，{R3，R5，R7}”。此时地址基址寄存器R1的隐性偏移量为4（一条指令占32位，即4个字节）
+</code></pre><h2 id="指令的条件码：31-28位4个字节存储，共16个条件码"><a href="#指令的条件码：31-28位4个字节存储，共16个条件码" class="headerlink" title="指令的条件码：31-28位4个字节存储，共16个条件码"></a>指令的条件码：31-28位4个字节存储，共16个条件码</h2><pre><code>条件码            助记符后缀            标志                含义
+0000            EQ                    Z置位                相等
+0001            NE                    Z清零                不相等
+0010            CS                    C置位                无符号数大于或等于
+0011            CC                    C清零                无符号数小于
+0100            MI                    N置位                负数
+0101            PL                    N清零                正数或零
+0110            VS                    V置位                溢出
+0111            VC                    V清零                未溢出
+1000            HI                    C置位 Z清零            无符号数大于
+1001            LS                    C清零 Z置位            无符号数小于或等于
+1010            GE                    N等于V                带符号数大于或等于
+1011            LT                    N不等于V            带符号数小于
+1100            GT                    Z清零且（N等于V）    带符号数大于
+1101            LE                    Z置位或（N不等于V）    带符号数小于或等于
+1110            AL                    忽略                无条件执行
+</code></pre><h2 id="ARM指令分类：六大类"><a href="#ARM指令分类：六大类" class="headerlink" title="ARM指令分类：六大类"></a>ARM指令分类：六大类</h2><pre><code>ARM指令集可以分为数据处理指令，数据加载指令和存储指令，分支指令，程序状态寄存器（PSR）处理指令，协处理器指令和异常产生指令六大类。
+</code></pre><h2 id="ARM指令的寻址方式：8类"><a href="#ARM指令的寻址方式：8类" class="headerlink" title="ARM指令的寻址方式：8类"></a>ARM指令的寻址方式：8类</h2><pre><code>ARM指令的寻址方式一般可以分为8类：立即数寻址，寄存器寻址，寄存器间接寻址，寄存器移位寻址，基址变址寻址，多寄存器寻址，相对寻址，堆栈寻址等
+举例：
+MOV    R0，#15            ；立即数15放入寄存器R0中
+ADD    R0，R1，R2        ；R0 &lt;= R1+R2
+LDR    R0，[R4]        ；R0 &lt;= [R4]（R4中存放的是一个指针变量，[ ]表示取改地址值指向的内容）
+ADD    R0，R1，R2，LSL #1        ；R0 &lt;= R1+R2（R2左移一位后的值）
+MOV    R0，R1，LSL R3    ；R0 &lt;= R1（R1左移R3位后）
+LDR    R0，[R1，#4]    ；R0 &lt;= [R1+4]
+LDR    R0，[R1，#4]!    ；R0 &lt;= [R1+4]，R1 &lt;= R1+4。同时更新基址
+LDR    R0，[R1]，#4    ；R0 &lt;= [R1]，R1 &lt;= R1+4
+LDR    R0，[R1，R2]    ；R0 &lt;= [R1+R2]
+LDMIA    R0!，{R1 - R4}    ；R1 &lt;= [R0]、R1 &lt;= [R0+4]、R1 &lt;= [R0+8]、R1 &lt;= [R0+12]
+BL        proc                ；跳转到子程序proc处执行，执行完毕后返回（L标记，带返回的跳转）。
+STMFD    R13!，{R0 - R4}    ；R0-R4压栈，FD为满栈递减，地址从高到低，R13为SP堆栈指针
+LDMFD    R13!，{R0 - R4}    ；R0-R4出栈，FD为满栈递减
+</code></pre><h2 id="ARM寄存器数据处理指令："><a href="#ARM寄存器数据处理指令：" class="headerlink" title="ARM寄存器数据处理指令："></a>ARM寄存器数据处理指令：</h2><h3 id="1、数据处理指令机器编码格式："><a href="#1、数据处理指令机器编码格式：" class="headerlink" title="1、数据处理指令机器编码格式："></a>1、数据处理指令机器编码格式：</h3><pre><code>31~28    |    27~26    25    |    24~21    |    20    |    19~16    |     15~12    |    11~0
+cond    |       00        I    |    opcode    |    S    |    Rn        |    Rd        |    Op2
+
+    cond：指令执行的条件码
+    I：用于区别第二操作数是立即数（I=1）还是寄存器移位（I=0）
+    opcode：数据处理指令操作码
+    S：用于设置条件码，S=0时，条件码不改变，S=1时，条件码根据具体指令的结果修改
+    Rn：第一操作数寄存器
+    Rd：目标寄存器
+    Op2：第二操作数，该数可以是立即数或寄存器移位数
+</code></pre><h3 id="2、数据传送指令：MOV-MVN"><a href="#2、数据传送指令：MOV-MVN" class="headerlink" title="2、数据传送指令：MOV  MVN"></a>2、数据传送指令：MOV  MVN</h3><pre><code>MOV    R1，R0        ；将寄存器R0的值传送到寄存器R1
+MOV    PC，R14    ；将寄存器R14的值传送到PC，常用于子程序返回
+MOV    R1，R0，LSL #3        ；将寄存器R0的值左移3位后传送到R1
+MOV    R0，#5        ；将立即数5传送到寄存器R0
+MVN    R0，#0        ；将立即数0按位取反后传送到寄存器R0中，完成后R0 = -1
+MVN    R1，R2        ；将R2按位取反后，结果存到R1
+</code></pre><h3 id="3、移位指令：LSL、LSR、ASR、ROR、RRX"><a href="#3、移位指令：LSL、LSR、ASR、ROR、RRX" class="headerlink" title="3、移位指令：LSL、LSR、ASR、ROR、RRX"></a>3、移位指令：LSL、LSR、ASR、ROR、RRX</h3><pre><code>MOV    R0，R1，LSL #1        ；寄存器R1左移一位后传送到R0
+MOVS    R0，R1，LSL #1        ；寄存器R1左移一位后传送到R0，并更新状态标志位
+MOVS    R0，R1，LSR #1        ；寄存器R1右移一位后传送到R0，并更新状态标志位
+MOVS    R0，R1，ASR #1        ；寄存器R1算术右移一位后传送到R0，并更新状态标志位
+                            ；算术右移，第一位符号位不变
+MOV    R0，R1，ROR #1    ；寄存器R1循环右移一位后传送到R0
+MOVS    R0，R1，RRX        ；寄存器R1循环右移一位后传送到R0，用C标志位作为最高位扩展
+</code></pre><h3 id="4、算术指令：ADD、ADC、SUB、SBC、RSB、RSC"><a href="#4、算术指令：ADD、ADC、SUB、SBC、RSB、RSC" class="headerlink" title="4、算术指令：ADD、ADC、SUB、SBC、RSB、RSC"></a>4、算术指令：ADD、ADC、SUB、SBC、RSB、RSC</h3><pre><code>ADD    R0，R1，R2            ；寄存器R1和R2的值相加后传送到R0
+ADD    R0，R1，#5            ；寄存器R1的值加上5后传送到R0
+ADD    R0，R1，R2，LSL #2        ；寄存器R2左移两位后与R1相加，得到的结果传送到R0
+ADD    R0，R1，R2，LSL R3    ；寄存器R2左移R3后与R1相加，得到的结果传送到R0
+ADDS    R0，R2，R4            ；64位加，低位放在R0
+ADC    R1，R3，R5            ；64位加，高位放在R1，注意要加上低位的进位
+SUB    R0，R1，R2            ；寄存器R1和R2的值相减后传送到R0
+SUB    R0，R1，#6            ；寄存器R1的值减6后传送到R0
+SUB    R0，R1，R2，LSL #1        ；R1与寄存器R2左移一位后的值相减，得到的结果传送到R0
+SUBS    R0，R2，R4            ；64位减，低位放在R0
+SBC    R1，R3，R5            ；64位减，高位放在R1，注意要减去低位的借位    
+RSB    R0，R1，R2            ；寄存器R2和R1的值相减后传送到R0，注意是R2-R1，方向相反
+RSB    R0，R1，#6            ；6与寄存器R1的值相减后传送到R0
+RSB    R0，R1，R2，LSL #1        ；寄存器R2左移一位后与R1相减，得到的结果传送到R0
+RSC    R0，R1，R2            ；寄存器R2和R1的值相减，再减去借位后传送到R0
+</code></pre><h3 id="5、逻辑运算指令：AND、ORR、EOR、BIC"><a href="#5、逻辑运算指令：AND、ORR、EOR、BIC" class="headerlink" title="5、逻辑运算指令：AND、ORR、EOR、BIC"></a>5、逻辑运算指令：AND、ORR、EOR、BIC</h3><pre><code>AND    R0，R0，#0xF        ；R0的值与0xF相位与后的值传送到R0
+ORR    R0，R0，#9            ；R0的值与9相位与后的值传送到R0
+EOR    R0，R0，#0xF        ；R0的值与0xF相异或后的值传送到R0
+BIC        R0，R0，#9            ；位清除指令R0的第0位和第3位清零
+</code></pre><h3 id="6、比较指令：CMP、CMN、TST、TEQ"><a href="#6、比较指令：CMP、CMN、TST、TEQ" class="headerlink" title="6、比较指令：CMP、CMN、TST、TEQ"></a>6、比较指令：CMP、CMN、TST、TEQ</h3><pre><code>CMP    R1，#10                ；将寄存器R1的值与10相减，并设置CPSR标志位
+ADDGT    R0，R0，#5            ；如果R1&gt;10，则执行ADDGT指令，将R0加5
+CMN    R0，R1                ；R0 - (-R1)，反值比较，影响CPSR标志位
+CMN    R0，#10                ；R0 - (-10)，反值比较，影响CPSR标志位
+TST        R1，#3                ；检查R1中第0位和第1位是否为1，根据结果更新条件标志位
+TEQ    R1，R2                ；将寄存器R1的值与寄存器R2的值进行按位异或，
+                            ；并根据结果设置CPSR的标志位
+</code></pre><h3 id="7、乘法指令：MUL、MLA、SMULL、SMLAL、UMULL、UMLAL"><a href="#7、乘法指令：MUL、MLA、SMULL、SMLAL、UMULL、UMLAL" class="headerlink" title="7、乘法指令：MUL、MLA、SMULL、SMLAL、UMULL、UMLAL"></a>7、乘法指令：MUL、MLA、SMULL、SMLAL、UMULL、UMLAL</h3><pre><code>MUL    R0，R1，R2            ；R1和R2相乘的结果发送到R0
+MULS    R0，R1，R2            ；R1和R2相乘的结果发送到R0，同时设置CPSR的相关条件标志位
+MLA    R0，R1，R2，R3    ；R1和R2相乘的结果再加上R3后发送到R0
+MLAS    R0，R1，R2，R3    ；R1和R2相乘的结果再加上R3后发送到R0，更新CPSR标志位
+SMULL    R0，R1，R2，R3    ；R2和R3相乘的结果的低32位放在R0，高32位放在R1
+SMLAL    R0，R1，R2，R3    ；R2和R3相乘的结果的低32位加上R0后放在R0，
+                            ；高32位加上R1后放在R1
+UMULL    R0，R1，R2，R3    ；无符号数相乘，结果与SMULL类似
+UMLAL    R0，R1，R2，R3    ；无符号数乘加，结果与SMLAL类似
+</code></pre><h2 id="ARM数据加载和存储指令："><a href="#ARM数据加载和存储指令：" class="headerlink" title="ARM数据加载和存储指令："></a>ARM数据加载和存储指令：</h2><h3 id="1、数据加载和存储的方向。寄存器到存储器方向：Store；从存储器到寄存器方向：Load"><a href="#1、数据加载和存储的方向。寄存器到存储器方向：Store；从存储器到寄存器方向：Load" class="headerlink" title="1、数据加载和存储的方向。寄存器到存储器方向：Store；从存储器到寄存器方向：Load"></a>1、数据加载和存储的方向。寄存器到存储器方向：Store；从存储器到寄存器方向：Load</h3><pre><code>数据加载和存储指令共有三种类型：单寄存器加载和存储指令，多寄存器加载和存储指令 和 交换指令
+</code></pre><h3 id="2、数据加载与存储器指令寻址"><a href="#2、数据加载与存储器指令寻址" class="headerlink" title="2、数据加载与存储器指令寻址"></a>2、数据加载与存储器指令寻址</h3><pre><code>LDR    R5，[R6，#0x08]        ；R6寄存器加0x08的和的地址值内的数据传送到R5
+STR        R6，[R7]，#-0x08    ；R6寄存器的数据传送到R7存储的地址值指向的存储空间，
+                            ；同时更新R7寄存器的内容为R7-0x08
+LDR    R5，[R6，R3]        ；R6寄存器加R3的和的地址值内的数据传送到R5
+STR        R6，[R7]，-R8        ；R6寄存器的数据传送到R7存储的地址值指向的存储空间，
+                            ；同时更新R7寄存器的内容为R7-R8
+LDR    R3，[R2，R4，LSL #2]    ；R3 &lt;== [  R2 + R4(R4左移两位)  ]
+LDR    R3，[R2]，-R4，LSR #3    ；R3 &lt;== [ R2 ]，R2 = R2-R4（R4右移三位）
+LDR    R4，START            ；将标号START标定的空间的数据加载到R4中
+</code></pre><h3 id="3、地址索引：前索引、自动索引、后索引"><a href="#3、地址索引：前索引、自动索引、后索引" class="headerlink" title="3、地址索引：前索引、自动索引、后索引"></a>3、地址索引：前索引、自动索引、后索引</h3><pre><code>1】前索引：前索引也称为前变址，这种索引是在指令执行前把偏移量和基址相加减，得到的值作为变量的地址。如：
+LDR    R5，[R6，#0x04]
+STR        R0，[R5，-R8]
+2】自动索引：自动索引也称为自动变址，有时为了修改基址寄存器的内容，使之指向数据传送地址，可使用这种方法自动修改基址寄存器，如：
+LDR    R5，[R6，#0x04]！
+3】后索引：后索引也被称为后变址，后索引就是用基址寄存器的地址值寻址，找出操作数进行操作，操作完成后，再把地址偏移量和基址相加/减，结果送到基址寄存器，作为下一次寻址的基址。如：
+LDR    R5，[R6]，#0x04
+STR        R6，[R7]，#-0x08
+</code></pre><h3 id="4、单寄存器加载和存储指令：LDR-STR、LDRB-STRB、LDRH-STRH、LDRSB-LDRSH"><a href="#4、单寄存器加载和存储指令：LDR-STR、LDRB-STRB、LDRH-STRH、LDRSB-LDRSH" class="headerlink" title="4、单寄存器加载和存储指令：LDR/STR、LDRB/STRB、LDRH/STRH、LDRSB/LDRSH"></a>4、单寄存器加载和存储指令：LDR/STR、LDRB/STRB、LDRH/STRH、LDRSB/LDRSH</h3><pre><code>1】字数据加载/存储指令格式：
+    31~28    |  27~26    | 25 24 23 22 21 20|    19~16    |     15~12    |    11~0
+    cond    |     01    |   I    P  U  B   W  L      |    Rn        |    Rd        |    Op2
+    cond：指令执行的条件编码
+    I、P、U、W：用于区别不同的地址模式（偏移量）。
+        I为0时，偏移量为12位立即数；I为1时，偏移量为移位寄存器移位
+        P表示前/后索引
+        U表示加/减
+        W表示回写
+    L：L为1时表示加载，L为0时表示存储
+    B：B为1表示字节访问，B为0表示字访问
+    Rd：源/目标寄存器
+    Rn：基址寄存器
+    Op2：表示偏移量是一个12位的无符号二进制数，与Rn一起构成地址addr
+2】存储器&lt;==&gt;寄存器  LDR/STR
+    LDR指令用于从存储器中间一个32位的字数据加载到目的寄存器Rd中。该指令通常用于从存储器中读取32位的字数据到通用寄存器，然后对数据进行处理。当程序计数器PC作为目的寄存器时，指令从存储器中读取的字数据被当做目的地址，从而实现程序流程的跳转。
+LDR    R4，START            ；将存储地址为START的字数据读入R4
+STR        R5，DATA1            ；将R5存入存储地址为DATA1中
+LDR    R0，[R1]            ；将存储器地址为R1的字数据读入寄存器R0
+LDR    R0，[R1，R2]        ；将存储器地址为R1+R2的字数据读入寄存器R0
+LDR    R0，[R1，#8]        ；将寄存器R1+8的内容读入寄存器R0
+LDR    R0，[R1，R2，LSL #2]    ；将R1+R2*4的字数据读入寄存器R0
+STR        R0，[R1，R2]!        ；将R0字数据存入存储器地址为R1+R2的存储单元中，
+                                并将新地址R1+R2写入R1
+STR        R0，[R1，#8]!        ；将R0字数据存入存储器地址为R1+8的存储单元中，
+                                并将新地址R1+8写入R1
+STR        R0，[R1，R2，LSL #2]!    ；将R0字数据存入地址为R1+R2*4的存储单元中，
+                                并将新地址R1+R2*4写入R1
+LDR    R0，[R1]，#8        ；将存储器地址为R1的字数据读入寄存器R0，
+                                并将新地址R1+8写入R1
+LDR    R0，[R1]，R2        ；将存储器地址为R1的字数据读入寄存器R0，
+                                并将新地址R1+R2写入R1
+LDR    R0，[R1]，R2，LSL #2    ；将存储器地址为R1的字数据读入寄存器R0，
+                                并将新地址R1+R2*4写入R1
+    【备注】注意事项：
+    a、立即数绝对值不大于4095的数值，可使用带符号数，即在-4095 ~ +4095之间。（4096D = 1000H）
+    b、语句的标号不能指向程序存储器的程序存储区，而是指向程序存储器的数据存储区或数据存储器的数据存储区。另外指向的区域是可修改的。例如，在用户模式下，有些存储区是不能访问的或是只读的。
+    c、字传送时，偏移量必须保证偏移的结果能够使地址对齐。
+    d、使用寄存器移位的方法计算偏移量时。移位的位数不能超过规定的数值，而且不能用寄存器表示移位的位数。各类移位指令的移位位数规定如下：
+            ASR    #n：算术右移（1≤n≤32）
+            LSL        #n：逻辑左移（0≤n≤31）
+            LSR        #n：逻辑右移（1≤n≤32）
+            ROR    #n：循环右移（1≤n≤31）
+    e、R15作为基址寄存器Rn时，不可以使用回写功能，即使用后缀“!”，另外，R15不可作为偏移寄存器使用。
+</code></pre><h3 id="5、字节数据加载-存储指令：LDRB-STRB"><a href="#5、字节数据加载-存储指令：LDRB-STRB" class="headerlink" title="5、字节数据加载/存储指令：LDRB/STRB"></a>5、字节数据加载/存储指令：LDRB/STRB</h3><pre><code>LDRB指令用于从存储器中将一个8位字节的数据加载到目的寄存器，同时将寄存器的高24位清零。该指令通常用于从存储器中读取8位的字节数据到通用寄存器，然后对数据进行处理。当程序计数器PC作为目的寄存器时，指令从存储器读取的数据被当做目的地，从而可以实现程序流程的跳转
+STRB指令用于从源寄存器中将一个8位的字节数据存储到存储器中，该字节数据为源寄存器的低8位，STRB指令和LDRB指令的区别在于数据的传送方向。
+LDRB    R0，[R1]            ；将存储器地址为R1的字节数据读入寄存器R0，
+                                并将R0的高24位清零。
+LDRB    R0，[R1，#8]        ；将存储器地址为R1+8的字节数据读入寄存器R0，
+                                并将R0的高24位清零。
+STRB    R0，[R1]            ；将寄存器R0中的字节数据写入以R1为地址的存储器中。
+STRB    R0，[R1，#8]        ；将寄存器R0中的字节数据写入以R1+8为地址的存储器中。
+</code></pre><h3 id="6、LDRH-STRH-半字数据加载-存储指令"><a href="#6、LDRH-STRH-半字数据加载-存储指令" class="headerlink" title="6、LDRH/STRH 半字数据加载/存储指令"></a>6、LDRH/STRH 半字数据加载/存储指令</h3><pre><code>    31~28|  27~25| 24 23 22 21 20 |    19~16| 15~12| 11~8      | 7   6   5   4   | 3~0
+    cond   |     000  |  P  U    I   W   L  |        Rn   |     Rd    | addr_H  |1    S   H   1    |addr_L
+    cond：指令执行的条件编码
+    I、P、U、W：用于区别不同的地址模式（偏移量）。I为0时，偏移量为8位立即数，I为1时，偏移量为寄存器移位。P表示前/后变址，U表示加/减，W表示回写。
+    L：L为1表示加载，L为0表示存储。
+    S：用于区别有符号访问（S为1）和无符号访问（S为0）
+    H：用于区别半字访问（H为1）或字节访问（H为0）
+    Rd：源/目标寄存器
+    Rn：基址寄存器
+    addr  H / addr  I：表示偏移量，I为0时，偏移量为8位立即数由addr  H和addr  I组成；
+    I为1时，偏移量为寄存器移位addr  H为0，addr  L表示寄存器编号
+LDR指令用于从寄存器中间一个16位的半字数据加载到目的寄存器Rd中，同时将寄存器的高16位清零，该指令通常用于从存储器中读取16位的半字数据到通用寄存器，然后对数据进行处理。当程序计数器PC作为目的寄存器时，指令从存储器中读取的数据被当做目的地址，从而可以实现程序流程的跳转。
+LDRH    R0，[R1]            ；将存储器地址R1的半字数据读入寄存器R0，
+                                并将R0的高16位清零
+LDRH    R0，[R1，#8]        ；将存储器地址为R1+8的半字数据读入寄存器R0，
+                                并将R0的高16位清零
+LDRH    R0，[R1，R2]        ；将存储器地址为R1+R2的半字数据读入寄存器R0，
+                                并将R0的高16位清零
+STRH    R0，[R1]            ；将寄存器R0中的半字数据写入以R1为地址的存储器中
+使用半字加载/存储指令需要注意的事项：
+（1）必须半字地址对齐。
+（2）对于R15的使用需要慎重，R15作为基址寄存器Rn时，不可以使用回写功能，不可使用R15作为目的寄存器。
+（3）立即数偏移使用的是8位无符号数。
+（4）不能使用寄存器移位寻址
+</code></pre><h3 id="7、有符号数字节-半字加载指令：LDRSB-LDRSH"><a href="#7、有符号数字节-半字加载指令：LDRSB-LDRSH" class="headerlink" title="7、有符号数字节/半字加载指令：LDRSB / LDRSH"></a>7、有符号数字节/半字加载指令：LDRSB / LDRSH</h3><pre><code>LDRSB指令用于从存储器中间一个8位的字节数据加载到目的寄存器中，同时将寄存器的高24位设置为该字节数据的符号位的值，即将该8位字节数据进行符号位的扩展，生成32位数据；LDRSH指令用于从存储器中将一个16位的半字数据加载到目的寄存器Rd中，同时将寄存器的高16位设置为该字数据的符号位的值，即将该16位字数据进行符号位的扩展，生成32位数据。
+LDRSB    R0，[R1，#4]        ；将存储地址为R1+4的有符号字节数据读入R0，
+                                R0中的高24位设置为高字节数据的符号位
+LDRSH    R6，[R2]，#2        ；将存储地址为R2+2的有符号半字数据读入R6，
+                                R6的高16位设置成该字节数据的符号位，R2=R2+2
+</code></pre><h3 id="8、多寄存器加载和存储指令：LDM-STM"><a href="#8、多寄存器加载和存储指令：LDM-STM" class="headerlink" title="8、多寄存器加载和存储指令：LDM / STM"></a>8、多寄存器加载和存储指令：LDM / STM</h3><pre><code>LDM指令用于从基址寄存器所指示的一片连续存储器中读取数据到寄存器列表所指示的多个寄存器中，内存单元的其实地址为基址寄存器Rn的值，各个寄存器有寄存器列表regs表示。该指令一般用于多个寄存器数据的出栈操作；STM指令用于将寄存器列表所指示的多个寄存器的值存入到由基址寄存器所指示的一片连续存储器中，内存单元的其实地址为基址寄存器Rn的值，各个寄存器由寄存器列表regs表示。指令的其它参数的用法和LDM指令是相同的。该指令一般用于多个寄存器数据的进栈操作。
+type类型。用于数据的存储和读取有一下几种情况：
+        IA        每次传送后地址值加
+        IB        每次传送前地址值加
+        DA        每次传送后地址值减
+        DB        每次传送前地址值减
+对于堆栈操作有如下几种情况：
+        FD        满递减堆栈
+        ED        空递减堆栈
+        FA        满递增堆栈
+        EA        满递增堆栈
+
+{ ! }为可选后缀，若选用该后缀，则当数据加载与存储完毕后，将最后的地址写入基址寄存器，否则基址寄存器的内容不改变。基址寄存器不允许为R15，寄存器列表可以为R0~R15的任意组合。
+{ ^ }为可选后缀，当治疗为LDM且寄存器列表中包含R15，选用该后缀时表示：除了正常数据加载和存储之外，还将SPSR复制到CPSR。同时，该后缀还表示传入或传出的是用户模式下的寄存器，而不是当前模式下的寄存器。
+LDMIA    R0!，{R6-R8}        ；R6 &lt;- [R0]，R7 &lt;- [R0+4]，R8 &lt;- [R0+8]，R0 &lt;- R0+12
+LDMIB    R0!，{R6-R8}        ；R6 &lt;- [R0]，R7 &lt;- [R0+4]，R8 &lt;- [R0+8]，R0 &lt;- R0+8
+</code></pre><h3 id="9、堆栈和堆栈操作"><a href="#9、堆栈和堆栈操作" class="headerlink" title="9、堆栈和堆栈操作"></a>9、堆栈和堆栈操作</h3><pre><code>堆栈就是在RAM存储器中开辟（指定）的一个特定的存储区域，在这个区域中，信息的存入（此时称为推入）与取出（此时称为弹出）的原则不再是“随机存取”，而是按照“后进先出”的原则就行存取。
+A】建栈：规定堆栈底部在RAM存储器中的位置，如：用户可以通过LDR命令设置SP的值来建立堆栈。
+LDR    R13，=0x90010        ；
+LDR    SP，=0x90010        ；
+这时，SP指向地址0x90010，栈内无数据，堆栈底部与顶部重叠，是一个空栈。
+B】进栈：STM指令配合FD（满递减）、ED（空递减）、FA（满递增）、EA（空递增）完成入栈操作。在使用一个堆栈的时候，需要确定堆栈在存储器空间中是向上生长还是向下生长的。向上称为递增，向下称为递减。
+STMFD    SP!，{R2-R4}        ；把R4，R3，R2的值依次压栈（标号高的存在高地址）
+LDMFD    SP!，{R6-R8}        ；把R2，R3，R4的值，依次退到R6，R7，R8
+</code></pre>
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>如果文章对您有用请随意打赏，谢谢支持！</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+        <div id="wechat" style="display: inline-block">
+          <img id="wechat_qr" src="/images/w.png" alt="Jason Lin WeChat Pay"/>
+          <p>微信打赏</p>
+        </div>
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="/images/z.jpg" alt="Jason Lin Alipay"/>
+          <p>支付宝打赏</p>
+        </div>
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/ARM汇编基础/" rel="tag"># ARM汇编基础</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/01/26/Pipeline-architecture/" rel="next" title="ARM获得当前PC需要PC=PC+8？">
+                <i class="fa fa-chevron-left"></i> ARM获得当前PC需要PC=PC+8？
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <div class="ds-share flat" data-thread-key="2017/02/01/arm-asm/"
+     data-title="ARM指令和指令系统"
+     data-content=""
+     data-url="http://ideask.cf/2017/02/01/arm-asm/">
+  <div class="ds-share-inline">
+    <ul  class="ds-share-icons-16">
+
+      <li data-toggle="ds-share-icons-more"><a class="ds-more" href="javascript:void(0);">分享到：</a></li>
+      <li><a class="ds-weibo" href="javascript:void(0);" data-service="weibo">微博</a></li>
+      <li><a class="ds-qzone" href="javascript:void(0);" data-service="qzone">QQ空间</a></li>
+      <li><a class="ds-qqt" href="javascript:void(0);" data-service="qqt">腾讯微博</a></li>
+      <li><a class="ds-wechat" href="javascript:void(0);" data-service="wechat">微信</a></li>
+
+    </ul>
+    <div class="ds-share-icons-more">
+    </div>
+  </div>
+</div>
+      
+    </div>
+  </div>
+
+          
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2017/02/01/arm-asm/"
+           data-title="ARM指令和指令系统" data-url="http://ideask.cf/2017/02/01/arm-asm/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="Jason Lin" />
+          <p class="site-author-name" itemprop="name">Jason Lin</p>
+          <p class="site-description motion-element" itemprop="description">embedded system engineer</p>
+        </div>
+        <nav class="site-state motion-element">
+        
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">12</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">8</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">8</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/ideask" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/ideask" target="_blank" title="Twitter">
+                  
+                    <i class="fa fa-fw fa-twitter"></i>
+                  
+                  Twitter
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/ideask" target="_blank" title="微博">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                  微博
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://douban.com/people/ideask" target="_blank" title="豆瓣">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  豆瓣
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.zhihu.com/people/ideask" target="_blank" title="知乎">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  知乎
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              友情链接
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.jyu.edu.cn/" title="嘉应大学" target="_blank">嘉应大学</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#ARM指令后缀：S、！"><span class="nav-number">1.</span> <span class="nav-text">ARM指令后缀：S、！</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#指令的条件码：31-28位4个字节存储，共16个条件码"><span class="nav-number">2.</span> <span class="nav-text">指令的条件码：31-28位4个字节存储，共16个条件码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ARM指令分类：六大类"><span class="nav-number">3.</span> <span class="nav-text">ARM指令分类：六大类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ARM指令的寻址方式：8类"><span class="nav-number">4.</span> <span class="nav-text">ARM指令的寻址方式：8类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ARM寄存器数据处理指令："><span class="nav-number">5.</span> <span class="nav-text">ARM寄存器数据处理指令：</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1、数据处理指令机器编码格式："><span class="nav-number">5.1.</span> <span class="nav-text">1、数据处理指令机器编码格式：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2、数据传送指令：MOV-MVN"><span class="nav-number">5.2.</span> <span class="nav-text">2、数据传送指令：MOV  MVN</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3、移位指令：LSL、LSR、ASR、ROR、RRX"><span class="nav-number">5.3.</span> <span class="nav-text">3、移位指令：LSL、LSR、ASR、ROR、RRX</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4、算术指令：ADD、ADC、SUB、SBC、RSB、RSC"><span class="nav-number">5.4.</span> <span class="nav-text">4、算术指令：ADD、ADC、SUB、SBC、RSB、RSC</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5、逻辑运算指令：AND、ORR、EOR、BIC"><span class="nav-number">5.5.</span> <span class="nav-text">5、逻辑运算指令：AND、ORR、EOR、BIC</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6、比较指令：CMP、CMN、TST、TEQ"><span class="nav-number">5.6.</span> <span class="nav-text">6、比较指令：CMP、CMN、TST、TEQ</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7、乘法指令：MUL、MLA、SMULL、SMLAL、UMULL、UMLAL"><span class="nav-number">5.7.</span> <span class="nav-text">7、乘法指令：MUL、MLA、SMULL、SMLAL、UMULL、UMLAL</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ARM数据加载和存储指令："><span class="nav-number">6.</span> <span class="nav-text">ARM数据加载和存储指令：</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1、数据加载和存储的方向。寄存器到存储器方向：Store；从存储器到寄存器方向：Load"><span class="nav-number">6.1.</span> <span class="nav-text">1、数据加载和存储的方向。寄存器到存储器方向：Store；从存储器到寄存器方向：Load</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2、数据加载与存储器指令寻址"><span class="nav-number">6.2.</span> <span class="nav-text">2、数据加载与存储器指令寻址</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3、地址索引：前索引、自动索引、后索引"><span class="nav-number">6.3.</span> <span class="nav-text">3、地址索引：前索引、自动索引、后索引</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4、单寄存器加载和存储指令：LDR-STR、LDRB-STRB、LDRH-STRH、LDRSB-LDRSH"><span class="nav-number">6.4.</span> <span class="nav-text">4、单寄存器加载和存储指令：LDR/STR、LDRB/STRB、LDRH/STRH、LDRSB/LDRSH</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5、字节数据加载-存储指令：LDRB-STRB"><span class="nav-number">6.5.</span> <span class="nav-text">5、字节数据加载/存储指令：LDRB/STRB</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6、LDRH-STRH-半字数据加载-存储指令"><span class="nav-number">6.6.</span> <span class="nav-text">6、LDRH/STRH 半字数据加载/存储指令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7、有符号数字节-半字加载指令：LDRSB-LDRSH"><span class="nav-number">6.7.</span> <span class="nav-text">7、有符号数字节/半字加载指令：LDRSB / LDRSH</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8、多寄存器加载和存储指令：LDM-STM"><span class="nav-number">6.8.</span> <span class="nav-text">8、多寄存器加载和存储指令：LDM / STM</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#9、堆栈和堆栈操作"><span class="nav-number">6.9.</span> <span class="nav-text">9、堆栈和堆栈操作</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jason Lin</span>
+</div>
+
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"ideask"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    
+    <script src="/lib/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body").append('<div class="popoverlay">').css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".popoverlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+  
+
+  
+  
+
+  
+
+
+</body>
+</html>
