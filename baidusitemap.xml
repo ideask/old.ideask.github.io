@@ -4,6 +4,46 @@
 
     
   <url>
+    <loc>http://ideask.cf/2017/04/27/bbb-build-can/</loc>
+    <lastmod>2017-04-27T10:05:11.873Z</lastmod>
+    <data>
+        <display>
+        <title>BBB添加CAN支持</title>
+        <pubTime>2017-04-27T09:56:10.000Z</pubTime>
+        
+        <tag>BeagleBoneBlack</tag>
+         
+         
+           
+             
+              <breadCrumb title="BeagleBoneBlack" url="http://ideask.cf/categories/BeagleBoneBlack/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://ideask.cf/2017/04/27/bbb-build-spi/</loc>
+    <lastmod>2017-04-27T09:57:08.575Z</lastmod>
+    <data>
+        <display>
+        <title>BBB添加SPI支持</title>
+        <pubTime>2017-04-27T09:55:58.000Z</pubTime>
+        
+        <tag>BeagleBoneBlack</tag>
+         
+         
+           
+             
+              <breadCrumb title="BeagleBoneBlack" url="http://ideask.cf/categories/BeagleBoneBlack/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://ideask.cf/2017/04/27/bbb-build-tree-uart/</loc>
     <lastmod>2017-04-27T09:10:28.149Z</lastmod>
     <data>

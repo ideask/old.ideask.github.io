@@ -313,6 +313,533 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://ideask.cf/2017/04/27/bbb-build-can/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Jason Lin">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.gif">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="Jason Lin">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="Jason Lin" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/04/27/bbb-build-can/" itemprop="url">
+                  BBB添加CAN支持
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-04-27T17:56:10+08:00">
+                2017-04-27
+              </time>
+			  </span>
+			
+			<span>
+    
+			<span>更新于</span>
+			<time>
+			2017-04-27
+			17:56:10
+			</time>
+			</span>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/BeagleBoneBlack/" itemprop="url" rel="index">
+                    <span itemprop="name">BeagleBoneBlack</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2017/04/27/bbb-build-can/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/04/27/bbb-build-can/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>A few months back I got hold of my first BeagleBone Black (BBB) with the intention of installing it in my car as a trackday data logger. First step in this endeavor was to get the CANBus working. I wrote this up here, but I’m shutting down that (poorly designed) site and have come up with a better way of enabling CAN so here goes.</p>
+<p>First up, I’m assuming you are either running the latest Angstrom image (see here), or Ubuntu with the patched device tree compiler (see here). This ensures you have a device tree compiler which is capable of compiling overlays. So with that out of the way…</p>
+<p>Enabling DCAN1</p>
+<p>Update 26th August 2013: This original post focused on enabling dcan1, as these pins are available by default. If you’d like to enable dcan0 (At the expense of i2c2, possibly breaking any capes you have plugged in!), skip to the bottom of the post</p>
+<p>To enable CAN (specifically dcan1), we need to write a device tree overlay which will enable the device and set the pin muxing. For those of you who just want the answer, here’s the overlay.</p>
+<p>BB-DCAN1-00A0.dts</p>
+<pre><code class="bash">/dts-v1/;
+/plugin/;
+
+/ {
+    compatible = <span class="string">"ti,beaglebone"</span>, <span class="string">"ti,beaglebone-black"</span>;
+
+    /* identification */
+    part-number = <span class="string">"dcan1pinmux"</span>;
+
+    fragment@0 {
+        target = &lt;&amp;am33xx_pinmux&gt;;
+        __overlay__ {
+            dcan1_pins_s0: dcan1_pins_s0 {
+                pinctrl-single,pins = &lt;
+                    0x180 0x12  /* d_can1_tx, SLEWCTRL_FAST | INPUT_PULLUP | MODE2 */
+                    0x184 0x32  /* d_can1_rx, SLEWCTRL_FAST | RECV_ENABLE | INPUT_PULLUP | MODE2 */
+                &gt;;
+            };
+        };
+    };
+
+    fragment@1 {
+        target = &lt;&amp;dcan1&gt;;
+        __overlay__ {
+             <span class="comment">#address-cells = &lt;1&gt;;</span>
+             <span class="comment">#size-cells = &lt;0&gt;;</span>
+
+             status = <span class="string">"okay"</span>;
+             pinctrl-names = <span class="string">"default"</span>;
+             pinctrl-0 = &lt;&amp;dcan1_pins_s0&gt;;
+        };
+    };
+};
+</code></pre>
+<p>There are two important parts to the overlay, fragment@0 and fragment@1. We’ll look at each of those in turn.</p>
+<p>fragment@0 is responsible for setting the pin mux. The two lines of hex (15-16) represent pairs of ‘pin’ register and ‘mode’ value.</p>
+<p>Update 20th August 2013: I’ve created a spreadsheet to simplify the determination of register offset and mode values so you no longer have to dig through datasheets. The dcan1 signals can be found on pins P9 _24 and P9_26, both Mode 2. Use the register value worksheet to determine the correct pinmux values (Fast slew,  input for rx/output for tx, pull up, mode 2).</p>
+<p>To find the correct register you first need to find out the name of the pins from the BBB SRM. Referring to Table 11 in the SRM, you can find the dcan1 signals are exposed on pins 24 (UART1_TXD) and 26 (UART1_RXD).</p>
+<p>Now, diving in to the AM3359 Technical Reference Manual. In Table 9-10 (on page 759!) you can find the two registers conf_uart1_txd (0x980) and conf_uart1_rxd (0x984). These pin configuration registers start at 0x800, therefore the offset values are 0x180 and 0x184 respectively.</p>
+<p>The detail of these registers can be found in Section 9.3.51, letting you calculate the correct values for dcan1.</p>
+<p>Pin    Slew Rate    Input    Pull Up    Pull Up    Mode    Mode    Mode    In Hex</p>
+<pre><code class="bash">d_can1_tx (0x180)    0    0    1    0    0    1    0    0x12
+d_can1_rx (0x184)    0    1    1    0    0    1    0    0x32
+</code></pre>
+<p>That’s it for fragment@0, on to fragment@1. This section enables the CAN device. Firstly, on line 23, we identify the device we want to enable as dcan1. Then we specify that we want the device enabled by setting it’s status to “okay” on line 28. Finally, we associate the pin mux created in fragment@0 with the device, line 30.</p>
+<p>To compile this overlay, save it as BB-DCAN1-00A0.dts (the dts extension referring to a device tree source file). Then execute the following command.</p>
+<pre><code class="bash">dtc -O dtb -o BB-DCAN1-00A0.dtbo -b 0 -@ BB-DCAN1-00A0.dts
+</code></pre>
+<p>This will create the overlay binary BB-DCAN1-00A0.dtbo. If you get an error about the -@ option being unrecognised then you are likely on Ubuntu without the patched version of dtc (see here).</p>
+<p>To use the overlay simply copy it to /lib/firmware</p>
+<pre><code class="bash">sudo cp BB-DCAN1-00A0.dtbo /lib/firmware
+</code></pre>
+<p>And execute the following (note you must be logged in as root to do this, sudo will not work!)</p>
+<pre><code class="bash"><span class="built_in">echo</span> BB-DCAN1 &gt; /sys/devices/bone_capemgr.*/slots
+</code></pre>
+<p>Check with dmesg to see if this worked, you should see something like this</p>
+<pre><code class="bash">dmesg | tail -n15
+[   17.878323] init: plymouth-stop pre-start process (796) terminated with status 1
+[  283.946706] bone-capemgr bone_capemgr.8: part_number <span class="string">'BB-DCAN1'</span>, version <span class="string">'N/A'</span>
+[  283.946892] bone-capemgr bone_capemgr.8: slot <span class="comment">#9: generic override</span>
+[  283.946944] bone-capemgr bone_capemgr.8: bone: Using override eeprom data at slot 9
+[  283.946996] bone-capemgr bone_capemgr.8: slot <span class="comment">#9: 'Override Board Name,00A0,Override Manuf,BB-DCAN1'</span>
+[  283.947270] bone-capemgr bone_capemgr.8: slot <span class="comment">#9: Requesting part number/version based 'BB-DCAN1-00A0.dtbo</span>
+[  283.947323] bone-capemgr bone_capemgr.8: slot <span class="comment">#9: Requesting firmware 'BB-DCAN1-00A0.dtbo' for board-name 'Override Board Name', version '00A0'</span>
+[  283.951368] bone-capemgr bone_capemgr.8: slot <span class="comment">#9: dtbo 'BB-DCAN1-00A0.dtbo' loaded; converting to live tree</span>
+[  283.952035] bone-capemgr bone_capemgr.8: slot <span class="comment">#9: #2 overlays</span>
+[  283.953133] platform 481d0000.d_can: <span class="built_in">alias</span> fck already exists
+[  283.962225] bone-capemgr bone_capemgr.8: slot <span class="comment">#9: Applied #2 overlays.</span>
+[  284.034183] CAN device driver interface
+[  284.071999] c_can_platform 481d0000.d_can: invalid resource
+[  284.078088] c_can_platform 481d0000.d_can: control memory is not used <span class="keyword">for</span> raminit
+[  284.084553] c_can_platform 481d0000.d_can: c_can_platform device registered (regs=fa1d0000, irq=71)
+If you have something to hook up to (don<span class="string">'t forget to go through a transceiver, or bad things will happen), you can test everything is up and working with can-utils. First, make sure you have all the relevant modules loaded.</span>
+</code></pre>
+<pre><code class="bash">sudo modprobe can
+sudo modprobe can-dev
+sudo modprobe can-raw
+</code></pre>
+<p>Get and build can-utils</p>
+<pre><code class="bash">svn co svn://svn.berlios.de/socketcan/trunk
+<span class="built_in">cd</span> trunk/can-utils/
+make
+</code></pre>
+<p>Set up the bus speed and enable it</p>
+<pre><code class="bash">sudo ip link <span class="built_in">set</span> can0 up <span class="built_in">type</span> can bitrate 500000
+sudo ifconfig can0 up
+</code></pre>
+<p>Now you can use either cansend or candump to test your bus.</p>
+<p>Unfortunately, I’ve discovered my car is more rust than chassis so the track days are going to have to wait. BBB has been repurposed to other projects, more details on these coming soon…</p>
+<p>Enabling DCAN0</p>
+<p>Update 26th August 2013: After the comment from Marco below, I’ve put this section in to enable DCAN0.</p>
+<p>To enable dcan0, you’ll need an overlay similar to that for dcan1. Marco posted one below, but it seems the comment system strips angled brackets for fear of HTML tags, so here is one I made.</p>
+<p>BB-DCAN0-00A0.dts</p>
+<pre><code class="bash">/dts-v1/;
+/plugin/;
+
+/ {
+    compatible = <span class="string">"ti,beaglebone"</span>, <span class="string">"ti,beaglebone-black"</span>;
+
+    /* identification */
+    part-number = <span class="string">"dcan0pinmux"</span>;
+
+    fragment@0 {
+        target = &lt;&amp;am33xx_pinmux&gt;;
+        __overlay__ {
+            dcan0_pins_s0: dcan0_pins_s0 {
+                pinctrl-single,pins = &lt;
+                    0x178 0x12  /* d_can0_tx, SLEWCTRL_FAST | INPUT_PULLUP | MODE2 */
+                    0x17C 0x32  /* d_can0_rx, SLEWCTRL_FAST | RECV_ENABLE | INPUT_PULLUP | MODE2 */
+                &gt;;
+            };
+        };
+    };
+
+    fragment@1 {
+        target = &lt;&amp;dcan0&gt;;
+        __overlay__ {
+             <span class="comment">#address-cells = &lt;1&gt;;</span>
+             <span class="comment">#size-cells = &lt;0&gt;;</span>
+
+             status = <span class="string">"okay"</span>;
+             pinctrl-names = <span class="string">"default"</span>;
+             pinctrl-0 = &lt;&amp;dcan0_pins_s0&gt;;
+        };
+    };
+};
+</code></pre>
+<p>We can build and install this in the same way</p>
+<pre><code class="bash">dtc -O dtb -o BB-DCAN0-00A0.dtbo -b 0 -@ BB-DCAN0-00A0.dts
+sudo cp BB-DCAN0-00A0.dtbo /lib/firmware
+</code></pre>
+<p>However, if you try to enable dcan0 now you will get an error about the i2c pins (see Marco’s comment). This is because the i2c2 pins are enabled by default and take precedence over any overlay. Before we continue I should mention that the i2c2 pins are used by the BBB to identify capes, and enable devices/pinmuxes appropriately, everything I do from here on is likely to stop any capes working!.</p>
+<p>Another warning: This process involves modifying the default device tree binary. If you do this incorrectly, your BBB will not boot. If you’re messing with the eMMC image, I can’t guarantee it can be reflashed either (although I see no reason why it shouldn’t be possible). You’re following this guide at your own risk, if it breaks your BBB it’s not my fault! I do all my hacking on an Ubuntu flashed SD card, so if it goes wrong (and it often does!) I can stick the card in my PC and undo any changes. eMMC users, continue at your own risk…</p>
+<p>Unfortunately, we can’t simply disable i2c2 with an overlay (I have tried, it crashed my BBB!). We also can’t switch off the i2c2 device, because it is used by bone_capemgr and disabling it seems to make /sys/devices/bone_capemgr.*/slots disappear, meaning we can’t enable overlays! So, my work around is simply to prevent the i2c2 device setting its pinmux and claiming the dcan0 pins. In this state, as far as bone_capemgr is concerned, the i2c2 pins are perpetually disconnected (but the device still exists in /dev/).</p>
+<p>To stop i2c2 from setting its pinmux, we need to modify the default device tree binary, and to do this we need the source files. If you built your kernel from scratch you will have them lying around somewhere, but if not you can grab them from Derek Molloy’s git repository (Note, I’m assuming the 3.8.13 kernel here).</p>
+<pre><code class="bash">git <span class="built_in">clone</span> https://github.com/derekmolloy/boneDeviceTree.git
+<span class="built_in">cd</span> boneDeviceTree/DTSource3.8.13/
+</code></pre>
+<p>Open up am335x-bone-common.dtsi and go to line 401 (pass the -c flag to nano to show line numbers). This is the section concerning i2c2.</p>
+<pre><code class="bash">nano -c am335x-bone-common.dtsi
+</code></pre>
+<p>am335x-bone-common.dtsi</p>
+<pre><code class="bash">&amp;i2c2 {
+    status = <span class="string">"okay"</span>;
+    pinctrl-names = <span class="string">"default"</span>;
+    pinctrl-0 = &lt;&amp;i2c2_pins&gt;;
+
+    clock-frequency = &lt;100000&gt;;
+
+    cape_eeprom0: cape_eeprom0@54 {
+        compatible = <span class="string">"at,24c256"</span>;
+        reg = &lt;0x54&gt;;
+    };
+
+    cape_eeprom1: cape_eeprom1@55 {
+        compatible = <span class="string">"at,24c256"</span>;
+        reg = &lt;0x55&gt;;
+    };
+
+    cape_eeprom2: cape_eeprom2@56 {
+        compatible = <span class="string">"at,24c256"</span>;
+        reg = &lt;0x56&gt;;
+    };
+
+    cape_eeprom3: cape_eeprom3@57 {
+        compatible = <span class="string">"at,24c256"</span>;
+        reg = &lt;0x57&gt;;
+    };
+};
+</code></pre>
+<p>To prevent the pinmux from being applied, simply comment out </p>
+<p>am335x-bone-common.dtsi</p>
+<p>//  pinctrl-0 = &lt;&amp;i2c2_pins&gt;;<br>Save and exit, then build with (note, you’re not building the file you just edited!)</p>
+<pre><code class="bash">dtc -O dtb -o am335x-boneblack.dtb -b 0 -@ am335x-boneblack.dts
+</code></pre>
+<p>Before overwriting your default device tree binary, back it up</p>
+<pre><code class="bash">sudo mv /boot/uboot/dtbs/am335x-boneblack.dtb /boot/uboot/dtbs/am335x-boneblack.orig.dtb
+</code></pre>
+<p>Now move your new binary in to place</p>
+<p>sudo mv am335x-boneblack.dtb /boot/uboot/dtbs/<br>You’ll get an error about preserving permissions, you can safely ignore this.</p>
+<p>Now reboot your BBB and the i2c2 pinmux will not be applied. Now you should be able to enable dcan0 in much the same way as dcan1. As root (not sudo!)</p>
+<pre><code class="bash"><span class="built_in">echo</span> BB-DCAN0 &gt; /sys/devices/bone_capemgr.*/slots
+</code></pre>
+<p>Now grab can-utils and play around with the bus (see above for dcan1).</p>
+<p>If you plan to use dcan0 and dcan1, I believe the device driver numbering is based on the order the devices are enabled. So enable dcan0 before dcan1 so that your calls to ip, ifconfig, candump, etc… all make sense!</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://ideask.cf/2017/04/27/bbb-build-spi/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Jason Lin">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.gif">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="Jason Lin">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="Jason Lin" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/04/27/bbb-build-spi/" itemprop="url">
+                  BBB添加SPI支持
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-04-27T17:55:58+08:00">
+                2017-04-27
+              </time>
+			  </span>
+			
+			<span>
+    
+			<span>更新于</span>
+			<time>
+			2017-04-27
+			17:55:58
+			</time>
+			</span>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/BeagleBoneBlack/" itemprop="url" rel="index">
+                    <span itemprop="name">BeagleBoneBlack</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2017/04/27/bbb-build-spi/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/04/27/bbb-build-spi/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>在3.2之前版本的内核里spi驱动要先注册spi_board_info结构体,然后匹配spi_master, 再创建spi_device. 创建完设备之后再到spi总线上寻找有没有同名的spi_driver. 如果有的话就调用spi_driver的probe函数. 在probe函数里register_chrdev/class_create/device_create, 创建chrdev然后通过fops里的函数来读写spi设备.<br>在新版的内核里推荐使用dts来描述设备信息, 并且先注册spi_master, 然后再创建设备, 最后跟platform总线上的driver的 .of_match_table成员里的元素匹配, 如果匹配成功就调用probe. 所以新版的内核里我们不需要再写spi_baord_info 和spi_register_board_info这样的代码了</p>
+<p>折腾了一个星期的人表示看到上边这个画面简直泪如雨下.  下边我们就看如何在不修改一丁点内核代码的情况下让系统显示出这个画面.<br><img src="http://img.blog.csdn.net/20150723153952844" alt="这里写图片描述"><br>首先交代一下我使用的系统. 我使用的是TI最新板的sdk: ti-processor-sdk-Linux-am335x-evm-01.00.00.00-Linux-x86-Install.bin</p>
+<pre><code class="bash">root@am335x-evm:~<span class="comment"># uname -a  </span>
+Linux am335x-evm 3.14.26 <span class="comment">#22 Wed Jul 22 16:14:16 CST 2015 armv7l GNU/Linux</span>
+</code></pre>
+<p>我们先找到我们要修改的文件: am335x-boneblack.dts</p>
+<p>(sdk)/ti-processor-sdk-linux-am335x-evm-01.00.00.00/board-support/linux-3.14.26-g2489c02/arch/arm/boot/dts/am335x-boneblack.dtb  </p>
+<p>因为dts文件层层包含我们不容易搞清楚结构, 那还不如将dtb反编译回dts, 看看最终的dts文件.</p>
+<pre><code class="bash">dtc -I dtb -O dts am335x-boneblack.dtb &gt; am335x-boneblack.dts
+</code></pre>
+<p>第一处修改:<br><img src="http://img.blog.csdn.net/20150723160658562" alt="这里写图片描述"></p>
+<p>第二处修改:<br><img src="http://img.blog.csdn.net/20150723160803617" alt="这里写图片描述"></p>
+<p>添加这两部分的代码, spi0_pins 和spi1_pins分别对应spi0和spi1引脚的配置, 关于引脚的配置值可以用TI官方的pinmux工具来生成.<br>第三处修改:<br><img src="http://img.blog.csdn.net/20150723161619530" alt="这里写图片描述"><br>spi@48030000 对应spi0<br>spi@481a0000 对应spi1<br>compatible = “ti,omap4-mcspi” 对应spi驱动底层 spi_master驱动(spi-omap2-mcspi.c)下 的platform_drvier里的 .of_match_table 成员.如果 .of_match_table 数组里有 “ti,omap4-mcspi” 那么就可以调用该platform_driver的probe函数.在spi_register_master中创建设备<br>compatible = “rohm,dh2228fv” 对应spi驱动上层 spi_driver (spidev.c)的 .of_match_table 成员. 如果 .of_match_table 数组里有 “rohm,dh2228fv”,就可以调用 spi_driver的probe函数了.</p>
+<p>至此dts文件已经修改完毕, 只需要编译之后让系统加载这个新的dtb就可以了</p>
+<pre><code class="bash">dtc -I dts -O dtb am335x-boneblack.dts &gt; am335x-boneblack.dtb
+</code></pre>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
   <link itemprop="mainEntityOfPage" href="http://ideask.cf/2017/04/27/bbb-build-tree-uart/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -4134,515 +4661,6 @@ int main(int argc, char *argv[])
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://ideask.cf/2017/01/22/ioctl-led-udev-char-device/">
-
-  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <meta itemprop="name" content="Jason Lin">
-    <meta itemprop="description" content="">
-    <meta itemprop="image" content="/images/avatar.gif">
-  </span>
-
-  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-    <meta itemprop="name" content="Jason Lin">
-    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="Jason Lin" src="">
-    </span>
-  </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/01/22/ioctl-led-udev-char-device/" itemprop="url">
-                  ioctl方式操作LED udev驱动模板
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-01-22T19:48:09+08:00">
-                2017-01-22
-              </time>
-			  </span>
-			
-			<span>
-    
-			<span>更新于</span>
-			<time>
-			2017-01-22
-			19:48:09
-			</time>
-			</span>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/设备驱动/" itemprop="url" rel="index">
-                    <span itemprop="name">设备驱动</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2017/01/22/ioctl-led-udev-char-device/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/01/22/ioctl-led-udev-char-device/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="1、驱动源码"><a href="#1、驱动源码" class="headerlink" title="1、驱动源码"></a>1、驱动源码</h2><pre><code class="bash"><span class="comment">#include &lt;linux/init.h&gt;</span>
-<span class="comment">#include &lt;linux/module.h&gt;</span>
-<span class="comment">#include &lt;linux/fs.h&gt;</span>
-<span class="comment">#include &lt;linux/cdev.h&gt;</span>
-<span class="comment">#include &lt;linux/device.h&gt;</span>
-<span class="comment">#include &lt;linux/version.h&gt;</span>
-
-<span class="comment">#include &lt;asm/mach/arch.h&gt;</span>
-<span class="comment">#include &lt;asm/gpio.h&gt;</span>
-
-<span class="comment">#define LED_IOC_MAGIC 'L'    //操作LED的幻数</span>
-<span class="comment">#define LED_ON _IO(LED_IOC_MAGIC,0)    //无参数命令</span>
-<span class="comment">#define LED_OFF _IO(LED_IOC_MAGIC,1) </span>
-<span class="comment">#define LED_IOCTL_MAXNR 2    //</span>
-
-static int major,minor;
-struct cdev *led;
-static dev_t devno;
-static struct class *led_class;
-
-<span class="comment">#define DEVICE_NAME "led" </span>
-<span class="comment">#define GPIO_LED_PIN_NUM 116</span>
-
-static int led_open(struct inode *inode,struct file *file)
-{
-    try_module_get(THIS_MODULE);
-    gpio_direction_output(GPIO_LED_PIN_NUM,1);
-    <span class="built_in">return</span> 0;
-}
-
-static int led_release(struct inode *inode,struct file *file)
-{
-    module_put(THIS_MODULE);
-    gpio_direction_output(GPIO_LED_PIN_NUM,1);
-    <span class="built_in">return</span> 0;
-}
-<span class="comment">#if LINUX_VERSION_CODE &gt;= KERNEL_VERSION(2,6,36)</span>
-int led_ioctl(struct file *filp,unsigned int cmd,unsigned long arg)
-<span class="comment">#else</span>
-static int led_ioctl(struct inode *inode,struct file *file,unsigned int cmd,unsigned long arg)
-<span class="comment">#endif</span>
-{
-    <span class="keyword">if</span>(_IOC_TYPE(cmd) != LED_IOC_MAGIC)
-    {
-        <span class="built_in">return</span> -ENOTTY;
-    }
-    <span class="keyword">if</span>(_IOC_NR(cmd) &gt; LED_IOCTL_MAXNR)
-    {
-        <span class="built_in">return</span> -ENOTTY;
-    }
-    switch(cmd)
-    {
-        <span class="keyword">case</span> LED_ON:
-            gpio_set_value(GPIO_LED_PIN_NUM,0);
-            <span class="built_in">break</span>;
-        <span class="keyword">case</span> LED_OFF:
-            gpio_set_value(GPIO_LED_PIN_NUM,1);
-            <span class="built_in">break</span>;
-        default:
-            gpio_set_value(GPIO_LED_PIN_NUM,0);
-            <span class="built_in">break</span>;
-    }
-    <span class="built_in">return</span> 0;
-}
-
-struct file_operations led_fops ={
-    .owner = THIS_MODULE,
-    .open = led_open,
-    .release = led_release,
-<span class="comment">#if LINUX_VERSION_CODE &gt;= KERNEL_VERSION(2,6,36)</span>
-    .unlocked_ioctl = led_ioctl
-<span class="comment">#else</span>
-    .ioctl = led_ioctl
-<span class="comment">#endif</span>
-};
-static int __init led_init(void)
-{
-    int ret;
-    gpio_free(GPIO_LED_PIN_NUM);
-    <span class="keyword">if</span>(gpio_request(GPIO_LED_PIN_NUM,<span class="string">"led_run"</span>))
-    {
-        printk(<span class="string">"request %s gpio faile \n"</span>,<span class="string">"led_run"</span>);
-        <span class="built_in">return</span> -1;
-    }
-    ret = alloc_chrdev_region(&amp;devno,minor,1,<span class="string">"led"</span>);
-    major = MAJOR(devno);
-    <span class="keyword">if</span>(ret &lt; 0)
-    {
-        printk(KERN_ERR<span class="string">"cannot get major %d \n"</span>,major);
-        <span class="built_in">return</span> -1;
-    }
-
-    led = cdev_alloc();
-    <span class="keyword">if</span>(led != NULL)
-    {
-        cdev_init(led,&amp;led_fops);
-        led-&gt;owner = THIS_MODULE;
-        <span class="keyword">if</span>(cdev_add(led,devno,1) != 0)
-        {
-            printk(KERN_ERR <span class="string">"add cdev error!\n"</span>);
-            goto error;
-        }
-    }
-    <span class="keyword">else</span>
-    {
-        printk(KERN_ERR<span class="string">"cdev_alloc error!\n"</span>);
-        <span class="built_in">return</span> -1;
-    }
-
-    led_class = class_create(THIS_MODULE,<span class="string">"led_class"</span>);
-     <span class="keyword">if</span>(IS_ERR(led_class))
-    {
-        printk(KERN_INFO<span class="string">"create class error\n"</span>);
-        <span class="built_in">return</span> -1;
-    }
-
-    device_create(led_class,NULL,devno,NULL,<span class="string">"led"</span>);
-    <span class="built_in">return</span> 0;
-
-error:
-        unregister_chrdev_region(devno,1);
-        <span class="built_in">return</span> ret;
-}
-
-static void __exit led_exit(void)
-{
-    cdev_del(led);
-    unregister_chrdev_region(devno,1);
-    device_destroy(led_class,devno);
-    class_destroy(led_class);
-}
-
-module_init(led_init);
-module_exit(led_exit);
-
-MODULE_LICENSE(<span class="string">"GPL"</span>);
-MODULE_AUTHOR(<span class="string">"ideask,ideask@ideask.cf"</span>);
-</code></pre>
-<h2 id="2、编译Makefile"><a href="#2、编译Makefile" class="headerlink" title="2、编译Makefile"></a>2、编译Makefile</h2><pre><code class="bash">CC = arm-fsl-linux-gnueabi-gcc
-
-ifneq ($(KERNELRELEASE),)
-obj-m := led.o
-
-PWD :=$(shell <span class="built_in">pwd</span>)
-KVER :=$(shell uname -r)
-KDIR :=/root/linux-2.6.35.3  <span class="comment">#内核文件地址，自定义</span>
-
-all:
-    $(MAKE) -C $(KDIR) M=$(PWD) modules
-clean:
-    rm -rf .*.cmd *.o *.mod.c *.ko .tmp_versions
-endif
-</code></pre>
-<h2 id="3、测试程序"><a href="#3、测试程序" class="headerlink" title="3、测试程序"></a>3、测试程序</h2><pre><code class="bash"><span class="comment">#include &lt;stdio.h&gt;</span>
-<span class="comment">#include &lt;stdlib.h&gt;</span>
-<span class="comment">#include &lt;unistd.h&gt;</span>
-<span class="comment">#include &lt;sys/ioctl.h&gt;</span>
-<span class="comment">#include &lt;errno.h&gt;</span>
-<span class="comment">#include &lt;fcntl.h&gt;</span>
-
-<span class="comment">#define LED_IOC_MAGIC 'L'    //操作LED的幻数</span>
-<span class="comment">#define LED_ON _IO(LED_IOC_MAGIC,0)    //无参数命令</span>
-<span class="comment">#define LED_OFF _IO(LED_IOC_MAGIC,1)</span>
-
-<span class="comment">#define DEV_NAME "/dev/led"</span>
-
-int main(int argc, char *argv[])
-{
-    int i;
-    int fd = 0;
-    fd = open(DEV_NAME,O_RDONLY);
-    <span class="keyword">if</span>(fd &lt; 0)
-    {
-        perror(<span class="string">"Open "</span>DEV_NAME<span class="string">"Failed!\n"</span>);
-        <span class="built_in">return</span> -1;
-    }
-    <span class="keyword">while</span>(1)
-    {
-        ioctl(fd,LED_ON);
-        //sleep(1);
-        ioctl(fd,LED_OFF);
-        //sleep(1);
-    }
-    close(fd);
-    <span class="built_in">return</span> 0;
-}
-</code></pre>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://ideask.cf/2017/01/22/udev-char-device/">
-
-  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <meta itemprop="name" content="Jason Lin">
-    <meta itemprop="description" content="">
-    <meta itemprop="image" content="/images/avatar.gif">
-  </span>
-
-  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-    <meta itemprop="name" content="Jason Lin">
-    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="Jason Lin" src="">
-    </span>
-  </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/01/22/udev-char-device/" itemprop="url">
-                  udev字符设备的程序
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-01-22T18:34:30+08:00">
-                2017-01-22
-              </time>
-			  </span>
-			
-			<span>
-    
-			<span>更新于</span>
-			<time>
-			2017-01-22
-			18:34:30
-			</time>
-			</span>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/设备驱动/" itemprop="url" rel="index">
-                    <span itemprop="name">设备驱动</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2017/01/22/udev-char-device/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/01/22/udev-char-device/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="支持udev的空壳程序"><a href="#支持udev的空壳程序" class="headerlink" title="支持udev的空壳程序"></a>支持udev的空壳程序</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#include &lt;linux/init.h&gt;</span></div><div class="line"><span class="comment">#include &lt;linux/module.h&gt;</span></div><div class="line"><span class="comment">#include &lt;linux/fs.h&gt;</span></div><div class="line"><span class="comment">#include &lt;linux/cdev.h&gt;</span></div><div class="line"><span class="comment">#include &lt;linux/device.h&gt;</span></div><div class="line"></div><div class="line"> static int major = 232; /* 静态设备号方式的默认值 */</div><div class="line"> static int minor = 0; /* 静态设备号方式的默认值 */</div><div class="line"> module_param(major, int, S_IRUGO);</div><div class="line"> module_param(minor, int, S_IRUGO);</div><div class="line"></div><div class="line"> struct cdev *char_null_udev; /* cdev 数据结构 */</div><div class="line"> static dev_t devno; /* 设备编号 */</div><div class="line"> static struct class *char_null_udev_class;</div><div class="line"></div><div class="line"> <span class="comment">#define DEVICE_NAME "char_null_udev"</span></div><div class="line"></div><div class="line"> static int __init char_null_udev_init(void)</div><div class="line"> &#123;</div><div class="line">	 int ret;</div><div class="line"></div><div class="line">	 <span class="keyword">if</span> (major &gt; 0) </div><div class="line">	 &#123; /* 静态设备号 */</div><div class="line">		devno = MKDEV(major, minor);</div><div class="line">		ret=register_chrdev_region(devno,1,<span class="string">"char_null_udev"</span>);</div><div class="line">	 &#125; </div><div class="line">	 <span class="keyword">else</span> </div><div class="line">	 &#123; /* 动态设备号 */</div><div class="line">		ret=alloc_chrdev_region(&amp;devno,minor,1,<span class="string">"char_null_udev"</span>); /* 从系统获取主设备号 */</div><div class="line">		major = MAJOR(devno);</div><div class="line">	 &#125;</div><div class="line">	 <span class="keyword">if</span> (ret &lt; 0)</div><div class="line">	 &#123;</div><div class="line">		printk(KERN_ERR <span class="string">"cannot get major %d \n"</span>, major);</div><div class="line">		<span class="built_in">return</span> -1;</div><div class="line">	 &#125;</div><div class="line"></div><div class="line">	 char_null_udev = cdev_alloc(); /* 分配 char_null_udev 结构 */</div><div class="line">	 <span class="keyword">if</span> (char_null_udev != NULL) </div><div class="line">	 &#123;</div><div class="line">		 cdev_init(char_null_udev, &amp;major); /* 初始化 char_null_udev 结构 */</div><div class="line">		 char_null_udev-&gt;owner = THIS_MODULE;</div><div class="line">		<span class="keyword">if</span> (cdev_add(char_null_udev, devno, 1) != 0) </div><div class="line">		&#123; /* 增加 char_null_udev 到系统中 */</div><div class="line">			printk(KERN_ERR <span class="string">"add cdev error!\n"</span>);</div><div class="line">			goto error;</div><div class="line">		&#125;</div><div class="line">	 &#125; </div><div class="line">	 <span class="keyword">else</span> &#123;</div><div class="line">		printk(KERN_ERR <span class="string">"cdev_alloc error!\n"</span>);</div><div class="line">		<span class="built_in">return</span> -1;</div><div class="line">		&#125;</div><div class="line"></div><div class="line">	//在/sys/class/下创建 char_null_udev_class 目录</div><div class="line">	char_null_udev_class = class_create(THIS_MODULE, <span class="string">"char_null_udev_class"</span>);</div><div class="line">	<span class="keyword">if</span> (IS_ERR(char_null_udev_class)) </div><div class="line">	&#123;</div><div class="line">		printk(KERN_INFO <span class="string">"create class error\n"</span>);</div><div class="line">		<span class="built_in">return</span> -1;</div><div class="line">	&#125;</div><div class="line">	/* 将创建/dev/char_null_udev0 文件 */</div><div class="line">	//device_create(char_null_udev_class, NULL, devno, NULL, <span class="string">"char_null_udev"</span> <span class="string">"%d"</span>,MINOR(devno));</div><div class="line">	/* 将创建/dev/char_null_udev 文件 */</div><div class="line">	device_create(char_null_udev_class, NULL, devno, NULL, <span class="string">"char_null_udev"</span>);</div><div class="line"></div><div class="line">	<span class="built_in">return</span> 0;</div><div class="line"></div><div class="line">	error:</div><div class="line">		unregister_chrdev_region(devno, 1); /* 释放已经获得的设备号 */</div><div class="line">	<span class="built_in">return</span> ret;</div><div class="line"> &#125;</div><div class="line"></div><div class="line"> static void __exit char_null_udev_exit(void)</div><div class="line"> &#123;</div><div class="line">	device_destroy(char_null_udev_class, devno);</div><div class="line">	class_destroy(char_null_udev_class);</div><div class="line">	cdev_del(char_null_udev); /* 移除字符设备 */</div><div class="line">	unregister_chrdev_region(devno, 1); /* 释放设备号 */</div><div class="line"> &#125;</div><div class="line"></div><div class="line"> module_init(char_null_udev_init);</div><div class="line"> module_exit(char_null_udev_exit);</div><div class="line"></div><div class="line"> MODULE_LICENSE(<span class="string">"GPL"</span>);</div><div class="line"> MODULE_AUTHOR(<span class="string">"Jason"</span>);</div></pre></td></tr></table></figure>
-<h2 id="程序分析"><a href="#程序分析" class="headerlink" title="程序分析:"></a>程序分析:</h2><p> 第(1)~(5)行是所需要的头文件；<br> 第(7)~(8)行用变量设定设备的主次设备号；<br> 第(9)~(10)行是模块参数，驱动支持加载的时候指定主次设备号；<br> 第(12)行定义一个 cdev 全局变量 char_null_udev；<br> 第(13)行的 dev_t devno 用来保存设备编号；<br> 第(14)行是定义 class 结构；<br> 第(16)行定义设备名为 char_null_udev；<br> 第(18)~(71)是模块的初始化代码，行完成设备注册以及设备节点创建：<br> 第(22)~(31)行，根据 major 变量，可以静态或者动态获取设备编号：如果是设<br>备号，需要用 MKDEV 构建成设备编号（行(24)）； 如果是动态获取设备编号，<br>还需在(29)行获取主设备号；<br> 第(38)行通过 cdev_alloc 分配一个 cdev 数据结构 char_null_udev；<br> 如果分配成功，则在(41)~(42)行进行初始化；注意 cdev_init()的第 2 个参数，<br>本应该传入驱动操作方法 fops 的地址，但是没有实现 fops，就传入一个有效<br>地址，防止运行错误；<br> 第(43)行通过 cdev_add 将 char_null_udev 添加到系统中，如果添加失败，则需<br>要释放已经获取的设备号并退出；<br> 第(55)行在 sysfs 的 class 目录下创建 char_null_udev_class 目录；<br> 第(62)或(64)行是在 sysfs 系统中创建设备节点；<br> 第(73)~(79)是模块的退出代码，完成资源释放工作：<br> 第(75)行删除 char_null_uedv 结构；<br> 第(78)行释放设备号；<br> 第(77)行删除 sysfs 中的设备节点；<br> 第(76)行销毁 sysfs 中的 class。</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -4690,7 +4708,7 @@ int main(int argc, char *argv[])
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">13</span>
+                <span class="site-state-item-count">15</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>

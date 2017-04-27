@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="设备驱动," />
+  <meta name="keywords" content="BeagleBoneBlack," />
 
 
 
@@ -84,31 +84,16 @@
 
 
 
-<meta name="description" content="1、LCD12864串口驱动程序#include &amp;lt;linux/module.h&amp;gt;
-#include &amp;lt;linux/kernel.h&amp;gt;
-#include &amp;lt;linux/types.h&amp;gt;
-#include &amp;lt;linux/sched.h&amp;gt;
-#include &amp;lt;linux/init.h&amp;gt;
-#include &amp;lt;linux/fs.h&amp;gt;">
+<meta name="description" content="A few months back I got hold of my first BeagleBone Black (BBB) with the intention of installing it in my car as a trackday data logger. First step in this endeavor was to get the CANBus working. I wr">
 <meta property="og:type" content="article">
-<meta property="og:title" content="LCD12864串口驱动udev">
-<meta property="og:url" content="http://ideask.cf/2017/01/22/12864-udev-char-device/index.html">
+<meta property="og:title" content="BBB添加CAN支持">
+<meta property="og:url" content="http://ideask.cf/2017/04/27/bbb-build-can/index.html">
 <meta property="og:site_name" content="Jason Lin">
-<meta property="og:description" content="1、LCD12864串口驱动程序#include &amp;lt;linux/module.h&amp;gt;
-#include &amp;lt;linux/kernel.h&amp;gt;
-#include &amp;lt;linux/types.h&amp;gt;
-#include &amp;lt;linux/sched.h&amp;gt;
-#include &amp;lt;linux/init.h&amp;gt;
-#include &amp;lt;linux/fs.h&amp;gt;">
-<meta property="og:updated_time" content="2017-01-22T13:55:39.387Z">
+<meta property="og:description" content="A few months back I got hold of my first BeagleBone Black (BBB) with the intention of installing it in my car as a trackday data logger. First step in this endeavor was to get the CANBus working. I wr">
+<meta property="og:updated_time" content="2017-04-27T10:05:11.873Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="LCD12864串口驱动udev">
-<meta name="twitter:description" content="1、LCD12864串口驱动程序#include &amp;lt;linux/module.h&amp;gt;
-#include &amp;lt;linux/kernel.h&amp;gt;
-#include &amp;lt;linux/types.h&amp;gt;
-#include &amp;lt;linux/sched.h&amp;gt;
-#include &amp;lt;linux/init.h&amp;gt;
-#include &amp;lt;linux/fs.h&amp;gt;">
+<meta name="twitter:title" content="BBB添加CAN支持">
+<meta name="twitter:description" content="A few months back I got hold of my first BeagleBone Black (BBB) with the intention of installing it in my car as a trackday data logger. First step in this endeavor was to get the CANBus working. I wr">
 
 
 
@@ -136,13 +121,13 @@
 
 
 
-  <link rel="canonical" href="http://ideask.cf/2017/01/22/12864-udev-char-device/"/>
+  <link rel="canonical" href="http://ideask.cf/2017/04/27/bbb-build-can/"/>
 
 
 
 
 
-  <title> LCD12864串口驱动udev | Jason Lin </title>
+  <title> BBB添加CAN支持 | Jason Lin </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -327,7 +312,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://ideask.cf/2017/01/22/12864-udev-char-device/">
+  <link itemprop="mainEntityOfPage" href="http://ideask.cf/2017/04/27/bbb-build-can/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="Jason Lin">
@@ -351,7 +336,7 @@
             
             
               
-                LCD12864串口驱动udev
+                BBB添加CAN支持
               
             
           </h1>
@@ -366,8 +351,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-01-22T20:08:48+08:00">
-                2017-01-22
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-04-27T17:56:10+08:00">
+                2017-04-27
               </time>
 			  </span>
 			
@@ -375,8 +360,8 @@
     
 			<span>更新于</span>
 			<time>
-			2017-01-22
-			20:08:48
+			2017-04-27
+			17:56:10
 			</time>
 			</span>
             
@@ -399,8 +384,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/设备驱动/" itemprop="url" rel="index">
-                    <span itemprop="name">设备驱动</span>
+                  <a href="/categories/BeagleBoneBlack/" itemprop="url" rel="index">
+                    <span itemprop="name">BeagleBoneBlack</span>
                   </a>
                 </span>
 
@@ -417,8 +402,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2017/01/22/12864-udev-char-device/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/01/22/12864-udev-char-device/" itemprop="commentCount"></span>
+                <a href="/2017/04/27/bbb-build-can/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/04/27/bbb-build-can/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -444,307 +429,197 @@
       
 
       
-        <h2 id="1、LCD12864串口驱动程序"><a href="#1、LCD12864串口驱动程序" class="headerlink" title="1、LCD12864串口驱动程序"></a>1、LCD12864串口驱动程序</h2><pre><code class="bash"><span class="comment">#include &lt;linux/module.h&gt;</span>
-<span class="comment">#include &lt;linux/kernel.h&gt;</span>
-<span class="comment">#include &lt;linux/types.h&gt;</span>
-<span class="comment">#include &lt;linux/sched.h&gt;</span>
-<span class="comment">#include &lt;linux/init.h&gt;</span>
-<span class="comment">#include &lt;linux/fs.h&gt;</span>
-<span class="comment">#include &lt;linux/ioctl.h&gt;</span>
-<span class="comment">#include &lt;linux/delay.h&gt;</span>
-<span class="comment">#include &lt;linux/bcd.h&gt;</span>
-<span class="comment">#include &lt;linux/capability.h&gt;</span>
-<span class="comment">#include &lt;linux/rtc.h&gt;</span>
-<span class="comment">#include &lt;linux/cdev.h&gt;</span>
-<span class="comment">#include &lt;linux/device.h&gt;</span>
-<span class="comment">#include &lt;linux/gpio.h&gt;</span>
-<span class="comment">#include &lt;linux/version.h&gt;</span>
+        <p>A few months back I got hold of my first BeagleBone Black (BBB) with the intention of installing it in my car as a trackday data logger. First step in this endeavor was to get the CANBus working. I wrote this up here, but I’m shutting down that (poorly designed) site and have come up with a better way of enabling CAN so here goes.</p>
+<p>First up, I’m assuming you are either running the latest Angstrom image (see here), or Ubuntu with the patched device tree compiler (see here). This ensures you have a device tree compiler which is capable of compiling overlays. So with that out of the way…</p>
+<p>Enabling DCAN1</p>
+<p>Update 26th August 2013: This original post focused on enabling dcan1, as these pins are available by default. If you’d like to enable dcan0 (At the expense of i2c2, possibly breaking any capes you have plugged in!), skip to the bottom of the post</p>
+<p>To enable CAN (specifically dcan1), we need to write a device tree overlay which will enable the device and set the pin muxing. For those of you who just want the answer, here’s the overlay.</p>
+<p>BB-DCAN1-00A0.dts</p>
+<pre><code class="bash">/dts-v1/;
+/plugin/;
 
-<span class="comment">#include &lt;../arch/arm/mach-mx28/mx28_pins.h&gt;</span>
+/ {
+    compatible = <span class="string">"ti,beaglebone"</span>, <span class="string">"ti,beaglebone-black"</span>;
 
-<span class="comment">#define DEVICE_NAME "LCD12864"</span>
+    /* identification */
+    part-number = <span class="string">"dcan1pinmux"</span>;
 
-<span class="comment">#define LCD_SID 57</span>
-<span class="comment">#define LCD_CS 39</span>
-<span class="comment">#define LCD_CLK 56</span>
+    fragment@0 {
+        target = &lt;&amp;am33xx_pinmux&gt;;
+        __overlay__ {
+            dcan1_pins_s0: dcan1_pins_s0 {
+                pinctrl-single,pins = &lt;
+                    0x180 0x12  /* d_can1_tx, SLEWCTRL_FAST | INPUT_PULLUP | MODE2 */
+                    0x184 0x32  /* d_can1_rx, SLEWCTRL_FAST | RECV_ENABLE | INPUT_PULLUP | MODE2 */
+                &gt;;
+            };
+        };
+    };
 
-<span class="comment">#define LCD_IOC_MAGIC 'L'</span>
-<span class="comment">#define LCD_CMD _IO(LCD_IOC_MAGIC,0)</span>
-<span class="comment">#define LCD_LINE _IO(LCD_IOC_MAGIC,1)</span>
-<span class="comment">#define LCD_ROW _IO(LCD_IOC_MAGIC,2)</span>
-<span class="comment">#define LCD_DATA _IO(LCD_IOC_MAGIC,3)</span>
+    fragment@1 {
+        target = &lt;&amp;dcan1&gt;;
+        __overlay__ {
+             <span class="comment">#address-cells = &lt;1&gt;;</span>
+             <span class="comment">#size-cells = &lt;0&gt;;</span>
 
-<span class="comment">#define LCD_IOCTL_MAXNR 4</span>
-
-
-<span class="comment">#define LCD_SID_H gpio_direction_output(LCD_SID,1);</span>
-<span class="comment">#define LCD_SID_L gpio_direction_output(LCD_SID,0);</span>
-<span class="comment">#define LCD_CS_H gpio_direction_output(LCD_CS,1);</span>
-<span class="comment">#define LCD_CS_L gpio_direction_output(LCD_CS,0);</span>
-<span class="comment">#define LCD_CLK_H gpio_direction_output(LCD_CLK,1);</span>
-<span class="comment">#define LCD_CLK_L gpio_direction_output(LCD_CLK,0);</span>
-
-static int major,minor;
-struct cdev *lcd;
-static dev_t devno;
-static struct class *lcd_class;
-static int lcd_open(struct inode *inode,struct file *filp);
-static int lcd_release(struct inode *inode,struct file *filp);
-static int lcd_ioctl(struct inode *inode,struct file *flip,unsigned int <span class="built_in">command</span>,unsigned long arg);
-static int lcd_init(void);
-static void lcd_exit(void);
-
-struct file_operations lcd_fops ={
-    .owner = THIS_MODULE,
-    .open =lcd_open,
-    .release = lcd_release,
-<span class="comment">#if LINUX_VERSION_CODE &gt;= KERNEL_VERSION(2,6,36)</span>
-    .unlocked_ioctl = lcd_ioctl,
-<span class="comment">#else</span>
-    .ioctl = lcd_ioctl
-<span class="comment">#endif</span>
+             status = <span class="string">"okay"</span>;
+             pinctrl-names = <span class="string">"default"</span>;
+             pinctrl-0 = &lt;&amp;dcan1_pins_s0&gt;;
+        };
+    };
 };
-
-static void lcd_sendbyte(unsigned char byte)
-{
-    unsigned int i=0;
-    <span class="keyword">for</span>(i=0;i&lt;8;i++)
-    {
-        LCD_CLK_L;
-        udelay(1);
-        <span class="keyword">if</span>(byte &amp; 0x80)
-        {LCD_SID_H;}
-        <span class="keyword">else</span>
-        {LCD_SID_L;}
-        LCD_CLK_H;
-        udelay(1);
-        LCD_CLK_L;
-        udelay(1);
-        byte = byte &lt;&lt; 1;
-    }
-}
-
-static void lcd12864_write_cmd(unsigned char cmd)
-{
-    LCD_CS_H;
-    lcd_sendbyte(0xf8);
-    lcd_sendbyte(0xf0 &amp; cmd);
-    lcd_sendbyte(0xf0 &amp; (cmd &lt;&lt; 4));
-    LCD_CS_L;
-    mdelay(10);
-}
-
-static void lcd12864_write_dat(unsigned char dat)
-{
-
-    LCD_CS_H;
-    lcd_sendbyte(0xfa);
-    lcd_sendbyte(0xf0 &amp; dat);
-    lcd_sendbyte(0xf0 &amp; (dat &lt;&lt; 4));
-    LCD_CS_L;
-    mdelay(10);
-}
-static void lcd12864_init(void)
-{
-    lcd12864_write_cmd(0x30);
-    lcd12864_write_cmd(0x02);
-    lcd12864_write_cmd(0x06);
-    lcd12864_write_cmd(0x0c);
-    lcd12864_write_cmd(0x01);
-    lcd12864_write_cmd(0x80);
-
-}
-static void lcd12864_clean(void)
-{
-    lcd12864_write_cmd(0x01);
-}
-static void lcd_string(unsigned char x,unsigned char y,unsigned char *String)
-{
-    <span class="keyword">if</span>((x &lt; 8)&amp;&amp;(y &lt; 4))
-    {
-        switch(y)
-        {
-            <span class="keyword">case</span> 0:
-                lcd12864_write_cmd(0x80|0x00|x);
-                <span class="built_in">break</span>;
-            <span class="keyword">case</span> 1:
-                lcd12864_write_cmd(0x80|0x10|x);
-                <span class="built_in">break</span>;
-            <span class="keyword">case</span> 2:
-                lcd12864_write_cmd(0x80|0x08|x);
-                <span class="built_in">break</span>;
-            <span class="keyword">case</span> 3:
-                lcd12864_write_cmd(0x80|0x18|x);
-                <span class="built_in">break</span>;
-        }
-        <span class="keyword">while</span>(*String !=<span class="string">'\0'</span>)
-        {
-            lcd12864_write_dat(*String);
-            mdelay(50);
-            String++;
-        }
-    }
-
-}    
-static int lcd_open(struct inode *inode,struct file *file)
-{
-    try_module_get(THIS_MODULE);
-    lcd12864_init();//init lcd12864 cmd 
-    //init lcd12864 background
-    lcd_string(0,0,<span class="string">"Linux Chardev"</span>);
-    lcd_string(0,1,<span class="string">"LCD12864 Device"</span>);
-    lcd_string(0,2,<span class="string">"Initialization"</span>);
-    lcd_string(0,3,<span class="string">"Author:Jason"</span>);
-    <span class="built_in">return</span> 0;
-}
-static int lcd_release(struct inode *inode,struct file *file)
-{
-    module_put(THIS_MODULE);
-    lcd12864_clean();//close lcd12864 background
-    lcd_string(0,0,<span class="string">"LCD12864 Device"</span>);
-    lcd_string(0,1,<span class="string">"Already"</span>);
-    lcd_string(0,2,<span class="string">"Closed"</span>);
-    <span class="built_in">return</span> 0;
-}
-
-
-<span class="comment">#if LINUX_VERSION_CODE &gt;= KERNEL_VERSION(2,6,36)</span>
-int lcd_ioctl(struct file *filp,unsigned int cmd,unsigned long arg)
-<span class="comment">#else</span>
-static int lcd_ioctl(struct inode *inode,struct file *file,unsigned int cmd,unsigned long arg)
-<span class="comment">#endif</span>
-{
-    <span class="keyword">if</span>(_IOC_TYPE(cmd) != LCD_IOC_MAGIC)
-    {
-        <span class="built_in">return</span> -ENOTTY;
-    }
-    <span class="keyword">if</span>(_IOC_NR(cmd) &gt; LCD_IOCTL_MAXNR)
-    {
-        <span class="built_in">return</span> -ENOTTY;
-    }
-
-    switch(cmd)
-    {
-        <span class="keyword">case</span> LCD_LINE:  //待开发
-                <span class="built_in">break</span>;
-        <span class="keyword">case</span> LCD_ROW:   //待开发
-                <span class="built_in">break</span>;
-        <span class="keyword">case</span> LCD_CMD:   //待开发
-                <span class="built_in">break</span>;
-        <span class="keyword">case</span> LCD_DATA:  //待开发
-                <span class="built_in">break</span>;
-    }
-    <span class="built_in">return</span> 0;
-
-
-}
-static int __init lcd_init(void)
-{
-    int ret=0;
-
-    gpio_free(LCD_SID);
-    gpio_free(LCD_CS);
-    gpio_free(LCD_CLK);
-    ret += gpio_request(LCD_SID,<span class="string">"SID"</span>);
-    ret += gpio_request(LCD_CS,<span class="string">"CS"</span>);
-    ret += gpio_request(LCD_CLK,<span class="string">"CLK"</span>);
-    <span class="keyword">if</span>(ret)
-    {
-        printk(<span class="string">"request gpio failed "</span>);
-        <span class="built_in">return</span> -1;
-    }
-    ret = 0;
-    ret = alloc_chrdev_region(&amp;devno,minor,1,<span class="string">"LCD12864"</span>);
-    major = MAJOR(devno);
-    <span class="keyword">if</span>(ret &lt; 0)
-    {
-        printk(KERN_ERR<span class="string">"cannot get major %d\n"</span>,major);
-        <span class="built_in">return</span> -1;
-    }
-    lcd = cdev_alloc();
-    <span class="keyword">if</span>(lcd !=NULL)
-    {
-        cdev_init(lcd,&amp;lcd_fops);
-        lcd-&gt;owner = THIS_MODULE;
-        <span class="keyword">if</span>(cdev_add(lcd,devno,1) != 0)
-        {
-            printk(KERN_ERR<span class="string">"add cdev error! \n"</span>);
-            goto error;
-        }
-    }    
-    <span class="keyword">else</span>
-    {
-        printk(KERN_ERR<span class="string">"cdev_alloc error! \n"</span>);
-        <span class="built_in">return</span> -1;
-    }
-
-    lcd_class = class_create(THIS_MODULE,<span class="string">"lcd_class"</span>);
-    <span class="keyword">if</span>(IS_ERR(lcd_class))
-    {
-        printk(KERN_INFO<span class="string">"create class error!\n"</span>);
-        <span class="built_in">return</span> -1;
-    }
-    device_create(lcd_class,NULL,devno,NULL,<span class="string">"lcd12864"</span>);
-    <span class="built_in">return</span> 0;
-error:
-    unregister_chrdev_region(devno,1);
-    <span class="built_in">return</span> ret;
-
-}
-static void __exit lcd_exit(void)
-{
-    cdev_del(lcd);
-    unregister_chrdev_region(devno,1);
-    device_destroy(lcd_class,devno);
-    class_destroy(lcd_class);
-}
-
-module_init(lcd_init);
-module_exit(lcd_exit);
-
-MODULE_LICENSE(<span class="string">"GPL"</span>);
-MODULE_AUTHOR(<span class="string">"ideask,ideask@ideask.cf"</span>);
 </code></pre>
-<h2 id="2、Makefile"><a href="#2、Makefile" class="headerlink" title="2、Makefile"></a>2、Makefile</h2><pre><code class="bash">CC = arm-fsl-linux-gnueabi-gcc
-
-ifneq ($(KERNELRELEASE),)
-obj-m := lcd.o
-
-PWD :=$(shell <span class="built_in">pwd</span>)
-KVER :=$(shell uname -r)
-KDIR :=/root/linux-2.6.35.3
-
-all:
-    $(MAKE) -C $(KDIR) M=$(PWD) modules
-clean:
-    rm -rf .*.cmd *.o *.mod.c *.ko .tmp_versions
-endif
+<p>There are two important parts to the overlay, fragment@0 and fragment@1. We’ll look at each of those in turn.</p>
+<p>fragment@0 is responsible for setting the pin mux. The two lines of hex (15-16) represent pairs of ‘pin’ register and ‘mode’ value.</p>
+<p>Update 20th August 2013: I’ve created a spreadsheet to simplify the determination of register offset and mode values so you no longer have to dig through datasheets. The dcan1 signals can be found on pins P9 _24 and P9_26, both Mode 2. Use the register value worksheet to determine the correct pinmux values (Fast slew,  input for rx/output for tx, pull up, mode 2).</p>
+<p>To find the correct register you first need to find out the name of the pins from the BBB SRM. Referring to Table 11 in the SRM, you can find the dcan1 signals are exposed on pins 24 (UART1_TXD) and 26 (UART1_RXD).</p>
+<p>Now, diving in to the AM3359 Technical Reference Manual. In Table 9-10 (on page 759!) you can find the two registers conf_uart1_txd (0x980) and conf_uart1_rxd (0x984). These pin configuration registers start at 0x800, therefore the offset values are 0x180 and 0x184 respectively.</p>
+<p>The detail of these registers can be found in Section 9.3.51, letting you calculate the correct values for dcan1.</p>
+<p>Pin    Slew Rate    Input    Pull Up    Pull Up    Mode    Mode    Mode    In Hex</p>
+<pre><code class="bash">d_can1_tx (0x180)    0    0    1    0    0    1    0    0x12
+d_can1_rx (0x184)    0    1    1    0    0    1    0    0x32
 </code></pre>
-<h2 id="3、测试程序"><a href="#3、测试程序" class="headerlink" title="3、测试程序"></a>3、测试程序</h2><pre><code class="bash"><span class="comment">#include &lt;stdio.h&gt;</span>
-<span class="comment">#include &lt;stdlib.h&gt;</span>
-<span class="comment">#include &lt;unistd.h&gt;</span>
-<span class="comment">#include &lt;sys/ioctl.h&gt;</span>
-<span class="comment">#include &lt;errno.h&gt;</span>
-<span class="comment">#include &lt;fcntl.h&gt;</span>
-
-
-<span class="comment">#define DEV_NAME "/dev/lcd12864"</span>
-
-int main(int argc, char *argv[])
-{
-    int i;
-    int fd = 0;
-    fd = open(DEV_NAME,O_RDONLY);
-    <span class="keyword">if</span>(fd &lt; 0)
-    {
-        perror(<span class="string">"Open "</span>DEV_NAME<span class="string">"Failed!\n"</span>);
-        <span class="built_in">return</span> -1;
-    }
-    //close(fd);
-    <span class="keyword">while</span>(1);
-    <span class="built_in">return</span> 0;
-}
+<p>That’s it for fragment@0, on to fragment@1. This section enables the CAN device. Firstly, on line 23, we identify the device we want to enable as dcan1. Then we specify that we want the device enabled by setting it’s status to “okay” on line 28. Finally, we associate the pin mux created in fragment@0 with the device, line 30.</p>
+<p>To compile this overlay, save it as BB-DCAN1-00A0.dts (the dts extension referring to a device tree source file). Then execute the following command.</p>
+<pre><code class="bash">dtc -O dtb -o BB-DCAN1-00A0.dtbo -b 0 -@ BB-DCAN1-00A0.dts
 </code></pre>
+<p>This will create the overlay binary BB-DCAN1-00A0.dtbo. If you get an error about the -@ option being unrecognised then you are likely on Ubuntu without the patched version of dtc (see here).</p>
+<p>To use the overlay simply copy it to /lib/firmware</p>
+<pre><code class="bash">sudo cp BB-DCAN1-00A0.dtbo /lib/firmware
+</code></pre>
+<p>And execute the following (note you must be logged in as root to do this, sudo will not work!)</p>
+<pre><code class="bash"><span class="built_in">echo</span> BB-DCAN1 &gt; /sys/devices/bone_capemgr.*/slots
+</code></pre>
+<p>Check with dmesg to see if this worked, you should see something like this</p>
+<pre><code class="bash">dmesg | tail -n15
+[   17.878323] init: plymouth-stop pre-start process (796) terminated with status 1
+[  283.946706] bone-capemgr bone_capemgr.8: part_number <span class="string">'BB-DCAN1'</span>, version <span class="string">'N/A'</span>
+[  283.946892] bone-capemgr bone_capemgr.8: slot <span class="comment">#9: generic override</span>
+[  283.946944] bone-capemgr bone_capemgr.8: bone: Using override eeprom data at slot 9
+[  283.946996] bone-capemgr bone_capemgr.8: slot <span class="comment">#9: 'Override Board Name,00A0,Override Manuf,BB-DCAN1'</span>
+[  283.947270] bone-capemgr bone_capemgr.8: slot <span class="comment">#9: Requesting part number/version based 'BB-DCAN1-00A0.dtbo</span>
+[  283.947323] bone-capemgr bone_capemgr.8: slot <span class="comment">#9: Requesting firmware 'BB-DCAN1-00A0.dtbo' for board-name 'Override Board Name', version '00A0'</span>
+[  283.951368] bone-capemgr bone_capemgr.8: slot <span class="comment">#9: dtbo 'BB-DCAN1-00A0.dtbo' loaded; converting to live tree</span>
+[  283.952035] bone-capemgr bone_capemgr.8: slot <span class="comment">#9: #2 overlays</span>
+[  283.953133] platform 481d0000.d_can: <span class="built_in">alias</span> fck already exists
+[  283.962225] bone-capemgr bone_capemgr.8: slot <span class="comment">#9: Applied #2 overlays.</span>
+[  284.034183] CAN device driver interface
+[  284.071999] c_can_platform 481d0000.d_can: invalid resource
+[  284.078088] c_can_platform 481d0000.d_can: control memory is not used <span class="keyword">for</span> raminit
+[  284.084553] c_can_platform 481d0000.d_can: c_can_platform device registered (regs=fa1d0000, irq=71)
+If you have something to hook up to (don<span class="string">'t forget to go through a transceiver, or bad things will happen), you can test everything is up and working with can-utils. First, make sure you have all the relevant modules loaded.</span>
+</code></pre>
+<pre><code class="bash">sudo modprobe can
+sudo modprobe can-dev
+sudo modprobe can-raw
+</code></pre>
+<p>Get and build can-utils</p>
+<pre><code class="bash">svn co svn://svn.berlios.de/socketcan/trunk
+<span class="built_in">cd</span> trunk/can-utils/
+make
+</code></pre>
+<p>Set up the bus speed and enable it</p>
+<pre><code class="bash">sudo ip link <span class="built_in">set</span> can0 up <span class="built_in">type</span> can bitrate 500000
+sudo ifconfig can0 up
+</code></pre>
+<p>Now you can use either cansend or candump to test your bus.</p>
+<p>Unfortunately, I’ve discovered my car is more rust than chassis so the track days are going to have to wait. BBB has been repurposed to other projects, more details on these coming soon…</p>
+<p>Enabling DCAN0</p>
+<p>Update 26th August 2013: After the comment from Marco below, I’ve put this section in to enable DCAN0.</p>
+<p>To enable dcan0, you’ll need an overlay similar to that for dcan1. Marco posted one below, but it seems the comment system strips angled brackets for fear of HTML tags, so here is one I made.</p>
+<p>BB-DCAN0-00A0.dts</p>
+<pre><code class="bash">/dts-v1/;
+/plugin/;
+
+/ {
+    compatible = <span class="string">"ti,beaglebone"</span>, <span class="string">"ti,beaglebone-black"</span>;
+
+    /* identification */
+    part-number = <span class="string">"dcan0pinmux"</span>;
+
+    fragment@0 {
+        target = &lt;&amp;am33xx_pinmux&gt;;
+        __overlay__ {
+            dcan0_pins_s0: dcan0_pins_s0 {
+                pinctrl-single,pins = &lt;
+                    0x178 0x12  /* d_can0_tx, SLEWCTRL_FAST | INPUT_PULLUP | MODE2 */
+                    0x17C 0x32  /* d_can0_rx, SLEWCTRL_FAST | RECV_ENABLE | INPUT_PULLUP | MODE2 */
+                &gt;;
+            };
+        };
+    };
+
+    fragment@1 {
+        target = &lt;&amp;dcan0&gt;;
+        __overlay__ {
+             <span class="comment">#address-cells = &lt;1&gt;;</span>
+             <span class="comment">#size-cells = &lt;0&gt;;</span>
+
+             status = <span class="string">"okay"</span>;
+             pinctrl-names = <span class="string">"default"</span>;
+             pinctrl-0 = &lt;&amp;dcan0_pins_s0&gt;;
+        };
+    };
+};
+</code></pre>
+<p>We can build and install this in the same way</p>
+<pre><code class="bash">dtc -O dtb -o BB-DCAN0-00A0.dtbo -b 0 -@ BB-DCAN0-00A0.dts
+sudo cp BB-DCAN0-00A0.dtbo /lib/firmware
+</code></pre>
+<p>However, if you try to enable dcan0 now you will get an error about the i2c pins (see Marco’s comment). This is because the i2c2 pins are enabled by default and take precedence over any overlay. Before we continue I should mention that the i2c2 pins are used by the BBB to identify capes, and enable devices/pinmuxes appropriately, everything I do from here on is likely to stop any capes working!.</p>
+<p>Another warning: This process involves modifying the default device tree binary. If you do this incorrectly, your BBB will not boot. If you’re messing with the eMMC image, I can’t guarantee it can be reflashed either (although I see no reason why it shouldn’t be possible). You’re following this guide at your own risk, if it breaks your BBB it’s not my fault! I do all my hacking on an Ubuntu flashed SD card, so if it goes wrong (and it often does!) I can stick the card in my PC and undo any changes. eMMC users, continue at your own risk…</p>
+<p>Unfortunately, we can’t simply disable i2c2 with an overlay (I have tried, it crashed my BBB!). We also can’t switch off the i2c2 device, because it is used by bone_capemgr and disabling it seems to make /sys/devices/bone_capemgr.*/slots disappear, meaning we can’t enable overlays! So, my work around is simply to prevent the i2c2 device setting its pinmux and claiming the dcan0 pins. In this state, as far as bone_capemgr is concerned, the i2c2 pins are perpetually disconnected (but the device still exists in /dev/).</p>
+<p>To stop i2c2 from setting its pinmux, we need to modify the default device tree binary, and to do this we need the source files. If you built your kernel from scratch you will have them lying around somewhere, but if not you can grab them from Derek Molloy’s git repository (Note, I’m assuming the 3.8.13 kernel here).</p>
+<pre><code class="bash">git <span class="built_in">clone</span> https://github.com/derekmolloy/boneDeviceTree.git
+<span class="built_in">cd</span> boneDeviceTree/DTSource3.8.13/
+</code></pre>
+<p>Open up am335x-bone-common.dtsi and go to line 401 (pass the -c flag to nano to show line numbers). This is the section concerning i2c2.</p>
+<pre><code class="bash">nano -c am335x-bone-common.dtsi
+</code></pre>
+<p>am335x-bone-common.dtsi</p>
+<pre><code class="bash">&amp;i2c2 {
+    status = <span class="string">"okay"</span>;
+    pinctrl-names = <span class="string">"default"</span>;
+    pinctrl-0 = &lt;&amp;i2c2_pins&gt;;
+
+    clock-frequency = &lt;100000&gt;;
+
+    cape_eeprom0: cape_eeprom0@54 {
+        compatible = <span class="string">"at,24c256"</span>;
+        reg = &lt;0x54&gt;;
+    };
+
+    cape_eeprom1: cape_eeprom1@55 {
+        compatible = <span class="string">"at,24c256"</span>;
+        reg = &lt;0x55&gt;;
+    };
+
+    cape_eeprom2: cape_eeprom2@56 {
+        compatible = <span class="string">"at,24c256"</span>;
+        reg = &lt;0x56&gt;;
+    };
+
+    cape_eeprom3: cape_eeprom3@57 {
+        compatible = <span class="string">"at,24c256"</span>;
+        reg = &lt;0x57&gt;;
+    };
+};
+</code></pre>
+<p>To prevent the pinmux from being applied, simply comment out </p>
+<p>am335x-bone-common.dtsi</p>
+<p>//  pinctrl-0 = &lt;&amp;i2c2_pins&gt;;<br>Save and exit, then build with (note, you’re not building the file you just edited!)</p>
+<pre><code class="bash">dtc -O dtb -o am335x-boneblack.dtb -b 0 -@ am335x-boneblack.dts
+</code></pre>
+<p>Before overwriting your default device tree binary, back it up</p>
+<pre><code class="bash">sudo mv /boot/uboot/dtbs/am335x-boneblack.dtb /boot/uboot/dtbs/am335x-boneblack.orig.dtb
+</code></pre>
+<p>Now move your new binary in to place</p>
+<p>sudo mv am335x-boneblack.dtb /boot/uboot/dtbs/<br>You’ll get an error about preserving permissions, you can safely ignore this.</p>
+<p>Now reboot your BBB and the i2c2 pinmux will not be applied. Now you should be able to enable dcan0 in much the same way as dcan1. As root (not sudo!)</p>
+<pre><code class="bash"><span class="built_in">echo</span> BB-DCAN0 &gt; /sys/devices/bone_capemgr.*/slots
+</code></pre>
+<p>Now grab can-utils and play around with the bus (see above for dcan1).</p>
+<p>If you plan to use dcan0 and dcan1, I believe the device driver numbering is based on the order the devices are enabled. So enable dcan0 before dcan1 so that your calls to ip, ifconfig, candump, etc… all make sense!</p>
 
       
     </div>
@@ -789,7 +664,7 @@ int main(int argc, char *argv[])
       
         <div class="post-tags">
           
-            <a href="/tags/设备驱动/" rel="tag"># 设备驱动</a>
+            <a href="/tags/BeagleBoneBlack/" rel="tag"># BeagleBoneBlack</a>
           
         </div>
       
@@ -798,8 +673,8 @@ int main(int argc, char *argv[])
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/01/22/ioctl-led-udev-char-device/" rel="next" title="ioctl方式操作LED udev驱动模板">
-                <i class="fa fa-chevron-left"></i> ioctl方式操作LED udev驱动模板
+              <a href="/2017/04/27/bbb-build-spi/" rel="next" title="BBB添加SPI支持">
+                <i class="fa fa-chevron-left"></i> BBB添加SPI支持
               </a>
             
           </div>
@@ -807,10 +682,6 @@ int main(int argc, char *argv[])
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/01/23/vim-note/" rel="prev" title="vim笔记">
-                vim笔记 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -825,10 +696,10 @@ int main(int argc, char *argv[])
 
     <div class="post-spread">
       
-        <div class="ds-share flat" data-thread-key="2017/01/22/12864-udev-char-device/"
-     data-title="LCD12864串口驱动udev"
+        <div class="ds-share flat" data-thread-key="2017/04/27/bbb-build-can/"
+     data-title="BBB添加CAN支持"
      data-content=""
-     data-url="http://ideask.cf/2017/01/22/12864-udev-char-device/">
+     data-url="http://ideask.cf/2017/04/27/bbb-build-can/">
   <div class="ds-share-inline">
     <ul  class="ds-share-icons-16">
 
@@ -855,8 +726,8 @@ int main(int argc, char *argv[])
           
   <div class="comments" id="comments">
     
-      <div class="ds-thread" data-thread-key="2017/01/22/12864-udev-char-device/"
-           data-title="LCD12864串口驱动udev" data-url="http://ideask.cf/2017/01/22/12864-udev-char-device/">
+      <div class="ds-thread" data-thread-key="2017/04/27/bbb-build-can/"
+           data-title="BBB添加CAN支持" data-url="http://ideask.cf/2017/04/27/bbb-build-can/">
       </div>
     
   </div>
@@ -880,17 +751,8 @@ int main(int argc, char *argv[])
       
 
       
-        <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
-            文章目录
-          </li>
-          <li class="sidebar-nav-overview" data-target="site-overview">
-            站点概览
-          </li>
-        </ul>
-      
 
-      <section class="site-overview sidebar-panel">
+      <section class="site-overview sidebar-panel sidebar-panel-active">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/images/avatar.gif"
@@ -1007,22 +869,6 @@ int main(int argc, char *argv[])
 
       </section>
 
-      
-      <!--noindex-->
-        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
-          <div class="post-toc">
-
-            
-              
-            
-
-            
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1、LCD12864串口驱动程序"><span class="nav-number">1.</span> <span class="nav-text">1、LCD12864串口驱动程序</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2、Makefile"><span class="nav-number">2.</span> <span class="nav-text">2、Makefile</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3、测试程序"><span class="nav-number">3.</span> <span class="nav-text">3、测试程序</span></a></li></ol></div>
-            
-
-          </div>
-        </section>
-      <!--/noindex-->
       
 
     </div>

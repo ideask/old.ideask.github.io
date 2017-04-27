@@ -4,6 +4,225 @@
   
     
     <entry>
+      <title><![CDATA[BBB添加CAN支持]]></title>
+      <url>http://ideask.cf/2017/04/27/bbb-build-can/</url>
+      <content type="html"><![CDATA[<p>A few months back I got hold of my first BeagleBone Black (BBB) with the intention of installing it in my car as a trackday data logger. First step in this endeavor was to get the CANBus working. I wrote this up here, but I’m shutting down that (poorly designed) site and have come up with a better way of enabling CAN so here goes.</p>
+<p>First up, I’m assuming you are either running the latest Angstrom image (see here), or Ubuntu with the patched device tree compiler (see here). This ensures you have a device tree compiler which is capable of compiling overlays. So with that out of the way…</p>
+<p>Enabling DCAN1</p>
+<p>Update 26th August 2013: This original post focused on enabling dcan1, as these pins are available by default. If you’d like to enable dcan0 (At the expense of i2c2, possibly breaking any capes you have plugged in!), skip to the bottom of the post</p>
+<p>To enable CAN (specifically dcan1), we need to write a device tree overlay which will enable the device and set the pin muxing. For those of you who just want the answer, here’s the overlay.</p>
+<p>BB-DCAN1-00A0.dts</p>
+<pre><code class="bash">/dts-v1/;
+/plugin/;
+
+/ {
+    compatible = <span class="string">"ti,beaglebone"</span>, <span class="string">"ti,beaglebone-black"</span>;
+
+    /* identification */
+    part-number = <span class="string">"dcan1pinmux"</span>;
+
+    fragment@0 {
+        target = &lt;&amp;am33xx_pinmux&gt;;
+        __overlay__ {
+            dcan1_pins_s0: dcan1_pins_s0 {
+                pinctrl-single,pins = &lt;
+                    0x180 0x12  /* d_can1_tx, SLEWCTRL_FAST | INPUT_PULLUP | MODE2 */
+                    0x184 0x32  /* d_can1_rx, SLEWCTRL_FAST | RECV_ENABLE | INPUT_PULLUP | MODE2 */
+                &gt;;
+            };
+        };
+    };
+
+    fragment@1 {
+        target = &lt;&amp;dcan1&gt;;
+        __overlay__ {
+             <span class="comment">#address-cells = &lt;1&gt;;</span>
+             <span class="comment">#size-cells = &lt;0&gt;;</span>
+
+             status = <span class="string">"okay"</span>;
+             pinctrl-names = <span class="string">"default"</span>;
+             pinctrl-0 = &lt;&amp;dcan1_pins_s0&gt;;
+        };
+    };
+};
+</code></pre>
+<p>There are two important parts to the overlay, fragment@0 and fragment@1. We’ll look at each of those in turn.</p>
+<p>fragment@0 is responsible for setting the pin mux. The two lines of hex (15-16) represent pairs of ‘pin’ register and ‘mode’ value.</p>
+<p>Update 20th August 2013: I’ve created a spreadsheet to simplify the determination of register offset and mode values so you no longer have to dig through datasheets. The dcan1 signals can be found on pins P9 _24 and P9_26, both Mode 2. Use the register value worksheet to determine the correct pinmux values (Fast slew,  input for rx/output for tx, pull up, mode 2).</p>
+<p>To find the correct register you first need to find out the name of the pins from the BBB SRM. Referring to Table 11 in the SRM, you can find the dcan1 signals are exposed on pins 24 (UART1_TXD) and 26 (UART1_RXD).</p>
+<p>Now, diving in to the AM3359 Technical Reference Manual. In Table 9-10 (on page 759!) you can find the two registers conf_uart1_txd (0x980) and conf_uart1_rxd (0x984). These pin configuration registers start at 0x800, therefore the offset values are 0x180 and 0x184 respectively.</p>
+<p>The detail of these registers can be found in Section 9.3.51, letting you calculate the correct values for dcan1.</p>
+<p>Pin    Slew Rate    Input    Pull Up    Pull Up    Mode    Mode    Mode    In Hex</p>
+<pre><code class="bash">d_can1_tx (0x180)    0    0    1    0    0    1    0    0x12
+d_can1_rx (0x184)    0    1    1    0    0    1    0    0x32
+</code></pre>
+<p>That’s it for fragment@0, on to fragment@1. This section enables the CAN device. Firstly, on line 23, we identify the device we want to enable as dcan1. Then we specify that we want the device enabled by setting it’s status to “okay” on line 28. Finally, we associate the pin mux created in fragment@0 with the device, line 30.</p>
+<p>To compile this overlay, save it as BB-DCAN1-00A0.dts (the dts extension referring to a device tree source file). Then execute the following command.</p>
+<pre><code class="bash">dtc -O dtb -o BB-DCAN1-00A0.dtbo -b 0 -@ BB-DCAN1-00A0.dts
+</code></pre>
+<p>This will create the overlay binary BB-DCAN1-00A0.dtbo. If you get an error about the -@ option being unrecognised then you are likely on Ubuntu without the patched version of dtc (see here).</p>
+<p>To use the overlay simply copy it to /lib/firmware</p>
+<pre><code class="bash">sudo cp BB-DCAN1-00A0.dtbo /lib/firmware
+</code></pre>
+<p>And execute the following (note you must be logged in as root to do this, sudo will not work!)</p>
+<pre><code class="bash"><span class="built_in">echo</span> BB-DCAN1 &gt; /sys/devices/bone_capemgr.*/slots
+</code></pre>
+<p>Check with dmesg to see if this worked, you should see something like this</p>
+<pre><code class="bash">dmesg | tail -n15
+[   17.878323] init: plymouth-stop pre-start process (796) terminated with status 1
+[  283.946706] bone-capemgr bone_capemgr.8: part_number <span class="string">'BB-DCAN1'</span>, version <span class="string">'N/A'</span>
+[  283.946892] bone-capemgr bone_capemgr.8: slot <span class="comment">#9: generic override</span>
+[  283.946944] bone-capemgr bone_capemgr.8: bone: Using override eeprom data at slot 9
+[  283.946996] bone-capemgr bone_capemgr.8: slot <span class="comment">#9: 'Override Board Name,00A0,Override Manuf,BB-DCAN1'</span>
+[  283.947270] bone-capemgr bone_capemgr.8: slot <span class="comment">#9: Requesting part number/version based 'BB-DCAN1-00A0.dtbo</span>
+[  283.947323] bone-capemgr bone_capemgr.8: slot <span class="comment">#9: Requesting firmware 'BB-DCAN1-00A0.dtbo' for board-name 'Override Board Name', version '00A0'</span>
+[  283.951368] bone-capemgr bone_capemgr.8: slot <span class="comment">#9: dtbo 'BB-DCAN1-00A0.dtbo' loaded; converting to live tree</span>
+[  283.952035] bone-capemgr bone_capemgr.8: slot <span class="comment">#9: #2 overlays</span>
+[  283.953133] platform 481d0000.d_can: <span class="built_in">alias</span> fck already exists
+[  283.962225] bone-capemgr bone_capemgr.8: slot <span class="comment">#9: Applied #2 overlays.</span>
+[  284.034183] CAN device driver interface
+[  284.071999] c_can_platform 481d0000.d_can: invalid resource
+[  284.078088] c_can_platform 481d0000.d_can: control memory is not used <span class="keyword">for</span> raminit
+[  284.084553] c_can_platform 481d0000.d_can: c_can_platform device registered (regs=fa1d0000, irq=71)
+If you have something to hook up to (don<span class="string">'t forget to go through a transceiver, or bad things will happen), you can test everything is up and working with can-utils. First, make sure you have all the relevant modules loaded.</span>
+</code></pre>
+<pre><code class="bash">sudo modprobe can
+sudo modprobe can-dev
+sudo modprobe can-raw
+</code></pre>
+<p>Get and build can-utils</p>
+<pre><code class="bash">svn co svn://svn.berlios.de/socketcan/trunk
+<span class="built_in">cd</span> trunk/can-utils/
+make
+</code></pre>
+<p>Set up the bus speed and enable it</p>
+<pre><code class="bash">sudo ip link <span class="built_in">set</span> can0 up <span class="built_in">type</span> can bitrate 500000
+sudo ifconfig can0 up
+</code></pre>
+<p>Now you can use either cansend or candump to test your bus.</p>
+<p>Unfortunately, I’ve discovered my car is more rust than chassis so the track days are going to have to wait. BBB has been repurposed to other projects, more details on these coming soon…</p>
+<p>Enabling DCAN0</p>
+<p>Update 26th August 2013: After the comment from Marco below, I’ve put this section in to enable DCAN0.</p>
+<p>To enable dcan0, you’ll need an overlay similar to that for dcan1. Marco posted one below, but it seems the comment system strips angled brackets for fear of HTML tags, so here is one I made.</p>
+<p>BB-DCAN0-00A0.dts</p>
+<pre><code class="bash">/dts-v1/;
+/plugin/;
+
+/ {
+    compatible = <span class="string">"ti,beaglebone"</span>, <span class="string">"ti,beaglebone-black"</span>;
+
+    /* identification */
+    part-number = <span class="string">"dcan0pinmux"</span>;
+
+    fragment@0 {
+        target = &lt;&amp;am33xx_pinmux&gt;;
+        __overlay__ {
+            dcan0_pins_s0: dcan0_pins_s0 {
+                pinctrl-single,pins = &lt;
+                    0x178 0x12  /* d_can0_tx, SLEWCTRL_FAST | INPUT_PULLUP | MODE2 */
+                    0x17C 0x32  /* d_can0_rx, SLEWCTRL_FAST | RECV_ENABLE | INPUT_PULLUP | MODE2 */
+                &gt;;
+            };
+        };
+    };
+
+    fragment@1 {
+        target = &lt;&amp;dcan0&gt;;
+        __overlay__ {
+             <span class="comment">#address-cells = &lt;1&gt;;</span>
+             <span class="comment">#size-cells = &lt;0&gt;;</span>
+
+             status = <span class="string">"okay"</span>;
+             pinctrl-names = <span class="string">"default"</span>;
+             pinctrl-0 = &lt;&amp;dcan0_pins_s0&gt;;
+        };
+    };
+};
+</code></pre>
+<p>We can build and install this in the same way</p>
+<pre><code class="bash">dtc -O dtb -o BB-DCAN0-00A0.dtbo -b 0 -@ BB-DCAN0-00A0.dts
+sudo cp BB-DCAN0-00A0.dtbo /lib/firmware
+</code></pre>
+<p>However, if you try to enable dcan0 now you will get an error about the i2c pins (see Marco’s comment). This is because the i2c2 pins are enabled by default and take precedence over any overlay. Before we continue I should mention that the i2c2 pins are used by the BBB to identify capes, and enable devices/pinmuxes appropriately, everything I do from here on is likely to stop any capes working!.</p>
+<p>Another warning: This process involves modifying the default device tree binary. If you do this incorrectly, your BBB will not boot. If you’re messing with the eMMC image, I can’t guarantee it can be reflashed either (although I see no reason why it shouldn’t be possible). You’re following this guide at your own risk, if it breaks your BBB it’s not my fault! I do all my hacking on an Ubuntu flashed SD card, so if it goes wrong (and it often does!) I can stick the card in my PC and undo any changes. eMMC users, continue at your own risk…</p>
+<p>Unfortunately, we can’t simply disable i2c2 with an overlay (I have tried, it crashed my BBB!). We also can’t switch off the i2c2 device, because it is used by bone_capemgr and disabling it seems to make /sys/devices/bone_capemgr.*/slots disappear, meaning we can’t enable overlays! So, my work around is simply to prevent the i2c2 device setting its pinmux and claiming the dcan0 pins. In this state, as far as bone_capemgr is concerned, the i2c2 pins are perpetually disconnected (but the device still exists in /dev/).</p>
+<p>To stop i2c2 from setting its pinmux, we need to modify the default device tree binary, and to do this we need the source files. If you built your kernel from scratch you will have them lying around somewhere, but if not you can grab them from Derek Molloy’s git repository (Note, I’m assuming the 3.8.13 kernel here).</p>
+<pre><code class="bash">git <span class="built_in">clone</span> https://github.com/derekmolloy/boneDeviceTree.git
+<span class="built_in">cd</span> boneDeviceTree/DTSource3.8.13/
+</code></pre>
+<p>Open up am335x-bone-common.dtsi and go to line 401 (pass the -c flag to nano to show line numbers). This is the section concerning i2c2.</p>
+<pre><code class="bash">nano -c am335x-bone-common.dtsi
+</code></pre>
+<p>am335x-bone-common.dtsi</p>
+<pre><code class="bash">&amp;i2c2 {
+    status = <span class="string">"okay"</span>;
+    pinctrl-names = <span class="string">"default"</span>;
+    pinctrl-0 = &lt;&amp;i2c2_pins&gt;;
+
+    clock-frequency = &lt;100000&gt;;
+
+    cape_eeprom0: cape_eeprom0@54 {
+        compatible = <span class="string">"at,24c256"</span>;
+        reg = &lt;0x54&gt;;
+    };
+
+    cape_eeprom1: cape_eeprom1@55 {
+        compatible = <span class="string">"at,24c256"</span>;
+        reg = &lt;0x55&gt;;
+    };
+
+    cape_eeprom2: cape_eeprom2@56 {
+        compatible = <span class="string">"at,24c256"</span>;
+        reg = &lt;0x56&gt;;
+    };
+
+    cape_eeprom3: cape_eeprom3@57 {
+        compatible = <span class="string">"at,24c256"</span>;
+        reg = &lt;0x57&gt;;
+    };
+};
+</code></pre>
+<p>To prevent the pinmux from being applied, simply comment out </p>
+<p>am335x-bone-common.dtsi</p>
+<p>//  pinctrl-0 = &lt;&amp;i2c2_pins&gt;;<br>Save and exit, then build with (note, you’re not building the file you just edited!)</p>
+<pre><code class="bash">dtc -O dtb -o am335x-boneblack.dtb -b 0 -@ am335x-boneblack.dts
+</code></pre>
+<p>Before overwriting your default device tree binary, back it up</p>
+<pre><code class="bash">sudo mv /boot/uboot/dtbs/am335x-boneblack.dtb /boot/uboot/dtbs/am335x-boneblack.orig.dtb
+</code></pre>
+<p>Now move your new binary in to place</p>
+<p>sudo mv am335x-boneblack.dtb /boot/uboot/dtbs/<br>You’ll get an error about preserving permissions, you can safely ignore this.</p>
+<p>Now reboot your BBB and the i2c2 pinmux will not be applied. Now you should be able to enable dcan0 in much the same way as dcan1. As root (not sudo!)</p>
+<pre><code class="bash"><span class="built_in">echo</span> BB-DCAN0 &gt; /sys/devices/bone_capemgr.*/slots
+</code></pre>
+<p>Now grab can-utils and play around with the bus (see above for dcan1).</p>
+<p>If you plan to use dcan0 and dcan1, I believe the device driver numbering is based on the order the devices are enabled. So enable dcan0 before dcan1 so that your calls to ip, ifconfig, candump, etc… all make sense!</p>
+]]></content>
+    </entry>
+    
+    <entry>
+      <title><![CDATA[BBB添加SPI支持]]></title>
+      <url>http://ideask.cf/2017/04/27/bbb-build-spi/</url>
+      <content type="html"><![CDATA[<p>在3.2之前版本的内核里spi驱动要先注册spi_board_info结构体,然后匹配spi_master, 再创建spi_device. 创建完设备之后再到spi总线上寻找有没有同名的spi_driver. 如果有的话就调用spi_driver的probe函数. 在probe函数里register_chrdev/class_create/device_create, 创建chrdev然后通过fops里的函数来读写spi设备.<br>在新版的内核里推荐使用dts来描述设备信息, 并且先注册spi_master, 然后再创建设备, 最后跟platform总线上的driver的 .of_match_table成员里的元素匹配, 如果匹配成功就调用probe. 所以新版的内核里我们不需要再写spi_baord_info 和spi_register_board_info这样的代码了</p>
+<p>折腾了一个星期的人表示看到上边这个画面简直泪如雨下.  下边我们就看如何在不修改一丁点内核代码的情况下让系统显示出这个画面.<br><img src="http://img.blog.csdn.net/20150723153952844" alt="这里写图片描述"><br>首先交代一下我使用的系统. 我使用的是TI最新板的sdk: ti-processor-sdk-Linux-am335x-evm-01.00.00.00-Linux-x86-Install.bin</p>
+<pre><code class="bash">root@am335x-evm:~<span class="comment"># uname -a  </span>
+Linux am335x-evm 3.14.26 <span class="comment">#22 Wed Jul 22 16:14:16 CST 2015 armv7l GNU/Linux</span>
+</code></pre>
+<p>我们先找到我们要修改的文件: am335x-boneblack.dts</p>
+<p>(sdk)/ti-processor-sdk-linux-am335x-evm-01.00.00.00/board-support/linux-3.14.26-g2489c02/arch/arm/boot/dts/am335x-boneblack.dtb  </p>
+<p>因为dts文件层层包含我们不容易搞清楚结构, 那还不如将dtb反编译回dts, 看看最终的dts文件.</p>
+<pre><code class="bash">dtc -I dtb -O dts am335x-boneblack.dtb &gt; am335x-boneblack.dts
+</code></pre>
+<p>第一处修改:<br><img src="http://img.blog.csdn.net/20150723160658562" alt="这里写图片描述"></p>
+<p>第二处修改:<br><img src="http://img.blog.csdn.net/20150723160803617" alt="这里写图片描述"></p>
+<p>添加这两部分的代码, spi0_pins 和spi1_pins分别对应spi0和spi1引脚的配置, 关于引脚的配置值可以用TI官方的pinmux工具来生成.<br>第三处修改:<br><img src="http://img.blog.csdn.net/20150723161619530" alt="这里写图片描述"><br>spi@48030000 对应spi0<br>spi@481a0000 对应spi1<br>compatible = “ti,omap4-mcspi” 对应spi驱动底层 spi_master驱动(spi-omap2-mcspi.c)下 的platform_drvier里的 .of_match_table 成员.如果 .of_match_table 数组里有 “ti,omap4-mcspi” 那么就可以调用该platform_driver的probe函数.在spi_register_master中创建设备<br>compatible = “rohm,dh2228fv” 对应spi驱动上层 spi_driver (spidev.c)的 .of_match_table 成员. 如果 .of_match_table 数组里有 “rohm,dh2228fv”,就可以调用 spi_driver的probe函数了.</p>
+<p>至此dts文件已经修改完毕, 只需要编译之后让系统加载这个新的dtb就可以了</p>
+<pre><code class="bash">dtc -I dts -O dtb am335x-boneblack.dts &gt; am335x-boneblack.dtb
+</code></pre>
+]]></content>
+    </entry>
+    
+    <entry>
       <title><![CDATA[BBB狗板在ubuntu14.04LTS添加Uart1、2、4、5]]></title>
       <url>http://ideask.cf/2017/04/27/bbb-build-tree-uart/</url>
       <content type="html"><![CDATA[<h3 id="至于为什么没有Uart3"><a href="#至于为什么没有Uart3" class="headerlink" title="至于为什么没有Uart3"></a>至于为什么没有Uart3</h3><p>   图上可知BBB的uart3只有一个发送，并没有接收，所以本文将不使能该串口，我感觉uart1、2、4、5这四个串口都够用了。<br><img src="http://beagleboard.org/static/images/cape-headers-serial.png" alt="这里写图片描述"></p>
