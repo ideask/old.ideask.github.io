@@ -4,6 +4,26 @@
 
     
   <url>
+    <loc>http://ideask.cf/2017/04/27/bbb-build-tree-uart/</loc>
+    <lastmod>2017-04-27T09:10:28.149Z</lastmod>
+    <data>
+        <display>
+        <title>BBB狗板在ubuntu14.04LTS添加Uart1、2、4、5</title>
+        <pubTime>2017-04-27T08:16:53.000Z</pubTime>
+        
+        <tag>BeagleBoneBlack</tag>
+         
+         
+           
+             
+              <breadCrumb title="BeagleBoneBlack" url="http://ideask.cf/categories/BeagleBoneBlack/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://ideask.cf/2017/02/01/arm-asm/</loc>
     <lastmod>2017-02-06T08:40:37.805Z</lastmod>
     <data>

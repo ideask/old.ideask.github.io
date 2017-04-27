@@ -313,6 +313,2112 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://ideask.cf/2017/04/27/bbb-build-tree-uart/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Jason Lin">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.gif">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="Jason Lin">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="Jason Lin" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/04/27/bbb-build-tree-uart/" itemprop="url">
+                  BBB狗板在ubuntu14.04LTS添加Uart1、2、4、5
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-04-27T16:16:53+08:00">
+                2017-04-27
+              </time>
+			  </span>
+			
+			<span>
+    
+			<span>更新于</span>
+			<time>
+			2017-04-27
+			16:16:53
+			</time>
+			</span>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/BeagleBoneBlack/" itemprop="url" rel="index">
+                    <span itemprop="name">BeagleBoneBlack</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2017/04/27/bbb-build-tree-uart/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/04/27/bbb-build-tree-uart/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="至于为什么没有Uart3"><a href="#至于为什么没有Uart3" class="headerlink" title="至于为什么没有Uart3"></a>至于为什么没有Uart3</h3><p>   图上可知BBB的uart3只有一个发送，并没有接收，所以本文将不使能该串口，我感觉uart1、2、4、5这四个串口都够用了。<br><img src="http://beagleboard.org/static/images/cape-headers-serial.png" alt="这里写图片描述"></p>
+<h3 id="如何使能串口2、4、5"><a href="#如何使能串口2、4、5" class="headerlink" title="如何使能串口2、4、5"></a>如何使能串口2、4、5</h3><p>   博主从 <a href="http://www.armhf.com" target="_blank" rel="external">http://www.armhf.com</a> 下载的ubuntu14.04是默认打开Uart0和1的，因此我们只需要修改2、4、5的串口配置。</p>
+<pre><code>http://www.armhf.com/beaglebone-black-serial-uart-device-tree-overlays-for-ubuntu-and-debian-wheezy-tty01-tty02-tty04-tty05-dtbo-files/
+</code></pre><p>   外国的朋友在早起已经有了解决方案，可惜这方法失效了，因为在内核版本到3.14之后就不再支持 bone_capemgr 了。</p>
+<p>   后来博主在评论区看到armhf的回答，按着他的步骤我驱动起来了。<br>    方法如下：<br>    1、先安装设备树反编译。<br>    2、进入dtbs目录备份原来的，避免错误修改造成开机失败。<br>    3、反编译dtb变成dts<br>    4、用nano或者vim打开dts文件</p>
+<pre><code class="bash">apt-get update
+apt-get install device-tree-compiler
+<span class="built_in">cd</span> /boot/dtbs/
+cp am335x-boneblack.dtb am335x-boneblack.dtb_orig  
+dtc -I dtb -O dts -o am335x-boneblack.dts   /boot/dtbs/am335x-boneblack.dtb
+nano am335x-boneblack.dts
+</code></pre>
+<p>   打开dts文件后找到：（在该位置删除掉）</p>
+<pre><code class="bash">   pinmux_uart2_pins {
+    pinctrl-single,pins = &lt;0x150 0x21 0x154 0x1&gt;;
+};
+
+pinmux_uart4_pins {
+    pinctrl-single,pins = &lt;0x70 0x26 0x74 0x6&gt;;
+};
+
+pinmux_uart5_pins {
+    pinctrl-single,pins = &lt;0xc4 0x24 0xc0 0x4&gt;;
+};
+</code></pre>
+<p>将其修改成：<strong>（在pinmux@44e10800 section“内”的尾部添加，以免在原位置的时候，后面I2C、SPI会覆盖修改设置，所以追加到后面）</strong><br>    <em>pinctrl-single,pins这个是配置哪个引脚哪个功能的，可以参考数据手册。</em></p>
+<pre><code class="bash">pinmux_uart2_pins {
+         pinctrl-single,pins = &lt;0x150 0x21 0x154 0x1&gt;;
+         linux,phandle = &lt;0x81&gt;;
+         phandle = &lt;0x81&gt;;
+
+ };
+
+ pinmux_uart4_pins {
+         pinctrl-single,pins = &lt;0x70 0x26 0x74 0x6&gt;;
+         linux,phandle = &lt;0x82&gt;;
+         phandle = &lt;0x82&gt;;
+
+ };
+
+ pinmux_uart5_pins {
+         pinctrl-single,pins = &lt;0xc4 0x24 0xc0 0x4&gt;;
+         linux,phandle = &lt;0x83&gt;;
+         phandle = &lt;0x83&gt;;
+
+ };
+</code></pre>
+<p>   然后找串口2、4、5的入口点：（注意：这里uart3对应串口2!）按照下面的修改就可以了。pinctrl-0 = <0x81>;与上面设置的linux,phandle = <0x81>;  phandle = <0x81>;要对应起来。</0x81></0x81></0x81></p>
+<pre><code>serial@48024000 {
+    compatible = &quot;ti,omap3-uart&quot;;
+    ti,hwmods = &quot;uart3&quot;;
+    clock-frequency = &lt;0x2dc6c00&gt;;
+    reg = &lt;0x48024000 0x2000&gt;;
+    interrupts = &lt;0x4a&gt;;
+    status = &quot;okay&quot;;
+    pinctrl-names = &quot;default&quot;;
+    pinctrl-0 = &lt;0x81&gt;;
+};
+
+serial@481a6000 {
+    compatible = &quot;ti,omap3-uart&quot;;
+    ti,hwmods = &quot;uart4&quot;;
+    clock-frequency = &lt;0x2dc6c00&gt;;
+    reg = &lt;0x481a6000 0x2000&gt;;
+    interrupts = &lt;0x2c&gt;;
+    status = &quot;disabled&quot;;
+};
+
+serial@481a8000 {
+    compatible = &quot;ti,omap3-uart&quot;;
+    ti,hwmods = &quot;uart5&quot;;
+    clock-frequency = &lt;0x2dc6c00&gt;;
+    reg = &lt;0x481a8000 0x2000&gt;;
+    interrupts = &lt;0x2d&gt;;
+    status = &quot;okay&quot;;
+    pinctrl-names = &quot;default&quot;;
+    pinctrl-0 = &lt;0x82&gt;;
+
+};
+
+serial@481aa000 {
+    compatible = &quot;ti,omap3-uart&quot;;
+    ti,hwmods = &quot;uart6&quot;;
+    clock-frequency = &lt;0x2dc6c00&gt;;
+    reg = &lt;0x481aa000 0x2000&gt;;
+    interrupts = &lt;0x2e&gt;;
+    status = &quot;okay&quot;;
+    pinctrl-names = &quot;default&quot;;
+    pinctrl-0 = &lt;0x83&gt;;
+
+};
+</code></pre><h3 id="最后一步"><a href="#最后一步" class="headerlink" title="最后一步"></a>最后一步</h3><p>在/boot/dtbs/目录内执行，生成新的am335x-boneblack.dtb。</p>
+<pre><code class="bash">dtc -I dts -O dtb -o am335x-boneblack.dtb am335x-boneblack.dts
+</code></pre>
+<h3 id="我的am335x-boneblack-dts参考"><a href="#我的am335x-boneblack-dts参考" class="headerlink" title="我的am335x-boneblack.dts参考"></a>我的am335x-boneblack.dts参考</h3><pre><code class="bash">/dts-v1/;
+
+/ {
+    <span class="comment">#address-cells = &lt;0x1&gt;;</span>
+    <span class="comment">#size-cells = &lt;0x1&gt;;</span>
+    compatible = <span class="string">"ti,am335x-bone"</span>, <span class="string">"ti,am33xx"</span>;
+    interrupt-parent = &lt;0x1&gt;;
+    model = <span class="string">"TI AM335x BeagleBone"</span>;
+
+    chosen {
+    };
+
+    aliases {
+        i2c0 = <span class="string">"/ocp/i2c@44e0b000"</span>;
+        i2c1 = <span class="string">"/ocp/i2c@4802a000"</span>;
+        i2c2 = <span class="string">"/ocp/i2c@4819c000"</span>;
+        serial0 = <span class="string">"/ocp/serial@44e09000"</span>;
+        serial1 = <span class="string">"/ocp/serial@48022000"</span>;
+        serial2 = <span class="string">"/ocp/serial@48024000"</span>;
+        serial3 = <span class="string">"/ocp/serial@481a6000"</span>;
+        serial4 = <span class="string">"/ocp/serial@481a8000"</span>;
+        serial5 = <span class="string">"/ocp/serial@481aa000"</span>;
+        d_can0 = <span class="string">"/ocp/d_can@481cc000"</span>;
+        d_can1 = <span class="string">"/ocp/d_can@481d0000"</span>;
+        usb0 = <span class="string">"/ocp/usb@47400000/usb@47401000"</span>;
+        usb1 = <span class="string">"/ocp/usb@47400000/usb@47401800"</span>;
+        phy0 = <span class="string">"/ocp/usb@47400000/usb-phy@47401300"</span>;
+        phy1 = <span class="string">"/ocp/usb@47400000/usb-phy@47401b00"</span>;
+        ethernet0 = <span class="string">"/ocp/ethernet@4a100000/slave@4a100200"</span>;
+        ethernet1 = <span class="string">"/ocp/ethernet@4a100000/slave@4a100300"</span>;
+    };
+
+    memory {
+        device_type = <span class="string">"memory"</span>;
+        reg = &lt;0x80000000 0x10000000&gt;;
+    };
+
+    cpus {
+        <span class="comment">#address-cells = &lt;0x1&gt;;</span>
+        <span class="comment">#size-cells = &lt;0x0&gt;;</span>
+
+        cpu@0 {
+            compatible = <span class="string">"arm,cortex-a8"</span>;
+            device_type = <span class="string">"cpu"</span>;
+            reg = &lt;0x0&gt;;
+            operating-points = &lt;0xf4240 0x1437c8 0xc3500 0x13d620 0x927c0 0x10f7c0 0x493e0 0xec928&gt;;
+            voltage-tolerance = &lt;0x2&gt;;
+            clock-latency = &lt;0x493e0&gt;;
+            cpu0-supply = &lt;0x2&gt;;
+        };
+    };
+
+    pmu {
+        compatible = <span class="string">"arm,cortex-a8-pmu"</span>;
+        interrupts = &lt;0x3&gt;;
+    };
+
+    soc {
+        compatible = <span class="string">"ti,omap-infra"</span>;
+
+        mpu {
+            compatible = <span class="string">"ti,omap3-mpu"</span>;
+            ti,hwmods = <span class="string">"mpu"</span>;
+        };
+    };
+
+    pinmux@44e10800 {
+        compatible = <span class="string">"pinctrl-single"</span>;
+        reg = &lt;0x44e10800 0x238&gt;;
+        <span class="comment">#address-cells = &lt;0x1&gt;;</span>
+        <span class="comment">#size-cells = &lt;0x0&gt;;</span>
+        pinctrl-single,register-width = &lt;0x20&gt;;
+        pinctrl-single,<span class="keyword">function</span>-mask = &lt;0x7f&gt;;
+        pinctrl-names = <span class="string">"default"</span>;
+        pinctrl-0 = &lt;0x3&gt;;
+
+        user_leds_s0 {
+            pinctrl-single,pins = &lt;0x54 0x7 0x58 0x17 0x5c 0x7 0x60 0x17&gt;;
+            linux,phandle = &lt;0x40&gt;;
+            phandle = &lt;0x40&gt;;
+        };
+
+        pinmux_i2c0_pins {
+            pinctrl-single,pins = &lt;0x188 0x30 0x18c 0x30&gt;;
+            linux,phandle = &lt;0x2a&gt;;
+            phandle = &lt;0x2a&gt;;
+        };
+
+        pinmux_i2c2_pins {
+            pinctrl-single,pins = &lt;0x178 0x73 0x17c 0x73&gt;;
+            linux,phandle = &lt;0x2b&gt;;
+            phandle = &lt;0x2b&gt;;
+        };
+
+        pinmux_uart0_pins {
+            pinctrl-single,pins = &lt;0x170 0x30 0x174 0x0&gt;;
+            linux,phandle = &lt;0x28&gt;;
+            phandle = &lt;0x28&gt;;
+        };
+
+
+        pinmux_clkout2_pin {
+            pinctrl-single,pins = &lt;0x1b4 0x3&gt;;
+            linux,phandle = &lt;0x3&gt;;
+            phandle = &lt;0x3&gt;;
+        };
+
+        cpsw_default {
+            pinctrl-single,pins = &lt;0x110 0x30 0x114 0x0 0x118 0x30 0x11c 0x0 0x120 0x0 0x124 0x0 0x128 0x0 0x12c 0x30 0x130 0x30 0x134 0x30 0x138 0x30 0x13c 0x30 0x140 0x30&gt;;
+            linux,phandle = &lt;0x39&gt;;
+            phandle = &lt;0x39&gt;;
+        };
+
+        cpsw_sleep {
+            pinctrl-single,pins = &lt;0x110 0x27 0x114 0x27 0x118 0x27 0x11c 0x27 0x120 0x27 0x124 0x27 0x128 0x27 0x12c 0x27 0x130 0x27 0x134 0x27 0x138 0x27 0x13c 0x27 0x140 0x27&gt;;
+            linux,phandle = &lt;0x3a&gt;;
+            phandle = &lt;0x3a&gt;;
+        };
+
+        davinci_mdio_default {
+            pinctrl-single,pins = &lt;0x148 0x70 0x14c 0x10&gt;;
+            linux,phandle = &lt;0x3b&gt;;
+            phandle = &lt;0x3b&gt;;
+        };
+
+        davinci_mdio_sleep {
+            pinctrl-single,pins = &lt;0x148 0x27 0x14c 0x27&gt;;
+            linux,phandle = &lt;0x3c&gt;;
+            phandle = &lt;0x3c&gt;;
+        };
+
+        pinmux_mmc1_pins {
+            pinctrl-single,pins = &lt;0x160 0x2f&gt;;
+            linux,phandle = &lt;0x2d&gt;;
+            phandle = &lt;0x2d&gt;;
+        };
+
+        pinmux_emmc_pins {
+            pinctrl-single,pins = &lt;0x80 0x32 0x84 0x32 0x0 0x31 0x4 0x31 0x8 0x31 0xc 0x31 0x10 0x31 0x14 0x31 0x18 0x31 0x1c 0x31&gt;;
+            linux,phandle = &lt;0x30&gt;;
+            phandle = &lt;0x30&gt;;
+        };
+
+        pinmux_spi0_pins {
+            pinctrl-single,pins = &lt;0x150 0x30 0x154 0x30 0x158 0x10 0x15c 0x10&gt;;
+            linux,phandle = &lt;0x31&gt;;
+            phandle = &lt;0x31&gt;;
+        };
+
+        pinmux_ehrpwm1_pin_p9_14 {
+            pinctrl-single,pins = &lt;0x48 0x6&gt;;
+            linux,phandle = &lt;0x37&gt;;
+            phandle = &lt;0x37&gt;;
+        };
+
+        pinmux_ehrpwm1_pin_p9_16 {
+            pinctrl-single,pins = &lt;0x4c 0x6&gt;;
+            linux,phandle = &lt;0x38&gt;;
+            phandle = &lt;0x38&gt;;
+        };
+
+        pinmux_ecap0_pin_p9_42 {
+            pinctrl-single,pins = &lt;0x164 0x0&gt;;
+            linux,phandle = &lt;0x36&gt;;
+            phandle = &lt;0x36&gt;;
+        };
+
+        nxp_hdmi_bonelt_pins {
+            pinctrl-single,pins = &lt;0x1b0 0x3 0xa0 0x8 0xa4 0x8 0xa8 0x8 0xac 0x8 0xb0 0x8 0xb4 0x8 0xb8 0x8 0xbc 0x8 0xc0 0x8 0xc4 0x8 0xc8 0x8 0xcc 0x8 0xd0 0x8 0xd4 0x8 0xd8 0x8 0xdc 0x8 0xe0 0x0 0xe4 0x0 0xe8 0x0 0xec 0x0&gt;;
+            linux,phandle = &lt;0x43&gt;;
+            phandle = &lt;0x43&gt;;
+        };
+
+        nxp_hdmi_bonelt_off_pins {
+            pinctrl-single,pins = &lt;0x1b0 0x3&gt;;
+            linux,phandle = &lt;0x44&gt;;
+            phandle = &lt;0x44&gt;;
+        };
+        pinmux_uart1_pins {
+            pinctrl-single,pins = &lt;0x180 0x30 0x184 0x0&gt;;
+            linux,phandle = &lt;0x29&gt;;
+            phandle = &lt;0x29&gt;;
+        };
+
+        pinmux_uart2_pins {
+            pinctrl-single,pins = &lt;0x150 0x21 0x154 0x1&gt;;
+            linux,phandle = &lt;0x81&gt;;
+            phandle = &lt;0x81&gt;;
+
+        };
+
+        pinmux_uart4_pins {
+            pinctrl-single,pins = &lt;0x70 0x26 0x74 0x6&gt;;
+            linux,phandle = &lt;0x82&gt;;
+            phandle = &lt;0x82&gt;;
+
+        };
+
+        pinmux_uart5_pins {
+            pinctrl-single,pins = &lt;0xc4 0x24 0xc0 0x4&gt;;
+            linux,phandle = &lt;0x83&gt;;
+            phandle = &lt;0x83&gt;;
+
+        };
+
+    };
+
+    ocp {
+        compatible = <span class="string">"simple-bus"</span>;
+        <span class="comment">#address-cells = &lt;0x1&gt;;</span>
+        <span class="comment">#size-cells = &lt;0x1&gt;;</span>
+        ranges;
+        ti,hwmods = <span class="string">"l3_main"</span>;
+
+        prcm@44e00000 {
+            compatible = <span class="string">"ti,am3-prcm"</span>;
+            reg = &lt;0x44e00000 0x4000&gt;;
+
+            clocks {
+                <span class="comment">#address-cells = &lt;0x1&gt;;</span>
+                <span class="comment">#size-cells = &lt;0x0&gt;;</span>
+
+                clk_32768_ck {
+                    <span class="comment">#clock-cells = &lt;0x0&gt;;</span>
+                    compatible = <span class="string">"fixed-clock"</span>;
+                    clock-frequency = &lt;0x8000&gt;;
+                    linux,phandle = &lt;0x15&gt;;
+                    phandle = &lt;0x15&gt;;
+                };
+
+                clk_rc32k_ck {
+                    <span class="comment">#clock-cells = &lt;0x0&gt;;</span>
+                    compatible = <span class="string">"fixed-clock"</span>;
+                    clock-frequency = &lt;0x7d00&gt;;
+                    linux,phandle = &lt;0x14&gt;;
+                    phandle = &lt;0x14&gt;;
+                };
+
+                virt_19200000_ck {
+                    <span class="comment">#clock-cells = &lt;0x0&gt;;</span>
+                    compatible = <span class="string">"fixed-clock"</span>;
+                    clock-frequency = &lt;0x124f800&gt;;
+                    linux,phandle = &lt;0x21&gt;;
+                    phandle = &lt;0x21&gt;;
+                };
+
+                virt_24000000_ck {
+                    <span class="comment">#clock-cells = &lt;0x0&gt;;</span>
+                    compatible = <span class="string">"fixed-clock"</span>;
+                    clock-frequency = &lt;0x16e3600&gt;;
+                    linux,phandle = &lt;0x22&gt;;
+                    phandle = &lt;0x22&gt;;
+                };
+
+                virt_25000000_ck {
+                    <span class="comment">#clock-cells = &lt;0x0&gt;;</span>
+                    compatible = <span class="string">"fixed-clock"</span>;
+                    clock-frequency = &lt;0x17d7840&gt;;
+                    linux,phandle = &lt;0x23&gt;;
+                    phandle = &lt;0x23&gt;;
+                };
+
+                virt_26000000_ck {
+                    <span class="comment">#clock-cells = &lt;0x0&gt;;</span>
+                    compatible = <span class="string">"fixed-clock"</span>;
+                    clock-frequency = &lt;0x18cba80&gt;;
+                    linux,phandle = &lt;0x24&gt;;
+                    phandle = &lt;0x24&gt;;
+                };
+
+                tclkin_ck {
+                    <span class="comment">#clock-cells = &lt;0x0&gt;;</span>
+                    compatible = <span class="string">"fixed-clock"</span>;
+                    clock-frequency = &lt;0xb71b00&gt;;
+                    linux,phandle = &lt;0x13&gt;;
+                    phandle = &lt;0x13&gt;;
+                };
+
+                dpll_core_ck {
+                    <span class="comment">#clock-cells = &lt;0x0&gt;;</span>
+                    compatible = <span class="string">"ti,am3-dpll-core-clock"</span>;
+                    clocks = &lt;0x4 0x4&gt;;
+                    reg = &lt;0x490 0x45c 0x468&gt;;
+                    linux,phandle = &lt;0x5&gt;;
+                    phandle = &lt;0x5&gt;;
+                };
+
+                dpll_core_x2_ck {
+                    <span class="comment">#clock-cells = &lt;0x0&gt;;</span>
+                    compatible = <span class="string">"ti,am3-dpll-x2-clock"</span>;
+                    clocks = &lt;0x5&gt;;
+                    linux,phandle = &lt;0x6&gt;;
+                    phandle = &lt;0x6&gt;;
+                };
+
+                dpll_core_m4_ck {
+                    <span class="comment">#clock-cells = &lt;0x0&gt;;</span>
+                    compatible = <span class="string">"ti,divider-clock"</span>;
+                    clocks = &lt;0x6&gt;;
+                    ti,max-div = &lt;0x1f&gt;;
+                    reg = &lt;0x480&gt;;
+                    ti,index-starts-at-one;
+                    linux,phandle = &lt;0xf&gt;;
+                    phandle = &lt;0xf&gt;;
+                };
+
+                dpll_core_m5_ck {
+                    <span class="comment">#clock-cells = &lt;0x0&gt;;</span>
+                    compatible = <span class="string">"ti,divider-clock"</span>;
+                    clocks = &lt;0x6&gt;;
+                    ti,max-div = &lt;0x1f&gt;;
+                    reg = &lt;0x484&gt;;
+                    ti,index-starts-at-one;
+                    linux,phandle = &lt;0x17&gt;;
+                    phandle = &lt;0x17&gt;;
+                };
+
+                dpll_core_m6_ck {
+                    <span class="comment">#clock-cells = &lt;0x0&gt;;</span>
+                    compatible = <span class="string">"ti,divider-clock"</span>;
+                    clocks = &lt;0x6&gt;;
+                    ti,max-div = &lt;0x1f&gt;;
+                    reg = &lt;0x4d8&gt;;
+                    ti,index-starts-at-one;
+                };
+
+                dpll_mpu_ck {
+                    <span class="comment">#clock-cells = &lt;0x0&gt;;</span>
+                    compatible = <span class="string">"ti,am3-dpll-clock"</span>;
+                    clocks = &lt;0x4 0x4&gt;;
+                    reg = &lt;0x488 0x420 0x42c&gt;;
+                    linux,phandle = &lt;0x7&gt;;
+                    phandle = &lt;0x7&gt;;
+                };
+
+                dpll_mpu_m2_ck {
+                    <span class="comment">#clock-cells = &lt;0x0&gt;;</span>
+                    compatible = <span class="string">"ti,divider-clock"</span>;
+                    clocks = &lt;0x7&gt;;
+                    ti,max-div = &lt;0x1f&gt;;
+                    reg = &lt;0x4a8&gt;;
+                    ti,index-starts-at-one;
+                };
+
+                dpll_ddr_ck {
+                    <span class="comment">#clock-cells = &lt;0x0&gt;;</span>
+                    compatible = <span class="string">"ti,am3-dpll-no-gate-clock"</span>;
+                    clocks = &lt;0x4 0x4&gt;;
+                    reg = &lt;0x494 0x434 0x440&gt;;
+                    linux,phandle = &lt;0x8&gt;;
+                    phandle = &lt;0x8&gt;;
+                };
+
+                dpll_ddr_m2_ck {
+                    <span class="comment">#clock-cells = &lt;0x0&gt;;</span>
+                    compatible = <span class="string">"ti,divider-clock"</span>;
+                    clocks = &lt;0x8&gt;;
+                    ti,max-div = &lt;0x1f&gt;;
+                    reg = &lt;0x4a0&gt;;
+                    ti,index-starts-at-one;
+                    linux,phandle = &lt;0x9&gt;;
+                    phandle = &lt;0x9&gt;;
+                };
+
+                dpll_ddr_m2_div2_ck {
+                    <span class="comment">#clock-cells = &lt;0x0&gt;;</span>
+                    compatible = <span class="string">"fixed-factor-clock"</span>;
+                    clocks = &lt;0x9&gt;;
+                    clock-mult = &lt;0x1&gt;;
+                    clock-div = &lt;0x2&gt;;
+                };
+
+                dpll_disp_ck {
+                    <span class="comment">#clock-cells = &lt;0x0&gt;;</span>
+                    compatible = <span class="string">"ti,am3-dpll-no-gate-clock"</span>;
+                    clocks = &lt;0x4 0x4&gt;;
+                    reg = &lt;0x498 0x448 0x454&gt;;
+                    linux,phandle = &lt;0xa&gt;;
+                    phandle = &lt;0xa&gt;;
+                };
+
+                dpll_disp_m2_ck {
+                    <span class="comment">#clock-cells = &lt;0x0&gt;;</span>
+                    compatible = <span class="string">"ti,divider-clock"</span>;
+                    clocks = &lt;0xa&gt;;
+                    ti,max-div = &lt;0x1f&gt;;
+                    reg = &lt;0x4a4&gt;;
+                    ti,index-starts-at-one;
+                    ti,<span class="built_in">set</span>-rate-parent;
+                    linux,phandle = &lt;0x11&gt;;
+                    phandle = &lt;0x11&gt;;
+                };
+
+                dpll_per_ck {
+                    <span class="comment">#clock-cells = &lt;0x0&gt;;</span>
+                    compatible = <span class="string">"ti,am3-dpll-no-gate-j-type-clock"</span>;
+                    clocks = &lt;0x4 0x4&gt;;
+                    reg = &lt;0x48c 0x470 0x49c&gt;;
+                    linux,phandle = &lt;0xb&gt;;
+                    phandle = &lt;0xb&gt;;
+                };
+
+                dpll_per_m2_ck {
+                    <span class="comment">#clock-cells = &lt;0x0&gt;;</span>
+                    compatible = <span class="string">"ti,divider-clock"</span>;
+                    clocks = &lt;0xb&gt;;
+                    ti,max-div = &lt;0x1f&gt;;
+                    reg = &lt;0x4ac&gt;;
+                    ti,index-starts-at-one;
+                    linux,phandle = &lt;0xc&gt;;
+                    phandle = &lt;0xc&gt;;
+                };
+
+                dpll_per_m2_div4_wkupdm_ck {
+                    <span class="comment">#clock-cells = &lt;0x0&gt;;</span>
+                    compatible = <span class="string">"fixed-factor-clock"</span>;
+                    clocks = &lt;0xc&gt;;
+                    clock-mult = &lt;0x1&gt;;
+                    clock-div = &lt;0x4&gt;;
+                };
+
+                dpll_per_m2_div4_ck {
+                    <span class="comment">#clock-cells = &lt;0x0&gt;;</span>
+                    compatible = <span class="string">"fixed-factor-clock"</span>;
+                    clocks = &lt;0xc&gt;;
+                    clock-mult = &lt;0x1&gt;;
+                    clock-div = &lt;0x4&gt;;
+                };
+
+                cefuse_fck {
+                    <span class="comment">#clock-cells = &lt;0x0&gt;;</span>
+                    compatible = <span class="string">"ti,gate-clock"</span>;
+                    clocks = &lt;0x4&gt;;
+                    ti,bit-shift = &lt;0x1&gt;;
+                    reg = &lt;0xa20&gt;;
+                };
+
+                clk_24mhz {
+                    <span class="comment">#clock-cells = &lt;0x0&gt;;</span>
+                    compatible = <span class="string">"fixed-factor-clock"</span>;
+                    clocks = &lt;0xc&gt;;
+                    clock-mult = &lt;0x1&gt;;
+                    clock-div = &lt;0x8&gt;;
+                    linux,phandle = &lt;0xd&gt;;
+                    phandle = &lt;0xd&gt;;
+                };
+
+                clkdiv32k_ck {
+                    <span class="comment">#clock-cells = &lt;0x0&gt;;</span>
+                    compatible = <span class="string">"fixed-factor-clock"</span>;
+                    clocks = &lt;0xd&gt;;
+                    clock-mult = &lt;0x1&gt;;
+                    clock-div = &lt;0x2dc&gt;;
+                    linux,phandle = &lt;0xe&gt;;
+                    phandle = &lt;0xe&gt;;
+                };
+
+                clkdiv32k_ick {
+                    <span class="comment">#clock-cells = &lt;0x0&gt;;</span>
+                    compatible = <span class="string">"ti,gate-clock"</span>;
+                    clocks = &lt;0xe&gt;;
+                    ti,bit-shift = &lt;0x1&gt;;
+                    reg = &lt;0x14c&gt;;
+                    linux,phandle = &lt;0x12&gt;;
+                    phandle = &lt;0x12&gt;;
+                };
+
+                l3_gclk {
+                    <span class="comment">#clock-cells = &lt;0x0&gt;;</span>
+                    compatible = <span class="string">"fixed-factor-clock"</span>;
+                    clocks = &lt;0xf&gt;;
+                    clock-mult = &lt;0x1&gt;;
+                    clock-div = &lt;0x1&gt;;
+                    linux,phandle = &lt;0x10&gt;;
+                    phandle = &lt;0x10&gt;;
+                };
+
+                pruss_ocp_gclk {
+                    <span class="comment">#clock-cells = &lt;0x0&gt;;</span>
+                    compatible = <span class="string">"ti,mux-clock"</span>;
+                    clocks = &lt;0x10 0x11&gt;;
+                    reg = &lt;0x530&gt;;
+                };
+
+                mmu_fck {
+                    <span class="comment">#clock-cells = &lt;0x0&gt;;</span>
+                    compatible = <span class="string">"ti,gate-clock"</span>;
+                    clocks = &lt;0xf&gt;;
+                    ti,bit-shift = &lt;0x1&gt;;
+                    reg = &lt;0x914&gt;;
+                };
+
+                timer1_fck {
+                    <span class="comment">#clock-cells = &lt;0x0&gt;;</span>
+                    compatible = <span class="string">"ti,mux-clock"</span>;
+                    clocks = &lt;0x4 0x12 0x13 0x14 0x15&gt;;
+                    reg = &lt;0x528&gt;;
+                };
+
+                timer2_fck {
+                    <span class="comment">#clock-cells = &lt;0x0&gt;;</span>
+                    compatible = <span class="string">"ti,mux-clock"</span>;
+                    clocks = &lt;0x13 0x4 0x12&gt;;
+                    reg = &lt;0x508&gt;;
+                };
+
+                timer3_fck {
+                    <span class="comment">#clock-cells = &lt;0x0&gt;;</span>
+                    compatible = <span class="string">"ti,mux-clock"</span>;
+                    clocks = &lt;0x13 0x4 0x12&gt;;
+                    reg = &lt;0x50c&gt;;
+                };
+
+                timer4_fck {
+                    <span class="comment">#clock-cells = &lt;0x0&gt;;</span>
+                    compatible = <span class="string">"ti,mux-clock"</span>;
+                    clocks = &lt;0x13 0x4 0x12&gt;;
+                    reg = &lt;0x510&gt;;
+                };
+
+                timer5_fck {
+                    <span class="comment">#clock-cells = &lt;0x0&gt;;</span>
+                    compatible = <span class="string">"ti,mux-clock"</span>;
+                    clocks = &lt;0x13 0x4 0x12&gt;;
+                    reg = &lt;0x518&gt;;
+                };
+
+                timer6_fck {
+                    <span class="comment">#clock-cells = &lt;0x0&gt;;</span>
+                    compatible = <span class="string">"ti,mux-clock"</span>;
+                    clocks = &lt;0x13 0x4 0x12&gt;;
+                    reg = &lt;0x51c&gt;;
+                };
+
+                timer7_fck {
+                    <span class="comment">#clock-cells = &lt;0x0&gt;;</span>
+                    compatible = <span class="string">"ti,mux-clock"</span>;
+                    clocks = &lt;0x13 0x4 0x12&gt;;
+                    reg = &lt;0x504&gt;;
+                };
+
+                usbotg_fck {
+                    <span class="comment">#clock-cells = &lt;0x0&gt;;</span>
+                    compatible = <span class="string">"ti,gate-clock"</span>;
+                    clocks = &lt;0xb&gt;;
+                    ti,bit-shift = &lt;0x8&gt;;
+                    reg = &lt;0x47c&gt;;
+                };
+
+                dpll_core_m4_div2_ck {
+                    <span class="comment">#clock-cells = &lt;0x0&gt;;</span>
+                    compatible = <span class="string">"fixed-factor-clock"</span>;
+                    clocks = &lt;0xf&gt;;
+                    clock-mult = &lt;0x1&gt;;
+                    clock-div = &lt;0x2&gt;;
+                    linux,phandle = &lt;0x16&gt;;
+                    phandle = &lt;0x16&gt;;
+                };
+
+                ieee5000_fck {
+                    <span class="comment">#clock-cells = &lt;0x0&gt;;</span>
+                    compatible = <span class="string">"ti,gate-clock"</span>;
+                    clocks = &lt;0x16&gt;;
+                    ti,bit-shift = &lt;0x1&gt;;
+                    reg = &lt;0xe4&gt;;
+                };
+
+                wdt1_fck {
+                    <span class="comment">#clock-cells = &lt;0x0&gt;;</span>
+                    compatible = <span class="string">"ti,mux-clock"</span>;
+                    clocks = &lt;0x14 0x12&gt;;
+                    reg = &lt;0x538&gt;;
+                };
+
+                l4_rtc_gclk {
+                    <span class="comment">#clock-cells = &lt;0x0&gt;;</span>
+                    compatible = <span class="string">"fixed-factor-clock"</span>;
+                    clocks = &lt;0xf&gt;;
+                    clock-mult = &lt;0x1&gt;;
+                    clock-div = &lt;0x2&gt;;
+                };
+
+                l4hs_gclk {
+                    <span class="comment">#clock-cells = &lt;0x0&gt;;</span>
+                    compatible = <span class="string">"fixed-factor-clock"</span>;
+                    clocks = &lt;0xf&gt;;
+                    clock-mult = &lt;0x1&gt;;
+                    clock-div = &lt;0x1&gt;;
+                };
+
+                l3s_gclk {
+                    <span class="comment">#clock-cells = &lt;0x0&gt;;</span>
+                    compatible = <span class="string">"fixed-factor-clock"</span>;
+                    clocks = &lt;0x16&gt;;
+                    clock-mult = &lt;0x1&gt;;
+                    clock-div = &lt;0x1&gt;;
+                };
+
+                l4fw_gclk {
+                    <span class="comment">#clock-cells = &lt;0x0&gt;;</span>
+                    compatible = <span class="string">"fixed-factor-clock"</span>;
+                    clocks = &lt;0x16&gt;;
+                    clock-mult = &lt;0x1&gt;;
+                    clock-div = &lt;0x1&gt;;
+                };
+
+                l4ls_gclk {
+                    <span class="comment">#clock-cells = &lt;0x0&gt;;</span>
+                    compatible = <span class="string">"fixed-factor-clock"</span>;
+                    clocks = &lt;0x16&gt;;
+                    clock-mult = &lt;0x1&gt;;
+                    clock-div = &lt;0x1&gt;;
+                };
+
+                sysclk_div_ck {
+                    <span class="comment">#clock-cells = &lt;0x0&gt;;</span>
+                    compatible = <span class="string">"fixed-factor-clock"</span>;
+                    clocks = &lt;0xf&gt;;
+                    clock-mult = &lt;0x1&gt;;
+                    clock-div = &lt;0x1&gt;;
+                };
+
+                cpsw_125mhz_gclk {
+                    <span class="comment">#clock-cells = &lt;0x0&gt;;</span>
+                    compatible = <span class="string">"fixed-factor-clock"</span>;
+                    clocks = &lt;0x17&gt;;
+                    clock-mult = &lt;0x1&gt;;
+                    clock-div = &lt;0x2&gt;;
+                };
+
+                cpsw_cpts_rft_clk {
+                    <span class="comment">#clock-cells = &lt;0x0&gt;;</span>
+                    compatible = <span class="string">"ti,mux-clock"</span>;
+                    clocks = &lt;0x17 0xf&gt;;
+                    reg = &lt;0x520&gt;;
+                };
+
+                gpio0_dbclk_mux_ck {
+                    <span class="comment">#clock-cells = &lt;0x0&gt;;</span>
+                    compatible = <span class="string">"ti,mux-clock"</span>;
+                    clocks = &lt;0x14 0x15 0x12&gt;;
+                    reg = &lt;0x53c&gt;;
+                    linux,phandle = &lt;0x18&gt;;
+                    phandle = &lt;0x18&gt;;
+                };
+
+                gpio0_dbclk {
+                    <span class="comment">#clock-cells = &lt;0x0&gt;;</span>
+                    compatible = <span class="string">"ti,gate-clock"</span>;
+                    clocks = &lt;0x18&gt;;
+                    ti,bit-shift = &lt;0x12&gt;;
+                    reg = &lt;0x408&gt;;
+                };
+
+                gpio1_dbclk {
+                    <span class="comment">#clock-cells = &lt;0x0&gt;;</span>
+                    compatible = <span class="string">"ti,gate-clock"</span>;
+                    clocks = &lt;0x12&gt;;
+                    ti,bit-shift = &lt;0x12&gt;;
+                    reg = &lt;0xac&gt;;
+                };
+
+                gpio2_dbclk {
+                    <span class="comment">#clock-cells = &lt;0x0&gt;;</span>
+                    compatible = <span class="string">"ti,gate-clock"</span>;
+                    clocks = &lt;0x12&gt;;
+                    ti,bit-shift = &lt;0x12&gt;;
+                    reg = &lt;0xb0&gt;;
+                };
+
+                gpio3_dbclk {
+                    <span class="comment">#clock-cells = &lt;0x0&gt;;</span>
+                    compatible = <span class="string">"ti,gate-clock"</span>;
+                    clocks = &lt;0x12&gt;;
+                    ti,bit-shift = &lt;0x12&gt;;
+                    reg = &lt;0xb4&gt;;
+                };
+
+                lcd_gclk {
+                    <span class="comment">#clock-cells = &lt;0x0&gt;;</span>
+                    compatible = <span class="string">"ti,mux-clock"</span>;
+                    clocks = &lt;0x11 0x17 0xc&gt;;
+                    reg = &lt;0x534&gt;;
+                    ti,<span class="built_in">set</span>-rate-parent;
+                    linux,phandle = &lt;0x1a&gt;;
+                    phandle = &lt;0x1a&gt;;
+                };
+
+                mmc_clk {
+                    <span class="comment">#clock-cells = &lt;0x0&gt;;</span>
+                    compatible = <span class="string">"fixed-factor-clock"</span>;
+                    clocks = &lt;0xc&gt;;
+                    clock-mult = &lt;0x1&gt;;
+                    clock-div = &lt;0x2&gt;;
+                };
+
+                gfx_fclk_clksel_ck {
+                    <span class="comment">#clock-cells = &lt;0x0&gt;;</span>
+                    compatible = <span class="string">"ti,mux-clock"</span>;
+                    clocks = &lt;0xf 0xc&gt;;
+                    ti,bit-shift = &lt;0x1&gt;;
+                    reg = &lt;0x52c&gt;;
+                    linux,phandle = &lt;0x19&gt;;
+                    phandle = &lt;0x19&gt;;
+                };
+
+                gfx_fck_div_ck {
+                    <span class="comment">#clock-cells = &lt;0x0&gt;;</span>
+                    compatible = <span class="string">"ti,divider-clock"</span>;
+                    clocks = &lt;0x19&gt;;
+                    reg = &lt;0x52c&gt;;
+                    ti,max-div = &lt;0x2&gt;;
+                };
+
+                sysclkout_pre_ck {
+                    <span class="comment">#clock-cells = &lt;0x0&gt;;</span>
+                    compatible = <span class="string">"ti,mux-clock"</span>;
+                    clocks = &lt;0x15 0x10 0x9 0xc 0x1a&gt;;
+                    reg = &lt;0x700&gt;;
+                    linux,phandle = &lt;0x1b&gt;;
+                    phandle = &lt;0x1b&gt;;
+                };
+
+                clkout2_div_ck {
+                    <span class="comment">#clock-cells = &lt;0x0&gt;;</span>
+                    compatible = <span class="string">"ti,divider-clock"</span>;
+                    clocks = &lt;0x1b&gt;;
+                    ti,bit-shift = &lt;0x3&gt;;
+                    ti,max-div = &lt;0x8&gt;;
+                    reg = &lt;0x700&gt;;
+                    linux,phandle = &lt;0x20&gt;;
+                    phandle = &lt;0x20&gt;;
+                };
+
+                dbg_sysclk_ck {
+                    <span class="comment">#clock-cells = &lt;0x0&gt;;</span>
+                    compatible = <span class="string">"ti,gate-clock"</span>;
+                    clocks = &lt;0x4&gt;;
+                    ti,bit-shift = &lt;0x13&gt;;
+                    reg = &lt;0x414&gt;;
+                    linux,phandle = &lt;0x1c&gt;;
+                    phandle = &lt;0x1c&gt;;
+                };
+
+                dbg_clka_ck {
+                    <span class="comment">#clock-cells = &lt;0x0&gt;;</span>
+                    compatible = <span class="string">"ti,gate-clock"</span>;
+                    clocks = &lt;0xf&gt;;
+                    ti,bit-shift = &lt;0x1e&gt;;
+                    reg = &lt;0x414&gt;;
+                    linux,phandle = &lt;0x1d&gt;;
+                    phandle = &lt;0x1d&gt;;
+                };
+
+                stm_pmd_clock_mux_ck {
+                    <span class="comment">#clock-cells = &lt;0x0&gt;;</span>
+                    compatible = <span class="string">"ti,mux-clock"</span>;
+                    clocks = &lt;0x1c 0x1d&gt;;
+                    ti,bit-shift = &lt;0x16&gt;;
+                    reg = &lt;0x414&gt;;
+                    linux,phandle = &lt;0x1e&gt;;
+                    phandle = &lt;0x1e&gt;;
+                };
+
+                trace_pmd_clk_mux_ck {
+                    <span class="comment">#clock-cells = &lt;0x0&gt;;</span>
+                    compatible = <span class="string">"ti,mux-clock"</span>;
+                    clocks = &lt;0x1c 0x1d&gt;;
+                    ti,bit-shift = &lt;0x14&gt;;
+                    reg = &lt;0x414&gt;;
+                    linux,phandle = &lt;0x1f&gt;;
+                    phandle = &lt;0x1f&gt;;
+                };
+
+                stm_clk_div_ck {
+                    <span class="comment">#clock-cells = &lt;0x0&gt;;</span>
+                    compatible = <span class="string">"ti,divider-clock"</span>;
+                    clocks = &lt;0x1e&gt;;
+                    ti,bit-shift = &lt;0x1b&gt;;
+                    ti,max-div = &lt;0x40&gt;;
+                    reg = &lt;0x414&gt;;
+                    ti,index-power-of-two;
+                };
+
+                trace_clk_div_ck {
+                    <span class="comment">#clock-cells = &lt;0x0&gt;;</span>
+                    compatible = <span class="string">"ti,divider-clock"</span>;
+                    clocks = &lt;0x1f&gt;;
+                    ti,bit-shift = &lt;0x18&gt;;
+                    ti,max-div = &lt;0x40&gt;;
+                    reg = &lt;0x414&gt;;
+                    ti,index-power-of-two;
+                };
+
+                clkout2_ck {
+                    <span class="comment">#clock-cells = &lt;0x0&gt;;</span>
+                    compatible = <span class="string">"ti,gate-clock"</span>;
+                    clocks = &lt;0x20&gt;;
+                    ti,bit-shift = &lt;0x7&gt;;
+                    reg = &lt;0x700&gt;;
+                };
+            };
+
+            clockdomains {
+
+                clk_24mhz_clkdm {
+                    compatible = <span class="string">"ti,clockdomain"</span>;
+                    clocks = &lt;0x12&gt;;
+                };
+            };
+        };
+
+        scrm@44e10000 {
+            compatible = <span class="string">"ti,am3-scrm"</span>;
+            reg = &lt;0x44e10000 0x2000&gt;;
+
+            clocks {
+                <span class="comment">#address-cells = &lt;0x1&gt;;</span>
+                <span class="comment">#size-cells = &lt;0x0&gt;;</span>
+
+                sys_clkin_ck {
+                    <span class="comment">#clock-cells = &lt;0x0&gt;;</span>
+                    compatible = <span class="string">"ti,mux-clock"</span>;
+                    clocks = &lt;0x21 0x22 0x23 0x24&gt;;
+                    ti,bit-shift = &lt;0x16&gt;;
+                    reg = &lt;0x40&gt;;
+                    linux,phandle = &lt;0x4&gt;;
+                    phandle = &lt;0x4&gt;;
+                };
+
+                adc_tsc_fck {
+                    <span class="comment">#clock-cells = &lt;0x0&gt;;</span>
+                    compatible = <span class="string">"fixed-factor-clock"</span>;
+                    clocks = &lt;0x4&gt;;
+                    clock-mult = &lt;0x1&gt;;
+                    clock-div = &lt;0x1&gt;;
+                };
+
+                dcan0_fck {
+                    <span class="comment">#clock-cells = &lt;0x0&gt;;</span>
+                    compatible = <span class="string">"fixed-factor-clock"</span>;
+                    clocks = &lt;0x4&gt;;
+                    clock-mult = &lt;0x1&gt;;
+                    clock-div = &lt;0x1&gt;;
+                };
+
+                dcan1_fck {
+                    <span class="comment">#clock-cells = &lt;0x0&gt;;</span>
+                    compatible = <span class="string">"fixed-factor-clock"</span>;
+                    clocks = &lt;0x4&gt;;
+                    clock-mult = &lt;0x1&gt;;
+                    clock-div = &lt;0x1&gt;;
+                };
+
+                mcasp0_fck {
+                    <span class="comment">#clock-cells = &lt;0x0&gt;;</span>
+                    compatible = <span class="string">"fixed-factor-clock"</span>;
+                    clocks = &lt;0x4&gt;;
+                    clock-mult = &lt;0x1&gt;;
+                    clock-div = &lt;0x1&gt;;
+                };
+
+                mcasp1_fck {
+                    <span class="comment">#clock-cells = &lt;0x0&gt;;</span>
+                    compatible = <span class="string">"fixed-factor-clock"</span>;
+                    clocks = &lt;0x4&gt;;
+                    clock-mult = &lt;0x1&gt;;
+                    clock-div = &lt;0x1&gt;;
+                };
+
+                smartreflex0_fck {
+                    <span class="comment">#clock-cells = &lt;0x0&gt;;</span>
+                    compatible = <span class="string">"fixed-factor-clock"</span>;
+                    clocks = &lt;0x4&gt;;
+                    clock-mult = &lt;0x1&gt;;
+                    clock-div = &lt;0x1&gt;;
+                };
+
+                smartreflex1_fck {
+                    <span class="comment">#clock-cells = &lt;0x0&gt;;</span>
+                    compatible = <span class="string">"fixed-factor-clock"</span>;
+                    clocks = &lt;0x4&gt;;
+                    clock-mult = &lt;0x1&gt;;
+                    clock-div = &lt;0x1&gt;;
+                };
+
+                sha0_fck {
+                    <span class="comment">#clock-cells = &lt;0x0&gt;;</span>
+                    compatible = <span class="string">"fixed-factor-clock"</span>;
+                    clocks = &lt;0x4&gt;;
+                    clock-mult = &lt;0x1&gt;;
+                    clock-div = &lt;0x1&gt;;
+                };
+
+                aes0_fck {
+                    <span class="comment">#clock-cells = &lt;0x0&gt;;</span>
+                    compatible = <span class="string">"fixed-factor-clock"</span>;
+                    clocks = &lt;0x4&gt;;
+                    clock-mult = &lt;0x1&gt;;
+                    clock-div = &lt;0x1&gt;;
+                };
+
+                rng_fck {
+                    <span class="comment">#clock-cells = &lt;0x0&gt;;</span>
+                    compatible = <span class="string">"fixed-factor-clock"</span>;
+                    clocks = &lt;0x4&gt;;
+                    clock-mult = &lt;0x1&gt;;
+                    clock-div = &lt;0x1&gt;;
+                };
+
+                ehrpwm0_gate_tbclk {
+                    <span class="comment">#clock-cells = &lt;0x0&gt;;</span>
+                    compatible = <span class="string">"ti,composite-no-wait-gate-clock"</span>;
+                    clocks = &lt;0xc&gt;;
+                    ti,bit-shift = &lt;0x0&gt;;
+                    reg = &lt;0x664&gt;;
+                    linux,phandle = &lt;0x25&gt;;
+                    phandle = &lt;0x25&gt;;
+                };
+
+                ehrpwm0_tbclk {
+                    <span class="comment">#clock-cells = &lt;0x0&gt;;</span>
+                    compatible = <span class="string">"ti,composite-clock"</span>;
+                    clocks = &lt;0x25&gt;;
+                };
+
+                ehrpwm1_gate_tbclk {
+                    <span class="comment">#clock-cells = &lt;0x0&gt;;</span>
+                    compatible = <span class="string">"ti,composite-no-wait-gate-clock"</span>;
+                    clocks = &lt;0xc&gt;;
+                    ti,bit-shift = &lt;0x1&gt;;
+                    reg = &lt;0x664&gt;;
+                    linux,phandle = &lt;0x26&gt;;
+                    phandle = &lt;0x26&gt;;
+                };
+
+                ehrpwm1_tbclk {
+                    <span class="comment">#clock-cells = &lt;0x0&gt;;</span>
+                    compatible = <span class="string">"ti,composite-clock"</span>;
+                    clocks = &lt;0x26&gt;;
+                };
+
+                ehrpwm2_gate_tbclk {
+                    <span class="comment">#clock-cells = &lt;0x0&gt;;</span>
+                    compatible = <span class="string">"ti,composite-no-wait-gate-clock"</span>;
+                    clocks = &lt;0xc&gt;;
+                    ti,bit-shift = &lt;0x2&gt;;
+                    reg = &lt;0x664&gt;;
+                    linux,phandle = &lt;0x27&gt;;
+                    phandle = &lt;0x27&gt;;
+                };
+
+                ehrpwm2_tbclk {
+                    <span class="comment">#clock-cells = &lt;0x0&gt;;</span>
+                    compatible = <span class="string">"ti,composite-clock"</span>;
+                    clocks = &lt;0x27&gt;;
+                };
+            };
+
+            clockdomains {
+            };
+        };
+
+        interrupt-controller@48200000 {
+            compatible = <span class="string">"ti,omap2-intc"</span>;
+            interrupt-controller;
+            <span class="comment">#interrupt-cells = &lt;0x1&gt;;</span>
+            ti,intc-size = &lt;0x80&gt;;
+            reg = &lt;0x48200000 0x1000&gt;;
+            linux,phandle = &lt;0x1&gt;;
+            phandle = &lt;0x1&gt;;
+        };
+
+        edma@49000000 {
+            compatible = <span class="string">"ti,edma3"</span>;
+            ti,hwmods = <span class="string">"tpcc"</span>, <span class="string">"tptc0"</span>, <span class="string">"tptc1"</span>, <span class="string">"tptc2"</span>;
+            reg = &lt;0x49000000 0x10000 0x44e10f90 0x10&gt;;
+            interrupts = &lt;0xc 0xd 0xe&gt;;
+            <span class="comment">#dma-cells = &lt;0x1&gt;;</span>
+            dma-channels = &lt;0x40&gt;;
+            ti,edma-regions = &lt;0x4&gt;;
+            ti,edma-slots = &lt;0x100&gt;;
+            linux,phandle = &lt;0x2c&gt;;
+            phandle = &lt;0x2c&gt;;
+        };
+
+        gpio@44e07000 {
+            compatible = <span class="string">"ti,omap4-gpio"</span>;
+            ti,hwmods = <span class="string">"gpio1"</span>;
+            gpio-controller;
+            <span class="comment">#gpio-cells = &lt;0x2&gt;;</span>
+            interrupt-controller;
+            <span class="comment">#interrupt-cells = &lt;0x2&gt;;</span>
+            reg = &lt;0x44e07000 0x1000&gt;;
+            interrupts = &lt;0x60&gt;;
+            linux,phandle = &lt;0x2e&gt;;
+            phandle = &lt;0x2e&gt;;
+        };
+
+        gpio@4804c000 {
+            compatible = <span class="string">"ti,omap4-gpio"</span>;
+            ti,hwmods = <span class="string">"gpio2"</span>;
+            gpio-controller;
+            <span class="comment">#gpio-cells = &lt;0x2&gt;;</span>
+            interrupt-controller;
+            <span class="comment">#interrupt-cells = &lt;0x2&gt;;</span>
+            reg = &lt;0x4804c000 0x1000&gt;;
+            interrupts = &lt;0x62&gt;;
+            linux,phandle = &lt;0x41&gt;;
+            phandle = &lt;0x41&gt;;
+        };
+
+        gpio@481ac000 {
+            compatible = <span class="string">"ti,omap4-gpio"</span>;
+            ti,hwmods = <span class="string">"gpio3"</span>;
+            gpio-controller;
+            <span class="comment">#gpio-cells = &lt;0x2&gt;;</span>
+            interrupt-controller;
+            <span class="comment">#interrupt-cells = &lt;0x2&gt;;</span>
+            reg = &lt;0x481ac000 0x1000&gt;;
+            interrupts = &lt;0x20&gt;;
+        };
+
+        gpio@481ae000 {
+            compatible = <span class="string">"ti,omap4-gpio"</span>;
+            ti,hwmods = <span class="string">"gpio4"</span>;
+            gpio-controller;
+            <span class="comment">#gpio-cells = &lt;0x2&gt;;</span>
+            interrupt-controller;
+            <span class="comment">#interrupt-cells = &lt;0x2&gt;;</span>
+            reg = &lt;0x481ae000 0x1000&gt;;
+            interrupts = &lt;0x3e&gt;;
+        };
+
+        serial@44e09000 {
+            compatible = <span class="string">"ti,omap3-uart"</span>;
+            ti,hwmods = <span class="string">"uart1"</span>;
+            clock-frequency = &lt;0x2dc6c00&gt;;
+            reg = &lt;0x44e09000 0x2000&gt;;
+            interrupts = &lt;0x48&gt;;
+            status = <span class="string">"okay"</span>;
+            pinctrl-names = <span class="string">"default"</span>;
+            pinctrl-0 = &lt;0x28&gt;;
+        };
+
+        serial@48022000 {
+            compatible = <span class="string">"ti,omap3-uart"</span>;
+            ti,hwmods = <span class="string">"uart2"</span>;
+            clock-frequency = &lt;0x2dc6c00&gt;;
+            reg = &lt;0x48022000 0x2000&gt;;
+            interrupts = &lt;0x49&gt;;
+            status = <span class="string">"okay"</span>;
+            pinctrl-names = <span class="string">"default"</span>;
+            pinctrl-0 = &lt;0x29&gt;;
+        };
+
+        serial@48024000 {
+            compatible = <span class="string">"ti,omap3-uart"</span>;
+            ti,hwmods = <span class="string">"uart3"</span>;
+            clock-frequency = &lt;0x2dc6c00&gt;;
+            reg = &lt;0x48024000 0x2000&gt;;
+            interrupts = &lt;0x4a&gt;;
+            status = <span class="string">"okay"</span>;
+            pinctrl-names = <span class="string">"default"</span>;
+            pinctrl-0 = &lt;0x81&gt;;
+        };
+
+        serial@481a6000 {
+            compatible = <span class="string">"ti,omap3-uart"</span>;
+            ti,hwmods = <span class="string">"uart4"</span>;
+            clock-frequency = &lt;0x2dc6c00&gt;;
+            reg = &lt;0x481a6000 0x2000&gt;;
+            interrupts = &lt;0x2c&gt;;
+            status = <span class="string">"disabled"</span>;
+        };
+
+        serial@481a8000 {
+            compatible = <span class="string">"ti,omap3-uart"</span>;
+            ti,hwmods = <span class="string">"uart5"</span>;
+            clock-frequency = &lt;0x2dc6c00&gt;;
+            reg = &lt;0x481a8000 0x2000&gt;;
+            interrupts = &lt;0x2d&gt;;
+            status = <span class="string">"okay"</span>;
+            pinctrl-names = <span class="string">"default"</span>;
+            pinctrl-0 = &lt;0x82&gt;;
+
+        };
+
+        serial@481aa000 {
+            compatible = <span class="string">"ti,omap3-uart"</span>;
+            ti,hwmods = <span class="string">"uart6"</span>;
+            clock-frequency = &lt;0x2dc6c00&gt;;
+            reg = &lt;0x481aa000 0x2000&gt;;
+            interrupts = &lt;0x2e&gt;;
+            status = <span class="string">"okay"</span>;
+            pinctrl-names = <span class="string">"default"</span>;
+            pinctrl-0 = &lt;0x83&gt;;
+
+        };
+
+        i2c@44e0b000 {
+            compatible = <span class="string">"ti,omap4-i2c"</span>;
+            <span class="comment">#address-cells = &lt;0x1&gt;;</span>
+            <span class="comment">#size-cells = &lt;0x0&gt;;</span>
+            ti,hwmods = <span class="string">"i2c1"</span>;
+            reg = &lt;0x44e0b000 0x1000&gt;;
+            interrupts = &lt;0x46&gt;;
+            status = <span class="string">"okay"</span>;
+            pinctrl-names = <span class="string">"default"</span>;
+            pinctrl-0 = &lt;0x2a&gt;;
+            clock-frequency = &lt;0x61a80&gt;;
+            linux,phandle = &lt;0x42&gt;;
+            phandle = &lt;0x42&gt;;
+
+            tps@24 {
+                reg = &lt;0x24&gt;;
+                compatible = <span class="string">"ti,tps65217"</span>;
+
+                regulators {
+                    <span class="comment">#address-cells = &lt;0x1&gt;;</span>
+                    <span class="comment">#size-cells = &lt;0x0&gt;;</span>
+
+                    regulator@0 {
+                        reg = &lt;0x0&gt;;
+                        regulator-compatible = <span class="string">"dcdc1"</span>;
+                        regulator-always-on;
+                    };
+
+                    regulator@1 {
+                        reg = &lt;0x1&gt;;
+                        regulator-compatible = <span class="string">"dcdc2"</span>;
+                        regulator-name = <span class="string">"vdd_mpu"</span>;
+                        regulator-min-microvolt = &lt;0xe1d48&gt;;
+                        regulator-max-microvolt = &lt;0x1437c8&gt;;
+                        regulator-boot-on;
+                        regulator-always-on;
+                        linux,phandle = &lt;0x2&gt;;
+                        phandle = &lt;0x2&gt;;
+                    };
+
+                    regulator@2 {
+                        reg = &lt;0x2&gt;;
+                        regulator-compatible = <span class="string">"dcdc3"</span>;
+                        regulator-name = <span class="string">"vdd_core"</span>;
+                        regulator-min-microvolt = &lt;0xe1d48&gt;;
+                        regulator-max-microvolt = &lt;0x118c30&gt;;
+                        regulator-boot-on;
+                        regulator-always-on;
+                    };
+
+                    regulator@3 {
+                        reg = &lt;0x3&gt;;
+                        regulator-compatible = <span class="string">"ldo1"</span>;
+                        regulator-always-on;
+                    };
+
+                    regulator@4 {
+                        reg = &lt;0x4&gt;;
+                        regulator-compatible = <span class="string">"ldo2"</span>;
+                        regulator-always-on;
+                    };
+
+                    regulator@5 {
+                        reg = &lt;0x5&gt;;
+                        regulator-compatible = <span class="string">"ldo3"</span>;
+                        regulator-always-on;
+                        regulator-min-microvolt = &lt;0x1b7740&gt;;
+                        regulator-max-microvolt = &lt;0x1b7740&gt;;
+                    };
+
+                    regulator@6 {
+                        reg = &lt;0x6&gt;;
+                        regulator-compatible = <span class="string">"ldo4"</span>;
+                        regulator-always-on;
+                    };
+                };
+            };
+
+            baseboard_eeprom@50 {
+                compatible = <span class="string">"at,24c256"</span>;
+                reg = &lt;0x50&gt;;
+            };
+        };
+
+        i2c@4802a000 {
+            compatible = <span class="string">"ti,omap4-i2c"</span>;
+            <span class="comment">#address-cells = &lt;0x1&gt;;</span>
+            <span class="comment">#size-cells = &lt;0x0&gt;;</span>
+            ti,hwmods = <span class="string">"i2c2"</span>;
+            reg = &lt;0x4802a000 0x1000&gt;;
+            interrupts = &lt;0x47&gt;;
+            status = <span class="string">"disabled"</span>;
+        };
+
+        i2c@4819c000 {
+            compatible = <span class="string">"ti,omap4-i2c"</span>;
+            <span class="comment">#address-cells = &lt;0x1&gt;;</span>
+            <span class="comment">#size-cells = &lt;0x0&gt;;</span>
+            ti,hwmods = <span class="string">"i2c3"</span>;
+            reg = &lt;0x4819c000 0x1000&gt;;
+            interrupts = &lt;0x1e&gt;;
+            status = <span class="string">"okay"</span>;
+            pinctrl-names = <span class="string">"default"</span>;
+            pinctrl-0 = &lt;0x2b&gt;;
+            clock-frequency = &lt;0x186a0&gt;;
+
+            cape_eeprom0@54 {
+                compatible = <span class="string">"at,24c256"</span>;
+                reg = &lt;0x54&gt;;
+            };
+
+            cape_eeprom1@55 {
+                compatible = <span class="string">"at,24c256"</span>;
+                reg = &lt;0x55&gt;;
+            };
+
+            cape_eeprom2@56 {
+                compatible = <span class="string">"at,24c256"</span>;
+                reg = &lt;0x56&gt;;
+            };
+
+            cape_eeprom3@57 {
+                compatible = <span class="string">"at,24c256"</span>;
+                reg = &lt;0x57&gt;;
+            };
+        };
+
+        mmc@48060000 {
+            compatible = <span class="string">"ti,omap4-hsmmc"</span>;
+            ti,hwmods = <span class="string">"mmc1"</span>;
+            ti,dual-volt;
+            ti,needs-special-reset;
+            ti,needs-special-hs-handling;
+            dmas = &lt;0x2c 0x18 0x2c 0x19&gt;;
+            dma-names = <span class="string">"tx"</span>, <span class="string">"rx"</span>;
+            interrupts = &lt;0x40&gt;;
+            interrupt-parent = &lt;0x1&gt;;
+            reg = &lt;0x48060000 0x1000&gt;;
+            status = <span class="string">"okay"</span>;
+            bus-width = &lt;0x4&gt;;
+            pinctrl-names = <span class="string">"default"</span>;
+            pinctrl-0 = &lt;0x2d&gt;;
+            <span class="built_in">cd</span>-gpios = &lt;0x2e 0x6 0x0&gt;;
+            <span class="built_in">cd</span>-inverted;
+            vmmc-supply = &lt;0x2f&gt;;
+        };
+
+        mmc@481d8000 {
+            compatible = <span class="string">"ti,omap4-hsmmc"</span>;
+            ti,hwmods = <span class="string">"mmc2"</span>;
+            ti,needs-special-reset;
+            dmas = &lt;0x2c 0x2 0x2c 0x3&gt;;
+            dma-names = <span class="string">"tx"</span>, <span class="string">"rx"</span>;
+            interrupts = &lt;0x1c&gt;;
+            interrupt-parent = &lt;0x1&gt;;
+            reg = &lt;0x481d8000 0x1000&gt;;
+            status = <span class="string">"okay"</span>;
+            vmmc-supply = &lt;0x2f&gt;;
+            pinctrl-names = <span class="string">"default"</span>;
+            pinctrl-0 = &lt;0x30&gt;;
+            bus-width = &lt;0x8&gt;;
+            ti,vcc-aux-disable-is-sleep;
+        };
+
+        mmc@47810000 {
+            compatible = <span class="string">"ti,omap4-hsmmc"</span>;
+            ti,hwmods = <span class="string">"mmc3"</span>;
+            ti,needs-special-reset;
+            interrupts = &lt;0x1d&gt;;
+            interrupt-parent = &lt;0x1&gt;;
+            reg = &lt;0x47810000 0x1000&gt;;
+            status = <span class="string">"disabled"</span>;
+        };
+
+        spinlock@480ca000 {
+            compatible = <span class="string">"ti,omap4-hwspinlock"</span>;
+            reg = &lt;0x480ca000 0x1000&gt;;
+            ti,hwmods = <span class="string">"spinlock"</span>;
+        };
+
+        wdt@44e35000 {
+            compatible = <span class="string">"ti,omap3-wdt"</span>;
+            ti,hwmods = <span class="string">"wd_timer2"</span>;
+            reg = &lt;0x44e35000 0x1000&gt;;
+            interrupts = &lt;0x5b&gt;;
+        };
+
+        d_can@481cc000 {
+            compatible = <span class="string">"bosch,d_can"</span>;
+            ti,hwmods = <span class="string">"d_can0"</span>;
+            reg = &lt;0x481cc000 0x2000 0x44e10644 0x4&gt;;
+            interrupts = &lt;0x34&gt;;
+            status = <span class="string">"disabled"</span>;
+        };
+
+        d_can@481d0000 {
+            compatible = <span class="string">"bosch,d_can"</span>;
+            ti,hwmods = <span class="string">"d_can1"</span>;
+            reg = &lt;0x481d0000 0x2000 0x44e10644 0x4&gt;;
+            interrupts = &lt;0x37&gt;;
+            status = <span class="string">"disabled"</span>;
+        };
+
+        timer@44e31000 {
+            compatible = <span class="string">"ti,am335x-timer-1ms"</span>;
+            reg = &lt;0x44e31000 0x400&gt;;
+            interrupts = &lt;0x43&gt;;
+            ti,hwmods = <span class="string">"timer1"</span>;
+            ti,timer-alwon;
+        };
+
+        timer@48040000 {
+            compatible = <span class="string">"ti,am335x-timer"</span>;
+            reg = &lt;0x48040000 0x400&gt;;
+            interrupts = &lt;0x44&gt;;
+            ti,hwmods = <span class="string">"timer2"</span>;
+        };
+
+        timer@48042000 {
+            compatible = <span class="string">"ti,am335x-timer"</span>;
+            reg = &lt;0x48042000 0x400&gt;;
+            interrupts = &lt;0x45&gt;;
+            ti,hwmods = <span class="string">"timer3"</span>;
+        };
+
+        timer@48044000 {
+            compatible = <span class="string">"ti,am335x-timer"</span>;
+            reg = &lt;0x48044000 0x400&gt;;
+            interrupts = &lt;0x5c&gt;;
+            ti,hwmods = <span class="string">"timer4"</span>;
+            ti,timer-pwm;
+        };
+
+        timer@48046000 {
+            compatible = <span class="string">"ti,am335x-timer"</span>;
+            reg = &lt;0x48046000 0x400&gt;;
+            interrupts = &lt;0x5d&gt;;
+            ti,hwmods = <span class="string">"timer5"</span>;
+            ti,timer-pwm;
+        };
+
+        timer@48048000 {
+            compatible = <span class="string">"ti,am335x-timer"</span>;
+            reg = &lt;0x48048000 0x400&gt;;
+            interrupts = &lt;0x5e&gt;;
+            ti,hwmods = <span class="string">"timer6"</span>;
+            ti,timer-pwm;
+        };
+
+        timer@4804a000 {
+            compatible = <span class="string">"ti,am335x-timer"</span>;
+            reg = &lt;0x4804a000 0x400&gt;;
+            interrupts = &lt;0x5f&gt;;
+            ti,hwmods = <span class="string">"timer7"</span>;
+            ti,timer-pwm;
+        };
+
+        rtc@44e3e000 {
+            compatible = <span class="string">"ti,da830-rtc"</span>;
+            reg = &lt;0x44e3e000 0x1000&gt;;
+            interrupts = &lt;0x4b 0x4c&gt;;
+            ti,hwmods = <span class="string">"rtc"</span>;
+        };
+
+        spi@48030000 {
+            compatible = <span class="string">"ti,omap4-mcspi"</span>;
+            <span class="comment">#address-cells = &lt;0x1&gt;;</span>
+            <span class="comment">#size-cells = &lt;0x0&gt;;</span>
+            reg = &lt;0x48030000 0x400&gt;;
+            interrupts = &lt;0x41&gt;;
+            ti,spi-num-cs = &lt;0x2&gt;;
+            ti,hwmods = <span class="string">"spi0"</span>;
+            dmas = &lt;0x2c 0x10 0x2c 0x11 0x2c 0x12 0x2c 0x13&gt;;
+            dma-names = <span class="string">"tx0"</span>, <span class="string">"rx0"</span>, <span class="string">"tx1"</span>, <span class="string">"rx1"</span>;
+            status = <span class="string">"okay"</span>;
+            pinctrl-names = <span class="string">"default"</span>;
+            pinctrl-0 = &lt;0x31&gt;;
+
+            spi@0 {
+                compatible = <span class="string">"spidev"</span>;
+                reg = &lt;0x0&gt;;
+                spi-max-frequency = &lt;0xf42400&gt;;
+                spi-cpha;
+            };
+
+            spi@1 {
+                compatible = <span class="string">"spidev"</span>;
+                reg = &lt;0x1&gt;;
+                spi-max-frequency = &lt;0xf42400&gt;;
+            };
+        };
+
+        spi@481a0000 {
+            compatible = <span class="string">"ti,omap4-mcspi"</span>;
+            <span class="comment">#address-cells = &lt;0x1&gt;;</span>
+            <span class="comment">#size-cells = &lt;0x0&gt;;</span>
+            reg = &lt;0x481a0000 0x400&gt;;
+            interrupts = &lt;0x7d&gt;;
+            ti,spi-num-cs = &lt;0x2&gt;;
+            ti,hwmods = <span class="string">"spi1"</span>;
+            dmas = &lt;0x2c 0x2a 0x2c 0x2b 0x2c 0x2c 0x2c 0x2d&gt;;
+            dma-names = <span class="string">"tx0"</span>, <span class="string">"rx0"</span>, <span class="string">"tx1"</span>, <span class="string">"rx1"</span>;
+            status = <span class="string">"disabled"</span>;
+        };
+
+        usb@47400000 {
+            compatible = <span class="string">"ti,am33xx-usb"</span>;
+            reg = &lt;0x47400000 0x1000&gt;;
+            ranges;
+            <span class="comment">#address-cells = &lt;0x1&gt;;</span>
+            <span class="comment">#size-cells = &lt;0x1&gt;;</span>
+            ti,hwmods = <span class="string">"usb_otg_hs"</span>;
+            status = <span class="string">"okay"</span>;
+
+            control@44e10620 {
+                compatible = <span class="string">"ti,am335x-usb-ctrl-module"</span>;
+                reg = &lt;0x44e10620 0x10 0x44e10648 0x4&gt;;
+                reg-names = <span class="string">"phy_ctrl"</span>, <span class="string">"wakeup"</span>;
+                status = <span class="string">"okay"</span>;
+                linux,phandle = &lt;0x32&gt;;
+                phandle = &lt;0x32&gt;;
+            };
+
+            usb-phy@47401300 {
+                compatible = <span class="string">"ti,am335x-usb-phy"</span>;
+                reg = &lt;0x47401300 0x100&gt;;
+                reg-names = <span class="string">"phy"</span>;
+                status = <span class="string">"okay"</span>;
+                ti,ctrl_mod = &lt;0x32&gt;;
+                linux,phandle = &lt;0x33&gt;;
+                phandle = &lt;0x33&gt;;
+            };
+
+            usb@47401000 {
+                compatible = <span class="string">"ti,musb-am33xx"</span>;
+                status = <span class="string">"okay"</span>;
+                reg = &lt;0x47401400 0x400 0x47401000 0x200&gt;;
+                reg-names = <span class="string">"mc"</span>, <span class="string">"control"</span>;
+                interrupts = &lt;0x12&gt;;
+                interrupt-names = <span class="string">"mc"</span>;
+                dr_mode = <span class="string">"otg"</span>;
+                mentor,multipoint = &lt;0x1&gt;;
+                mentor,num-eps = &lt;0x10&gt;;
+                mentor,ram-bits = &lt;0xc&gt;;
+                mentor,power = &lt;0x1f4&gt;;
+                phys = &lt;0x33&gt;;
+                dmas = &lt;0x34 0x0 0x0 0x34 0x1 0x0 0x34 0x2 0x0 0x34 0x3 0x0 0x34 0x4 0x0 0x34 0x5 0x0 0x34 0x6 0x0 0x34 0x7 0x0 0x34 0x8 0x0 0x34 0x9 0x0 0x34 0xa 0x0 0x34 0xb 0x0 0x34 0xc 0x0 0x34 0xd 0x0 0x34 0xe 0x0 0x34 0x0 0x1 0x34 0x1 0x1 0x34 0x2 0x1 0x34 0x3 0x1 0x34 0x4 0x1 0x34 0x5 0x1 0x34 0x6 0x1 0x34 0x7 0x1 0x34 0x8 0x1 0x34 0x9 0x1 0x34 0xa 0x1 0x34 0xb 0x1 0x34 0xc 0x1 0x34 0xd 0x1 0x34 0xe 0x1&gt;;
+                dma-names = <span class="string">"rx1"</span>, <span class="string">"rx2"</span>, <span class="string">"rx3"</span>, <span class="string">"rx4"</span>, <span class="string">"rx5"</span>, <span class="string">"rx6"</span>, <span class="string">"rx7"</span>, <span class="string">"rx8"</span>, <span class="string">"rx9"</span>, <span class="string">"rx10"</span>, <span class="string">"rx11"</span>, <span class="string">"rx12"</span>, <span class="string">"rx13"</span>, <span class="string">"rx14"</span>, <span class="string">"rx15"</span>, <span class="string">"tx1"</span>, <span class="string">"tx2"</span>, <span class="string">"tx3"</span>, <span class="string">"tx4"</span>, <span class="string">"tx5"</span>, <span class="string">"tx6"</span>, <span class="string">"tx7"</span>, <span class="string">"tx8"</span>, <span class="string">"tx9"</span>, <span class="string">"tx10"</span>, <span class="string">"tx11"</span>, <span class="string">"tx12"</span>, <span class="string">"tx13"</span>, <span class="string">"tx14"</span>, <span class="string">"tx15"</span>;
+            };
+
+            usb-phy@47401b00 {
+                compatible = <span class="string">"ti,am335x-usb-phy"</span>;
+                reg = &lt;0x47401b00 0x100&gt;;
+                reg-names = <span class="string">"phy"</span>;
+                status = <span class="string">"okay"</span>;
+                ti,ctrl_mod = &lt;0x32&gt;;
+                linux,phandle = &lt;0x35&gt;;
+                phandle = &lt;0x35&gt;;
+            };
+
+            usb@47401800 {
+                compatible = <span class="string">"ti,musb-am33xx"</span>;
+                status = <span class="string">"okay"</span>;
+                reg = &lt;0x47401c00 0x400 0x47401800 0x200&gt;;
+                reg-names = <span class="string">"mc"</span>, <span class="string">"control"</span>;
+                interrupts = &lt;0x13&gt;;
+                interrupt-names = <span class="string">"mc"</span>;
+                dr_mode = <span class="string">"host"</span>;
+                mentor,multipoint = &lt;0x1&gt;;
+                mentor,num-eps = &lt;0x10&gt;;
+                mentor,ram-bits = &lt;0xc&gt;;
+                mentor,power = &lt;0x1f4&gt;;
+                phys = &lt;0x35&gt;;
+                dmas = &lt;0x34 0xf 0x0 0x34 0x10 0x0 0x34 0x11 0x0 0x34 0x12 0x0 0x34 0x13 0x0 0x34 0x14 0x0 0x34 0x15 0x0 0x34 0x16 0x0 0x34 0x17 0x0 0x34 0x18 0x0 0x34 0x19 0x0 0x34 0x1a 0x0 0x34 0x1b 0x0 0x34 0x1c 0x0 0x34 0x1d 0x0 0x34 0xf 0x1 0x34 0x10 0x1 0x34 0x11 0x1 0x34 0x12 0x1 0x34 0x13 0x1 0x34 0x14 0x1 0x34 0x15 0x1 0x34 0x16 0x1 0x34 0x17 0x1 0x34 0x18 0x1 0x34 0x19 0x1 0x34 0x1a 0x1 0x34 0x1b 0x1 0x34 0x1c 0x1 0x34 0x1d 0x1&gt;;
+                dma-names = <span class="string">"rx1"</span>, <span class="string">"rx2"</span>, <span class="string">"rx3"</span>, <span class="string">"rx4"</span>, <span class="string">"rx5"</span>, <span class="string">"rx6"</span>, <span class="string">"rx7"</span>, <span class="string">"rx8"</span>, <span class="string">"rx9"</span>, <span class="string">"rx10"</span>, <span class="string">"rx11"</span>, <span class="string">"rx12"</span>, <span class="string">"rx13"</span>, <span class="string">"rx14"</span>, <span class="string">"rx15"</span>, <span class="string">"tx1"</span>, <span class="string">"tx2"</span>, <span class="string">"tx3"</span>, <span class="string">"tx4"</span>, <span class="string">"tx5"</span>, <span class="string">"tx6"</span>, <span class="string">"tx7"</span>, <span class="string">"tx8"</span>, <span class="string">"tx9"</span>, <span class="string">"tx10"</span>, <span class="string">"tx11"</span>, <span class="string">"tx12"</span>, <span class="string">"tx13"</span>, <span class="string">"tx14"</span>, <span class="string">"tx15"</span>;
+            };
+
+            dma-controller@47402000 {
+                compatible = <span class="string">"ti,am3359-cppi41"</span>;
+                reg = &lt;0x47400000 0x1000 0x47402000 0x1000 0x47403000 0x1000 0x47404000 0x4000&gt;;
+                reg-names = <span class="string">"glue"</span>, <span class="string">"controller"</span>, <span class="string">"scheduler"</span>, <span class="string">"queuemgr"</span>;
+                interrupts = &lt;0x11&gt;;
+                interrupt-names = <span class="string">"glue"</span>;
+                <span class="comment">#dma-cells = &lt;0x2&gt;;</span>
+                <span class="comment">#dma-channels = &lt;0x1e&gt;;</span>
+                <span class="comment">#dma-requests = &lt;0x100&gt;;</span>
+                status = <span class="string">"okay"</span>;
+                linux,phandle = &lt;0x34&gt;;
+                phandle = &lt;0x34&gt;;
+            };
+        };
+
+        epwmss@48300000 {
+            compatible = <span class="string">"ti,am33xx-pwmss"</span>;
+            reg = &lt;0x48300000 0x10&gt;;
+            ti,hwmods = <span class="string">"epwmss0"</span>;
+            <span class="comment">#address-cells = &lt;0x1&gt;;</span>
+            <span class="comment">#size-cells = &lt;0x1&gt;;</span>
+            status = <span class="string">"okay"</span>;
+            ranges = &lt;0x48300100 0x48300100 0x80 0x48300180 0x48300180 0x80 0x48300200 0x48300200 0x80&gt;;
+            pinctrl-names = <span class="string">"default"</span>;
+            pinctrl-0 = &lt;0x36&gt;;
+
+            ecap@48300100 {
+                compatible = <span class="string">"ti,am33xx-ecap"</span>;
+                <span class="comment">#pwm-cells = &lt;0x3&gt;;</span>
+                reg = &lt;0x48300100 0x80&gt;;
+                ti,hwmods = <span class="string">"ecap0"</span>;
+                status = <span class="string">"okay"</span>;
+                linux,phandle = &lt;0x3f&gt;;
+                phandle = &lt;0x3f&gt;;
+            };
+
+            ehrpwm@48300200 {
+                compatible = <span class="string">"ti,am33xx-ehrpwm"</span>;
+                <span class="comment">#pwm-cells = &lt;0x3&gt;;</span>
+                reg = &lt;0x48300200 0x80&gt;;
+                ti,hwmods = <span class="string">"ehrpwm0"</span>;
+                status = <span class="string">"disabled"</span>;
+            };
+        };
+
+        epwmss@48302000 {
+            compatible = <span class="string">"ti,am33xx-pwmss"</span>;
+            reg = &lt;0x48302000 0x10&gt;;
+            ti,hwmods = <span class="string">"epwmss1"</span>;
+            <span class="comment">#address-cells = &lt;0x1&gt;;</span>
+            <span class="comment">#size-cells = &lt;0x1&gt;;</span>
+            status = <span class="string">"okay"</span>;
+            ranges = &lt;0x48302100 0x48302100 0x80 0x48302180 0x48302180 0x80 0x48302200 0x48302200 0x80&gt;;
+            pinctrl-names = <span class="string">"default"</span>;
+            pinctrl-0 = &lt;0x37 0x38&gt;;
+
+            ecap@48302100 {
+                compatible = <span class="string">"ti,am33xx-ecap"</span>;
+                <span class="comment">#pwm-cells = &lt;0x3&gt;;</span>
+                reg = &lt;0x48302100 0x80&gt;;
+                ti,hwmods = <span class="string">"ecap1"</span>;
+                status = <span class="string">"disabled"</span>;
+            };
+
+            ehrpwm@48302200 {
+                compatible = <span class="string">"ti,am33xx-ehrpwm"</span>;
+                <span class="comment">#pwm-cells = &lt;0x3&gt;;</span>
+                reg = &lt;0x48302200 0x80&gt;;
+                ti,hwmods = <span class="string">"ehrpwm1"</span>;
+                status = <span class="string">"okay"</span>;
+                linux,phandle = &lt;0x3e&gt;;
+                phandle = &lt;0x3e&gt;;
+            };
+        };
+
+        epwmss@48304000 {
+            compatible = <span class="string">"ti,am33xx-pwmss"</span>;
+            reg = &lt;0x48304000 0x10&gt;;
+            ti,hwmods = <span class="string">"epwmss2"</span>;
+            <span class="comment">#address-cells = &lt;0x1&gt;;</span>
+            <span class="comment">#size-cells = &lt;0x1&gt;;</span>
+            status = <span class="string">"disabled"</span>;
+            ranges = &lt;0x48304100 0x48304100 0x80 0x48304180 0x48304180 0x80 0x48304200 0x48304200 0x80&gt;;
+
+            ecap@48304100 {
+                compatible = <span class="string">"ti,am33xx-ecap"</span>;
+                <span class="comment">#pwm-cells = &lt;0x3&gt;;</span>
+                reg = &lt;0x48304100 0x80&gt;;
+                ti,hwmods = <span class="string">"ecap2"</span>;
+                status = <span class="string">"disabled"</span>;
+            };
+
+            ehrpwm@48304200 {
+                compatible = <span class="string">"ti,am33xx-ehrpwm"</span>;
+                <span class="comment">#pwm-cells = &lt;0x3&gt;;</span>
+                reg = &lt;0x48304200 0x80&gt;;
+                ti,hwmods = <span class="string">"ehrpwm2"</span>;
+                status = <span class="string">"disabled"</span>;
+            };
+        };
+
+        ethernet@4a100000 {
+            compatible = <span class="string">"ti,cpsw"</span>;
+            ti,hwmods = <span class="string">"cpgmac0"</span>;
+            cpdma_channels = &lt;0x8&gt;;
+            ale_entries = &lt;0x400&gt;;
+            bd_ram_size = &lt;0x2000&gt;;
+            no_bd_ram = &lt;0x0&gt;;
+            rx_descs = &lt;0x40&gt;;
+            mac_control = &lt;0x20&gt;;
+            slaves = &lt;0x2&gt;;
+            active_slave = &lt;0x0&gt;;
+            cpts_clock_mult = &lt;0x80000000&gt;;
+            cpts_clock_shift = &lt;0x1d&gt;;
+            reg = &lt;0x4a100000 0x800 0x4a101200 0x100&gt;;
+            <span class="comment">#address-cells = &lt;0x1&gt;;</span>
+            <span class="comment">#size-cells = &lt;0x1&gt;;</span>
+            interrupt-parent = &lt;0x1&gt;;
+            interrupts = &lt;0x28 0x29 0x2a 0x2b&gt;;
+            ranges;
+            pinctrl-names = <span class="string">"default"</span>, <span class="string">"sleep"</span>;
+            pinctrl-0 = &lt;0x39&gt;;
+            pinctrl-1 = &lt;0x3a&gt;;
+
+            mdio@4a101000 {
+                compatible = <span class="string">"ti,davinci_mdio"</span>;
+                <span class="comment">#address-cells = &lt;0x1&gt;;</span>
+                <span class="comment">#size-cells = &lt;0x0&gt;;</span>
+                ti,hwmods = <span class="string">"davinci_mdio"</span>;
+                bus_freq = &lt;0xf4240&gt;;
+                reg = &lt;0x4a101000 0x100&gt;;
+                pinctrl-names = <span class="string">"default"</span>, <span class="string">"sleep"</span>;
+                pinctrl-0 = &lt;0x3b&gt;;
+                pinctrl-1 = &lt;0x3c&gt;;
+                linux,phandle = &lt;0x3d&gt;;
+                phandle = &lt;0x3d&gt;;
+            };
+
+            slave@4a100200 {
+                mac-address = [00 00 00 00 00 00];
+                phy_id = &lt;0x3d 0x0&gt;;
+                phy-mode = <span class="string">"mii"</span>;
+            };
+
+            slave@4a100300 {
+                mac-address = [00 00 00 00 00 00];
+                phy_id = &lt;0x3d 0x1&gt;;
+                phy-mode = <span class="string">"mii"</span>;
+            };
+
+            cpsw-phy-sel@44e10650 {
+                compatible = <span class="string">"ti,am3352-cpsw-phy-sel"</span>;
+                reg = &lt;0x44e10650 0x4&gt;;
+                reg-names = <span class="string">"gmii-sel"</span>;
+            };
+        };
+
+        ocmcram@40300000 {
+            compatible = <span class="string">"ti,am3352-ocmcram"</span>;
+            reg = &lt;0x40300000 0x10000&gt;;
+            ti,hwmods = <span class="string">"ocmcram"</span>;
+        };
+
+        wkup_m3@44d00000 {
+            compatible = <span class="string">"ti,am3353-wkup-m3"</span>;
+            reg = &lt;0x44d00000 0x4000 0x44d80000 0x2000&gt;;
+            ti,hwmods = <span class="string">"wkup_m3"</span>;
+            ti,no-reset-on-init;
+        };
+
+        elm@48080000 {
+            compatible = <span class="string">"ti,am3352-elm"</span>;
+            reg = &lt;0x48080000 0x2000&gt;;
+            interrupts = &lt;0x4&gt;;
+            ti,hwmods = <span class="string">"elm"</span>;
+            status = <span class="string">"disabled"</span>;
+        };
+
+        lcdc@4830e000 {
+            compatible = <span class="string">"ti,am33xx-tilcdc"</span>;
+            reg = &lt;0x4830e000 0x1000&gt;;
+            interrupt-parent = &lt;0x1&gt;;
+            interrupts = &lt;0x24&gt;;
+            ti,hwmods = <span class="string">"lcdc"</span>;
+            status = <span class="string">"okay"</span>;
+        };
+
+        tscadc@44e0d000 {
+            compatible = <span class="string">"ti,am3359-tscadc"</span>;
+            reg = &lt;0x44e0d000 0x1000&gt;;
+            interrupt-parent = &lt;0x1&gt;;
+            interrupts = &lt;0x10&gt;;
+            ti,hwmods = <span class="string">"adc_tsc"</span>;
+            status = <span class="string">"okay"</span>;
+
+            tsc {
+                compatible = <span class="string">"ti,am3359-tsc"</span>;
+            };
+
+            adc {
+                <span class="comment">#io-channel-cells = &lt;0x1&gt;;</span>
+                compatible = <span class="string">"ti,am3359-adc"</span>;
+                ti,adc-channels = &lt;0x4 0x5 0x6&gt;;
+            };
+        };
+
+        gpmc@50000000 {
+            compatible = <span class="string">"ti,am3352-gpmc"</span>;
+            ti,hwmods = <span class="string">"gpmc"</span>;
+            ti,no-idle-on-init;
+            reg = &lt;0x50000000 0x2000&gt;;
+            interrupts = &lt;0x64&gt;;
+            gpmc,num-cs = &lt;0x7&gt;;
+            gpmc,num-waitpins = &lt;0x2&gt;;
+            <span class="comment">#address-cells = &lt;0x2&gt;;</span>
+            <span class="comment">#size-cells = &lt;0x1&gt;;</span>
+            status = <span class="string">"disabled"</span>;
+        };
+
+        sham@53100000 {
+            compatible = <span class="string">"ti,omap4-sham"</span>;
+            ti,hwmods = <span class="string">"sham"</span>;
+            reg = &lt;0x53100000 0x200&gt;;
+            interrupts = &lt;0x6d&gt;;
+            dmas = &lt;0x2c 0x24&gt;;
+            dma-names = <span class="string">"rx"</span>;
+        };
+
+        aes@53500000 {
+            compatible = <span class="string">"ti,omap4-aes"</span>;
+            ti,hwmods = <span class="string">"aes"</span>;
+            reg = &lt;0x53500000 0xa0&gt;;
+            interrupts = &lt;0x67&gt;;
+            dmas = &lt;0x2c 0x6 0x2c 0x5&gt;;
+            dma-names = <span class="string">"tx"</span>, <span class="string">"rx"</span>;
+        };
+
+        mcasp@48038000 {
+            compatible = <span class="string">"ti,am33xx-mcasp-audio"</span>;
+            ti,hwmods = <span class="string">"mcasp0"</span>;
+            reg = &lt;0x48038000 0x2000 0x46000000 0x400000&gt;;
+            reg-names = <span class="string">"mpu"</span>, <span class="string">"dat"</span>;
+            interrupts = &lt;0x50 0x51&gt;;
+            interrupts-names = <span class="string">"tx"</span>, <span class="string">"rx"</span>;
+            status = <span class="string">"disabled"</span>;
+            dmas = &lt;0x2c 0x8 0x2c 0x9&gt;;
+            dma-names = <span class="string">"tx"</span>, <span class="string">"rx"</span>;
+        };
+
+        mcasp@4803C000 {
+            compatible = <span class="string">"ti,am33xx-mcasp-audio"</span>;
+            ti,hwmods = <span class="string">"mcasp1"</span>;
+            reg = &lt;0x4803c000 0x2000 0x46400000 0x400000&gt;;
+            reg-names = <span class="string">"mpu"</span>, <span class="string">"dat"</span>;
+            interrupts = &lt;0x52 0x53&gt;;
+            interrupts-names = <span class="string">"tx"</span>, <span class="string">"rx"</span>;
+            status = <span class="string">"disabled"</span>;
+            dmas = &lt;0x2c 0xa 0x2c 0xb&gt;;
+            dma-names = <span class="string">"tx"</span>, <span class="string">"rx"</span>;
+        };
+
+        rng@48310000 {
+            compatible = <span class="string">"ti,omap4-rng"</span>;
+            ti,hwmods = <span class="string">"rng"</span>;
+            reg = &lt;0x48310000 0x2000&gt;;
+            interrupts = &lt;0x6f&gt;;
+        };
+
+        pwm_test_P9_14@0 {
+            compatible = <span class="string">"pwm_test"</span>;
+            pwms = &lt;0x3e 0x0 0x7a120 0x1&gt;;
+            pwm-names = <span class="string">"PWM_P9_14"</span>;
+            pinctrl-names = <span class="string">"default"</span>;
+            pinctrl-0 = &lt;0x37&gt;;
+            enabled = &lt;0x1&gt;;
+            duty = &lt;0x0&gt;;
+            status = <span class="string">"okay"</span>;
+        };
+
+        pwm_test_P9_16@0 {
+            compatible = <span class="string">"pwm_test"</span>;
+            pwms = &lt;0x3e 0x0 0x7a120 0x1&gt;;
+            pwm-names = <span class="string">"PWM_P9_16"</span>;
+            pinctrl-names = <span class="string">"default"</span>;
+            pinctrl-0 = &lt;0x38&gt;;
+            enabled = &lt;0x1&gt;;
+            duty = &lt;0x0&gt;;
+            status = <span class="string">"okay"</span>;
+        };
+
+        pwm_test_P9_42 {
+            compatible = <span class="string">"pwm_test"</span>;
+            pwms = &lt;0x3f 0x0 0x7a120 0x1&gt;;
+            pwm-names = <span class="string">"PWM_P9_42"</span>;
+            pinctrl-names = <span class="string">"default"</span>;
+            pinctrl-0 = &lt;0x36&gt;;
+            enabled = &lt;0x1&gt;;
+            duty = &lt;0x0&gt;;
+            status = <span class="string">"okay"</span>;
+        };
+    };
+
+    leds {
+        pinctrl-names = <span class="string">"default"</span>;
+        pinctrl-0 = &lt;0x40&gt;;
+        compatible = <span class="string">"gpio-leds"</span>;
+
+        led@2 {
+            label = <span class="string">"beaglebone:green:heartbeat"</span>;
+            gpios = &lt;0x41 0x15 0x0&gt;;
+            linux,default-trigger = <span class="string">"heartbeat"</span>;
+            default-state = <span class="string">"off"</span>;
+        };
+
+        led@3 {
+            label = <span class="string">"beaglebone:green:mmc0"</span>;
+            gpios = &lt;0x41 0x16 0x0&gt;;
+            linux,default-trigger = <span class="string">"mmc0"</span>;
+            default-state = <span class="string">"off"</span>;
+        };
+
+        led@4 {
+            label = <span class="string">"beaglebone:green:usr2"</span>;
+            gpios = &lt;0x41 0x17 0x0&gt;;
+            linux,default-trigger = <span class="string">"cpu0"</span>;
+            default-state = <span class="string">"off"</span>;
+        };
+
+        led@5 {
+            label = <span class="string">"beaglebone:green:usr3"</span>;
+            gpios = &lt;0x41 0x18 0x0&gt;;
+            linux,default-trigger = <span class="string">"mmc1"</span>;
+            default-state = <span class="string">"off"</span>;
+        };
+    };
+
+    fixedregulator@0 {
+        compatible = <span class="string">"regulator-fixed"</span>;
+        regulator-name = <span class="string">"vmmcsd_fixed"</span>;
+        regulator-min-microvolt = &lt;0x325aa0&gt;;
+        regulator-max-microvolt = &lt;0x325aa0&gt;;
+        linux,phandle = &lt;0x2f&gt;;
+        phandle = &lt;0x2f&gt;;
+    };
+
+    hdmi {
+        compatible = <span class="string">"ti,tilcdc,slave"</span>;
+        i2c = &lt;0x42&gt;;
+        pinctrl-names = <span class="string">"default"</span>, <span class="string">"off"</span>;
+        pinctrl-0 = &lt;0x43&gt;;
+        pinctrl-1 = &lt;0x44&gt;;
+        status = <span class="string">"okay"</span>;
+
+        panel-info {
+            bpp = &lt;0x10&gt;;
+            ac-bias = &lt;0xff&gt;;
+            ac-bias-intrpt = &lt;0x0&gt;;
+            dma-burst-sz = &lt;0x10&gt;;
+            fdd = &lt;0x10&gt;;
+            sync-edge = &lt;0x1&gt;;
+            sync-ctrl = &lt;0x1&gt;;
+            raster-order = &lt;0x0&gt;;
+            fifo-th = &lt;0x0&gt;;
+            invert-pxl-clk;
+        };
+    };
+};
+</code></pre>
+<h3 id="重启开机后执行的效果"><a href="#重启开机后执行的效果" class="headerlink" title="重启开机后执行的效果"></a>重启开机后执行的效果</h3><pre><code class="bash">root@IDEASK:/boot/dtbs<span class="comment"># ll /dev/ttyO*</span>
+crw-rw---- 1 root tty     248, 0 Jan  1 00:00 /dev/ttyO0
+crw-rw---- 1 root dialout 248, 1 Jan  1 00:02 /dev/ttyO1
+crw-rw---- 1 root dialout 248, 2 Jan  1 00:03 /dev/ttyO2
+crw-rw---- 1 root dialout 248, 4 Jan  1 00:04 /dev/ttyO4
+crw-rw---- 1 root dialout 248, 5 Jan  1 00:06 /dev/ttyO5
+</code></pre>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
   <link itemprop="mainEntityOfPage" href="http://ideask.cf/2017/02/01/arm-asm/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2537,175 +4643,6 @@ int main(int argc, char *argv[])
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://ideask.cf/2017/01/22/char-device/">
-
-  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <meta itemprop="name" content="Jason Lin">
-    <meta itemprop="description" content="">
-    <meta itemprop="image" content="/images/avatar.gif">
-  </span>
-
-  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-    <meta itemprop="name" content="Jason Lin">
-    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="Jason Lin" src="">
-    </span>
-  </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/01/22/char-device/" itemprop="url">
-                  简单的字符设备驱动指南
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-01-22T17:39:08+08:00">
-                2017-01-22
-              </time>
-			  </span>
-			
-			<span>
-    
-			<span>更新于</span>
-			<time>
-			2017-01-22
-			17:39:08
-			</time>
-			</span>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/设备驱动/" itemprop="url" rel="index">
-                    <span itemprop="name">设备驱动</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2017/01/22/char-device/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/01/22/char-device/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="1、头文件"><a href="#1、头文件" class="headerlink" title="1、头文件"></a>1、头文件</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#include &lt;linux/module.h&gt;  </span></div><div class="line"><span class="comment">#include &lt;linux/init.h&gt;是必不可少的。</span></div></pre></td></tr></table></figure>
-<h2 id="2、模块初始化函数"><a href="#2、模块初始化函数" class="headerlink" title="2、模块初始化函数"></a>2、模块初始化函数</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">static int __init module_init_func(void)</div><div class="line">&#123;</div><div class="line">初始化代码</div><div class="line">&#125;</div><div class="line">module_init(module_init_func);</div></pre></td></tr></table></figure>
-<h2 id="3、模块退出函数"><a href="#3、模块退出函数" class="headerlink" title="3、模块退出函数"></a>3、模块退出函数</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">static void __exit module_exit_func(void)</div><div class="line">&#123;</div><div class="line">模块退出代码</div><div class="line">&#125;</div><div class="line">module_exit(module_exit_func);</div></pre></td></tr></table></figure>
-<h2 id="4、许可证"><a href="#4、许可证" class="headerlink" title="4、许可证"></a>4、许可证</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">MODULE_LICENSE(<span class="string">"GPL"</span>);</div><div class="line">MODULE_AUTHOR(<span class="string">"Jason_lin &lt;Linux@ideask.cf&gt;"</span>);</div><div class="line">MODULE_DESCRIPTION(<span class="string">"beep Driver"</span>);</div><div class="line">MODULE_VERSION(<span class="string">"V1.00"</span>);</div></pre></td></tr></table></figure>
-<h2 id="5、printk语句"><a href="#5、printk语句" class="headerlink" title="5、printk语句"></a>5、printk语句</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#define KERN_EMERG "&lt;0&gt;" /* system is unusable */</span></div><div class="line"><span class="comment">#define KERN_ALERT "&lt;1&gt;" /* action must be taken immediately */</span></div><div class="line"><span class="comment">#define KERN_CRIT "&lt;2&gt;" /* critical conditions */</span></div><div class="line"><span class="comment">#define KERN_ERR "&lt;3&gt;" /* error conditions */</span></div><div class="line"><span class="comment">#define KERN_WARNING "&lt;4&gt;" /* warning conditions */</span></div><div class="line"><span class="comment">#define KERN_NOTICE "&lt;5&gt;" /* normal but significant condition */</span></div><div class="line"><span class="comment">#define KERN_INFO "&lt;6&gt;" /* informational */</span></div><div class="line"><span class="comment">#define KERN_DEBUG "&lt;7&gt;" /* debug-level messages */</span></div></pre></td></tr></table></figure>
-<h2 id="6、Simple-demon"><a href="#6、Simple-demon" class="headerlink" title="6、Simple demon"></a>6、Simple demon</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#include &lt;linux/module.h&gt;</span></div><div class="line"><span class="comment">#include &lt;linux/init.h&gt;</span></div><div class="line"></div><div class="line"> static int num = 3;</div><div class="line"> static char *whom = <span class="string">"master"</span>;</div><div class="line"></div><div class="line"> module_param(num, int, S_IRUGO);</div><div class="line"> module_param(whom, charp, S_IRUGO);</div><div class="line"></div><div class="line"> static int __init hello_init(void)</div><div class="line"> &#123;</div><div class="line">  printk(KERN_INFO <span class="string">"%s, I get %d\n"</span>, whom, num);</div><div class="line">  <span class="built_in">return</span> 0;</div><div class="line"> &#125;</div><div class="line"></div><div class="line"> static void __exit hello_exit(void)</div><div class="line"> &#123;</div><div class="line">  printk(<span class="string">"I'll be leaving, bye!\n"</span>);</div><div class="line"> &#125;</div><div class="line"></div><div class="line"> module_init(hello_init);</div><div class="line"> module_exit(hello_exit);</div><div class="line"></div><div class="line"> MODULE_LICENSE(<span class="string">"GPL"</span>);</div></pre></td></tr></table></figure>
-<h3 id="运行"><a href="#运行" class="headerlink" title="运行"></a>运行</h3><pre><code class="bash"><span class="comment"># insmod hellop.ko whom="MASTER" num=5</span>
-</code></pre>
-<p>MASTER, I get 5</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -2753,7 +4690,7 @@ int main(int argc, char *argv[])
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">12</span>
+                <span class="site-state-item-count">13</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -2762,7 +4699,7 @@ int main(int argc, char *argv[])
           
             <div class="site-state-item site-state-categories">
               <a href="/categories">
-                <span class="site-state-item-count">8</span>
+                <span class="site-state-item-count">9</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -2771,7 +4708,7 @@ int main(int argc, char *argv[])
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">8</span>
+                <span class="site-state-item-count">9</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
